@@ -14,54 +14,78 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
+  MyHomePage({Key key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  List<Widget> widgets = new List();
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  @override
+  void initState() {
+    this.widgets.add(this._header());
+    this.widgets.add(Text('Coucou'));
+    this.widgets.add(Text('Coucou'));
+    this.widgets.add(Text('Coucou'));
+    this.widgets.add(Text('Coucou'));
+
+    print('Taille de la liste => ${this.widgets.length}');
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
+      body: Container(
+        padding: EdgeInsets.only(top: 32.0, left: 16.0, right: 16.0),
+        child: this._spotList(),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  Widget _header() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          'Spotfinder',
+          style: TextStyle(
+            fontSize: 32.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        _searchButton()
+      ],
+    );
+  }
+
+  Widget _searchButton() {
+    return Container(
+      height: 40.0,
+      padding: EdgeInsets.all(12.0),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          shape: BoxShape.rectangle,
+          color: Colors.grey),
+      child: Center(
+        child: Text("search"),
+      ),
+    );
+  }
+
+  Widget _spotList() {
+    return ListView.builder(
+        itemCount: this.widgets.length,
+        itemBuilder: (BuildContext context, int index) {
+          return this.widgets[index];
+        });
   }
 }
