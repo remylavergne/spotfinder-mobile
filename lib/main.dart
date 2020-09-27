@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:spotfinder/colors.dart';
 
 void main() {
   runApp(MyApp());
@@ -9,20 +11,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
+  MyHomePage({Key key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -38,6 +37,16 @@ class _MyHomePageState extends State<MyHomePage> {
     this.spots.add(this._spot());
     this.spots.add(this._spot());
     this.spots.add(this._spot());
+    this.spots.add(this._spot());
+    this.spots.add(this._spot());
+    this.spots.add(this._spot());
+    this.spots.add(this._spot());
+    this.spots.add(this._spot());
+    this.spots.add(this._spot());
+    this.spots.add(this._spot());
+    this.spots.add(this._spot());
+    this.spots.add(this._spot());
+    this.spots.add(this._spot());
     super.initState();
   }
 
@@ -45,6 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        // color: Colors.green,
         padding: EdgeInsets.only(top: 56.0, left: 16.0, right: 16.0),
         child: Column(
           children: [
@@ -57,18 +67,25 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _header() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          'Spotfinder',
-          style: TextStyle(
-            fontSize: 32.0,
-            fontWeight: FontWeight.bold,
+    return Container(
+      color: Colors.transparent,
+      padding: EdgeInsets.only(
+        bottom: 20.0,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'SpotFinder',
+            style: GoogleFonts.architectsDaughter(
+              fontSize: 42.0,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        _searchButton()
-      ],
+          _searchButton()
+        ],
+      ),
     );
   }
 
@@ -79,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20.0)),
           shape: BoxShape.rectangle,
-          color: Colors.grey),
+          color: palette['Aquamarine']),
       child: Center(
         child: Text("search"),
       ),
@@ -91,7 +108,14 @@ class _MyHomePageState extends State<MyHomePage> {
       return Expanded(
         child: Container(
           // color: Colors.green,
-          child: ListView.builder(
+          child: ListView.separated(
+              separatorBuilder: (context, index) => Divider(
+                    height: 12.0,
+                    color: Colors.transparent,
+                  ),
+              // padding: EdgeInsets.only(
+              //   top: 0,
+              // ),
               // shrinkWrap: true,
               itemCount: this.spots.length,
               itemBuilder: (BuildContext context, int index) {
