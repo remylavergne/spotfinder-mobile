@@ -32,6 +32,16 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> spots = List();
 
   @override
+  void initState() {
+    this.spots.add(this._spot());
+    this.spots.add(this._spot());
+    this.spots.add(this._spot());
+    this.spots.add(this._spot());
+    this.spots.add(this._spot());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
@@ -82,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Container(
           // color: Colors.green,
           child: ListView.builder(
-              shrinkWrap: true,
+              // shrinkWrap: true,
               itemCount: this.spots.length,
               itemBuilder: (BuildContext context, int index) {
                 return this.spots[index];
@@ -99,5 +109,27 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       );
     }
+  }
+
+  Widget _spot() {
+    return Card(
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(15.0),
+          image: DecorationImage(
+            image: NetworkImage(
+              'https://www.wampark.fr/wp-content/uploads/2020/03/wakeskate8x15.jpg',
+            ),
+            fit: BoxFit.fill,
+          ),
+        ),
+        height: 200.0,
+        child: Text('Random texte'),
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+    );
   }
 }
