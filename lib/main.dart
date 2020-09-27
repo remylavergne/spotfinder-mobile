@@ -137,19 +137,41 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _spot() {
     return Card(
-      child: Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(15.0),
-          image: DecorationImage(
-            image: NetworkImage(
-              'https://www.wampark.fr/wp-content/uploads/2020/03/wakeskate8x15.jpg',
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(15.0),
+              image: DecorationImage(
+                image: NetworkImage(
+                  'https://www.wampark.fr/wp-content/uploads/2020/03/wakeskate8x15.jpg',
+                ),
+                fit: BoxFit.fill,
+              ),
             ),
-            fit: BoxFit.fill,
+            height: 200.0,
           ),
-        ),
-        height: 200.0,
-        child: Text('Random texte'),
+          Expanded(
+            child: Positioned.fill(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  width: double.maxFinite,
+                  height: 30.0,
+                  decoration: BoxDecoration(
+                    color: Colors.red[50],
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(15.0),
+                      bottomRight: Radius.circular(15.0),
+                    ),
+                  ),
+                  child: Text('TEST DE TEXTE'),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
