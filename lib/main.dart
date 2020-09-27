@@ -14,39 +14,34 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(),
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key}) : super(key: key);
+  MyHomePage({Key key, this.title}) : super(key: key);
+
+  final String title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Widget> widgets = new List();
-
-  @override
-  void initState() {
-    this.widgets.add(this._header());
-    this.widgets.add(Text('Coucou'));
-    this.widgets.add(Text('Coucou'));
-    this.widgets.add(Text('Coucou'));
-    this.widgets.add(Text('Coucou'));
-
-    print('Taille de la liste => ${this.widgets.length}');
-    super.initState();
-  }
+  List<Widget> spots = List();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.only(top: 32.0, left: 16.0, right: 16.0),
-        child: this._spotList(),
+        padding: EdgeInsets.only(top: 56.0, left: 16.0, right: 16.0),
+        child: Column(
+          children: [
+            this._header(),
+            this._spotList(),
+          ],
+        ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
@@ -82,10 +77,27 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _spotList() {
-    return ListView.builder(
-        itemCount: this.widgets.length,
-        itemBuilder: (BuildContext context, int index) {
-          return this.widgets[index];
-        });
+    if (this.spots.isNotEmpty) {
+      return Expanded(
+        child: Container(
+          // color: Colors.green,
+          child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: this.spots.length,
+              itemBuilder: (BuildContext context, int index) {
+                return this.spots[index];
+              }),
+        ),
+      );
+    } else {
+      return Expanded(
+        child: Container(
+          color: Colors.green,
+          child: Center(
+            child: Text('Nothing to show...'),
+          ),
+        ),
+      );
+    }
   }
 }
