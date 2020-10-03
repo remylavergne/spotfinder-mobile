@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spotfinder/colors.dart';
+import 'package:spotfinder/views/spot-details.dart';
 
 void main() {
   runApp(MyApp());
@@ -90,15 +91,20 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _searchButton() {
-    return Container(
-      height: 40.0,
-      padding: EdgeInsets.all(12.0),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          shape: BoxShape.rectangle,
-          color: palette['Aquamarine']),
-      child: Center(
-        child: Text("search"),
+    return GestureDetector(
+      onTap: () {
+        print('Search clicked');
+      },
+      child: Container(
+        height: 40.0,
+        padding: EdgeInsets.all(12.0),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            shape: BoxShape.rectangle,
+            color: palette['Aquamarine']),
+        child: Center(
+          child: Text("search"),
+        ),
       ),
     );
   }
@@ -136,46 +142,64 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _spot() {
-    return Card(
-      child: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.circular(15.0),
-              image: DecorationImage(
-                image: NetworkImage(
-                  'https://www.wampark.fr/wp-content/uploads/2020/03/wakeskate8x15.jpg',
+    return GestureDetector(
+      child: Card(
+        child: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(15.0),
+                image: DecorationImage(
+                  image: NetworkImage(
+                    'https://www.wampark.fr/wp-content/uploads/2020/03/wakeskate8x15.jpg',
+                  ),
+                  fit: BoxFit.fill,
                 ),
-                fit: BoxFit.fill,
               ),
+              height: 200.0,
             ),
-            height: 200.0,
-          ),
-          Expanded(
-            child: Positioned.fill(
+            // Expanded(
+            Positioned.fill(
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
                   width: double.maxFinite,
                   height: 30.0,
                   decoration: BoxDecoration(
-                    color: Colors.red[50],
+                    color: palette['HeliotropeGrayTransparent'],
                     borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(15.0),
                       bottomRight: Radius.circular(15.0),
                     ),
                   ),
-                  child: Text('TEST DE TEXTE'),
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    padding: EdgeInsets.only(left: 16.0),
+                    child: Text(
+                      'Hipnotic cable park',
+                      style: GoogleFonts.lato(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+            // ),
+          ],
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
       ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
-      ),
+      onTap: () {
+        debugPrint('Spot clicked');
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SpotDetails()),
+        );
+      },
     );
   }
 }
