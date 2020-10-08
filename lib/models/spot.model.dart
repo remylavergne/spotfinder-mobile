@@ -1,9 +1,59 @@
-class Spot {
-  String name;
-  String picture;
+import 'dart:core';
 
-  Spot(String name, String picture) {
+class Spot {
+  String id;
+  String bio;
+  String name;
+  String address;
+  String country;
+  int disciplines;
+  double longitude;
+  double latitude;
+  int creationDate;
+  int modificationDate;
+  bool allowed;
+  String rider;
+
+  Spot(
+      String id,
+      String bio,
+      String name,
+      String address,
+      String country,
+      int disciplines,
+      double longitude,
+      double latitude,
+      int creationDate,
+      int modificationDate,
+      bool allowed,
+      String rider) {
+    this.id = id;
+    this.bio = bio;
     this.name = name;
-    this.picture = picture;
+    this.address = address;
+    this.country = country;
+    this.disciplines = disciplines;
+    this.longitude = longitude;
+    this.latitude = latitude;
+    this.creationDate = creationDate;
+    this.modificationDate = modificationDate;
+    this.allowed = allowed;
+    this.rider = rider;
+  }
+
+  factory Spot.fromJson(Map<String, dynamic> json) {
+    return Spot(
+        json['id'],
+        json['bio'],
+        json['name'],
+        json['address'],
+        json['country'],
+        json['disciplines'],
+        json['longitude'],
+        json['latitude'],
+        json['creationDate'],
+        json['modificationDate'],
+        json['allowed'],
+        json['rider']);
   }
 }
