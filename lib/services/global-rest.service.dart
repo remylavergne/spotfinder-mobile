@@ -5,8 +5,9 @@ import 'package:http/http.dart' as http;
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/models/mocks/spot.mocks.dart';
 import 'package:spotfinder/models/spot.model.dart';
+import 'package:spotfinder/services/spot-rest.service.dart';
 
-class RestService {
+class RestService implements SpotService {
   RestService._privateConstructor();
 
   static final RestService _instance = RestService._privateConstructor();
@@ -15,11 +16,12 @@ class RestService {
     return _instance;
   }
 
+  @override
   Future<List<Spot>> getSpots() async {
     if (Constants.mockEnabled) {
       return Future.value(SpotMocks.getSpots());
     } else {
-      final response = await http.get(Constants.getBaseApi() + '');
+      final response = await http.get(Constants.getBaseApi() + '/spot/all');
 
       if (response.statusCode == 200) {
         final jsonSpots = jsonDecode(response.body);
@@ -32,5 +34,23 @@ class RestService {
         throw Exception('Failed to get spots');
       }
     }
+  }
+
+  @override
+  Future<void> createNewSpot(Spot s) {
+    // TODO: implement createNewSpot
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Spot> getSpotById(String id) {
+    // TODO: implement getSpotById
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Spot>> getSpotsByRider(String id) {
+    // TODO: implement getSpotsByRider
+    throw UnimplementedError();
   }
 }

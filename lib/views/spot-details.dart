@@ -25,20 +25,35 @@ class _SpotDetailsState extends State<SpotDetails> {
     final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: Container(
-        padding: EdgeInsets.only(
-          top: 50.0,
-          left: 12.0,
-          right: 12.0,
-        ),
-        child: Column(
-          children: [
-            this._imageHeader(),
-            this._imagesUploadRecently(screenSize),
-            this._globalInformations(),
-          ],
-        ),
-      ),
+      body: FutureBuilder(
+        future: this.spots,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final spots = snapshot.data as List<Spot>;
+
+            debugPrint('Nombre de spots reçus ${spots.length}');
+            return Container();
+          } else {
+            return Container(
+              child: CircularProgressIndicator(),
+            );
+          }
+      })
+      
+      // Container(
+      //   padding: EdgeInsets.only(
+      //     top: 50.0,
+      //     left: 12.0,
+      //     right: 12.0,
+      //   ),
+      //   child: Column(
+      //     children: [
+      //       this._imageHeader(),
+      //       this._imagesUploadRecently(screenSize),
+      //       this._globalInformations(),
+      //     ],
+      //   ),
+      // ),
     );
   }
 

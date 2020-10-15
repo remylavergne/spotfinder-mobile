@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spotfinder/colors.dart';
+import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/views/spot-details.dart';
+
+import 'models/spot.model.dart';
 
 void main() {
   runApp(MyApp());
@@ -29,25 +32,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Widget> spots = List();
+  Future<List<Spot>> spots;
 
   @override
   void initState() {
-    this.spots.add(this._spot());
-    this.spots.add(this._spot());
-    this.spots.add(this._spot());
-    this.spots.add(this._spot());
-    this.spots.add(this._spot());
-    this.spots.add(this._spot());
-    this.spots.add(this._spot());
-    this.spots.add(this._spot());
-    this.spots.add(this._spot());
-    this.spots.add(this._spot());
-    this.spots.add(this._spot());
-    this.spots.add(this._spot());
-    this.spots.add(this._spot());
-    this.spots.add(this._spot());
-    this.spots.add(this._spot());
+    this.spots = Repository().getSpots();
     super.initState();
   }
 
@@ -110,38 +99,38 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _spotList() {
-    if (this.spots.isNotEmpty) {
-      return Expanded(
-        child: Container(
-          // color: Colors.green,
-          child: ListView.separated(
-              separatorBuilder: (context, index) => Divider(
-                    height: 12.0,
-                    color: Colors.transparent,
-                  ),
-              // padding: EdgeInsets.only(
-              //   top: 0,
-              // ),
-              // shrinkWrap: true,
-              itemCount: this.spots.length,
-              itemBuilder: (BuildContext context, int index) {
-                return this.spots[index];
-              }),
-        ),
-      );
-    } else {
-      return Expanded(
-        child: Container(
-          color: Colors.green,
-          child: Center(
-            child: Text('Nothing to show...'),
-          ),
-        ),
-      );
-    }
+    return FutureBuilder(
+        future: this.spots,
+        builder: (BuildContext context, AsyncSnapshot<List<Spot>> snapshot) {
+          if (snapshot.hasData) {
+            final spots = snapshot.data;
+
+            return Expanded(
+              child: Container(
+                // color: Colors.green,
+                child: ListView.separated(
+                    separatorBuilder: (context, index) => Divider(
+                          height: 12.0,
+                          color: Colors.transparent,
+                        ),
+                    itemCount: spots.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return this._generateSpotItem(spots[index]);
+                    }),
+              ),
+            );
+          } else {
+            return Expanded(
+              child: Container(
+                color: Colors.green,
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+        });
   }
 
-  Widget _spot() {
+  Widget _generateSpotItem(Spot spot) {
     return GestureDetector(
       child: Card(
         child: Stack(

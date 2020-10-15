@@ -1,5 +1,5 @@
 import 'package:spotfinder/models/spot.model.dart';
-import 'package:spotfinder/services/rest.service.dart';
+import 'package:spotfinder/services/global-rest.service.dart';
 
 class Repository {
   Repository._privateConstructor();
