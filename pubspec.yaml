@@ -32,6 +32,8 @@ dependencies:
   google_fonts: ^1.1.0
   http: ^0.12.2
   infinite_scroll_pagination: ^2.2.0+1
+  camera: ^0.5.8+11
+  path: ^1.7.0
 
 dev_dependencies:
   flutter_test:
