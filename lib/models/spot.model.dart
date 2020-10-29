@@ -56,4 +56,10 @@ class Spot {
         json['allowed'],
         json['rider']);
   }
+
+  static List<Spot> fromJsonList(List<dynamic> jsonSpots) {
+    List<Spot> spots =
+        List<Spot>.from(jsonSpots.map((jsonSpot) => Spot.fromJson(jsonSpot)));
+    return spots;
+  }
 }

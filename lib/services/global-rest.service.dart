@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/models/mocks/spot.mocks.dart';
+import 'package:spotfinder/models/pagination.model.dart';
+import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/services/spot-rest.service.dart';
 
@@ -25,7 +27,7 @@ class RestService implements SpotService {
 
       if (response.statusCode == 200) {
         final jsonSpots = jsonDecode(response.body);
-        final spots = List<Spot>.from(
+        List<Spot> spots = List<Spot>.from(
             jsonSpots.map((jsonSpot) => Spot.fromJson(jsonSpot)));
 
         debugPrint(spots[0].bio);
@@ -33,6 +35,27 @@ class RestService implements SpotService {
       } else {
         throw Exception('Failed to get spots');
       }
+    }
+  }
+
+  Future<ResultWrapper<List<Spot>>> getPaginatedSpots(int page, int limit) async {
+    final response = await http.get(Constants.getBaseApi() + '/spots?page=$page&limit=$limit');
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> wrapperMap = jsonDecode(response.body);
+      // Serialize Spots objects
+      List<dynamic> spotsJson = wrapperMap['result'];
+      List<Spot> spots = Spot.fromJsonList(spotsJson);
+      // Serialize Pagination
+       Map<String, dynamic> paginationJson = wrapperMap['pagination'];
+       Pagination pagination = Pagination.fromJson(paginationJson);
+      // Création du ResultWrapper
+      ResultWrapper rw = ResultWrapper.fromJson(wrapperMap, spots);
+      rw.pagination = pagination;
+
+      return rw;
+    } else {
+       throw Exception('Failed to get paginated spots');
     }
   }
 

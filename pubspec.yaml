@@ -31,6 +31,7 @@ dependencies:
   path_provider: ^1.6.18
   google_fonts: ^1.1.0
   http: ^0.12.2
+  infinite_scroll_pagination: ^2.2.0+1
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:spotfinder/colors.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/views/spot-details.dart';
@@ -32,11 +33,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  
+   final PagingController<int, Spot> _pagingController =
+      PagingController(firstPageKey: 0);
+  
   Future<List<Spot>> spots;
 
   @override
   void initState() {
     this.spots = Repository().getSpots();
+    final response = Repository().getPaginatedSpots(0, 20);
     super.initState();
   }
 
