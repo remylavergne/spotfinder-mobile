@@ -8,15 +8,15 @@ class CameraService {
 
   static final CameraService instance = CameraService._privateConstructor();
 
-  void _getFirstCameraAvailable() async {
+  Future<void> initCameras() async {
     WidgetsFlutterBinding.ensureInitialized();
     this._cameras = await availableCameras();
   }
 
-  Future<CameraDescription> getCamera([int number = 0]) async {
+  CameraDescription getCamera([int number = 0]) {
     if (this._cameras.isEmpty) {
-      this._getFirstCameraAvailable();
+      return null;
     }
-    return Future.value(this._cameras[number]);
+    return this._cameras[number];
   }
 }

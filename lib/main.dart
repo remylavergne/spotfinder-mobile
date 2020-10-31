@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:spotfinder/camera.helper.dart';
 import 'package:spotfinder/colors.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/views/spot-details.dart';
+import 'package:spotfinder/views/take-picture.dart';
 
+import 'camera.helper.dart';
 import 'models/spot.model.dart';
 
-void main() {
+void main() async {
+  await CameraService.instance.initCameras();
+
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -20,7 +24,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(),
+      home: TakePictureScreen(
+        camera: CameraService.instance.getCamera(),
+      ),
     );
   }
 }
@@ -33,10 +39,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  
-   final PagingController<int, Spot> _pagingController =
+  final PagingController<int, Spot> _pagingController =
       PagingController(firstPageKey: 0);
-  
+
   Future<List<Spot>> spots;
 
   @override
