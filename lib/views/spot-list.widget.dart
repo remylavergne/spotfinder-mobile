@@ -31,8 +31,7 @@ class _SpotListState extends State<SpotList> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.blue,
-        padding: EdgeInsets.only(top: SpotListConstante.listAdditonalTopPAdding,
+        padding: EdgeInsets.only(top: SpotListConstante.listAdditonalTopPAdding),
         child: this._spotList(),
       ),
     );
