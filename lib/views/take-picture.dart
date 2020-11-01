@@ -89,16 +89,16 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   Widget _pictureAction(BuildContext context) {
-    return GestureDetector(
-      onTap: () async {
-        this._takePicture(context);
-      },
-      onLongPress: () {
-        // TODO: Record clip
-      },
-      child: Expanded(
-        child: Align(
-          alignment: Alignment.bottomCenter,
+    return Positioned.fill(
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: GestureDetector(
+          onTap: () async {
+            this._takePicture(context);
+          },
+          onLongPress: () {
+            // TODO: Record clip
+          },
           child: Container(
             margin: EdgeInsets.only(
               bottom: 16.0,

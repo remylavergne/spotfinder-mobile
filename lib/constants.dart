@@ -9,7 +9,8 @@ class Constants {
     if (mockEnabled) {
       return 'http://localhost:8080';
     } else {
-      return 'http://localhost:8080';
+      return 'http://192.168.1.32:8080'; // macbook
+      // return 'http://localhost:8080'; // macbook
     }
   }
 }
