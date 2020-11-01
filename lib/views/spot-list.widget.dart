@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+
+import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/views/spot-details.dart';
@@ -25,13 +28,15 @@ class _SpotListState extends State<SpotList> {
         .then((List<Spot> spots) => this._getItems(spots));
     // final response = Repository().getPaginatedSpots(0, 20);
     super.initState();
+    SharedPrefsHelper.instance.createUniqueUserId();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.only(top: SpotListConstante.listAdditonalTopPAdding),
+        padding:
+            EdgeInsets.only(top: SpotListConstante.listAdditonalTopPAdding),
         child: this._spotList(),
       ),
     );
@@ -47,7 +52,8 @@ class _SpotListState extends State<SpotList> {
               child: Container(
                 child: GridView.count(
                     primary: false,
-                    padding: const EdgeInsets.all(SpotListConstante.listGlobalPadding),
+                    padding: const EdgeInsets.all(
+                        SpotListConstante.listGlobalPadding),
                     crossAxisSpacing: SpotListConstante.crossAxisSpacing,
                     mainAxisSpacing: SpotListConstante.mainAxisSpacing,
                     crossAxisCount: 2,
