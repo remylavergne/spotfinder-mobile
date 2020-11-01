@@ -1,4 +1,4 @@
-package dev.remylavergne.spotfinder
+package com.example.spotfinder
 
 import io.flutter.embedding.android.FlutterActivity
 
