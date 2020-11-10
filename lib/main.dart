@@ -8,7 +8,7 @@ import 'camera.helper.dart';
 
 void main() async {
   await CameraService.instance.initCameras();
-
+  
   runApp(SpotFinderApp());
 }
 

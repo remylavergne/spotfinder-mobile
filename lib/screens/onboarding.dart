@@ -134,9 +134,10 @@ class CreateAccount extends StatelessWidget {
                     ),
                   ),
                 ),
-                GestureDetector(
-                  child: Container(
-                    margin: EdgeInsets.only(bottom: 24.0, top: 16.0),
+                Container(
+                  margin: EdgeInsets.only(bottom: 10.0),
+                  child: FlatButton(
+                    onPressed: () {},
                     child: Text(
                       'J\'ai déjà un ID',
                       style: TextStyle(
@@ -146,10 +147,7 @@ class CreateAccount extends StatelessWidget {
                       ),
                     ),
                   ),
-                  onTap: () {
-                    debugPrint('Ouvrir connexion compte existant');
-                  },
-                )
+                ),
               ])),
     );
   }
