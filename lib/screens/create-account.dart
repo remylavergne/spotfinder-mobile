@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spotfinder/repositories/repository.dart';
-import 'package:spotfinder/screens/main.dart';
+import 'package:spotfinder/screens/feed.dart';
 import 'package:spotfinder/screens/retrieve-account.dart';
 
 class CreateAccount extends StatefulWidget {
@@ -143,7 +143,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => MainActivity()));
+                              builder: (context) => Feed()));
                     } else {
                       creationError = true;
                       _formKey.currentState.validate();

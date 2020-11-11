@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:spotfinder/camera.helper.dart';
+import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/screens/create-account.dart';
-import 'package:spotfinder/views/spot-list.widget.dart';
-import 'package:spotfinder/views/take-picture.dart';
+import 'package:spotfinder/screens/feed.dart';
 
 import 'camera.helper.dart';
 
@@ -13,10 +13,6 @@ void main() async {
 }
 
 class SpotFinderApp extends StatelessWidget {
-  final TakePictureScreen takePictureScreen =
-      TakePictureScreen(camera: CameraService.instance.getCamera());
-  final SpotList spotListScreen = SpotList();
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -28,7 +24,23 @@ class SpotFinderApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: CreateAccount(), // TODO: Logique
+        home: FutureBuilder(
+            future: SharedPrefsHelper.instance.isConnected(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                bool isConnected = snapshot.data;
+
+                if (isConnected) {
+                  return Feed();
+                } else {
+                  return CreateAccount();
+                }
+              } else {
+                return Container(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            }),
       ),
     );
   }

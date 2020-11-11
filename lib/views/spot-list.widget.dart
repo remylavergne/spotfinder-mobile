@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/views/spot-details.dart';
@@ -28,7 +27,6 @@ class _SpotListState extends State<SpotList> {
         .then((List<Spot> spots) => this._getItems(spots));
     // final response = Repository().getPaginatedSpots(0, 20);
     super.initState();
-    SharedPrefsHelper.instance.createUniqueUserId();
   }
 
   @override
