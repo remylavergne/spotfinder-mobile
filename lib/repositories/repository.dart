@@ -1,5 +1,6 @@
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
+import 'package:spotfinder/models/user.model.dart';
 import 'package:spotfinder/services/global-rest.service.dart';
 
 class Repository {
@@ -9,6 +10,16 @@ class Repository {
 
   factory Repository() {
     return _instance;
+  }
+
+  Future<bool> createAccount(String username) async {
+    User user = await RestService().createAccount(username);
+    // TODO: If user well created -> persist info into SharedPrefs
+    if (user != null) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   Future<List<Spot>> getSpots() {

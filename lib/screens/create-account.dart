@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:spotfinder/repositories/repository.dart';
+import 'package:spotfinder/screens/main.dart';
 import 'package:spotfinder/screens/retrieve-account.dart';
 
 class CreateAccount extends StatelessWidget {
@@ -80,6 +82,7 @@ class CreateAccount extends StatelessWidget {
   }
 
   Widget _form(BuildContext context) {
+    final usernameController = TextEditingController();
     return Container(
       margin: EdgeInsets.only(
         left: 16.0,
@@ -92,6 +95,7 @@ class CreateAccount extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(bottom: 16.0),
               child: TextFormField(
+                controller: usernameController,
                 decoration: InputDecoration(
                   hintStyle: TextStyle(
                     color: Color(0xFF989898),
@@ -122,10 +126,19 @@ class CreateAccount extends StatelessWidget {
                 color: Color(0xFF276FBF),
                 textColor: Colors.white,
                 height: 56.0,
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState.validate()) {
-                    // TODO: Redirection vers la home
-
+                    bool success = await Repository()
+                        .createAccount(usernameController.text);
+                    if (success) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MainActivity()));
+                    } else {
+                      // TODO: Display an error
+                      debugPrint('Creation error');
+                    }
                   }
                 },
                 child: Text(
