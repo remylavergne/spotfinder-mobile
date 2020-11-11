@@ -70,17 +70,17 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
           // TabBar
           Container(
             margin: EdgeInsets.only(top: 16.0),
+            // padding: EdgeInsets.only(bottom: 10.0),
             child: TabBar(
-              tabs: [Icon(Icons.search), Icon(Icons.bluetooth_searching)],
+              indicatorColor: Color(0xFFD4D4D4),
+              labelPadding: EdgeInsets.only(bottom: 10.0),
+              tabs: [
+                Text('Proches'), Text('Nouveaux')],
               controller: this.tabController,
             ),
           )
         ],
       ),
     );
-  }
-
-  Widget _body() {
-    return Container();
   }
 }
