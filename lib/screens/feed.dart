@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:spotfinder/camera.helper.dart';
+import 'package:spotfinder/views/take-picture.dart';
 
 class Feed extends StatefulWidget {
   @override
@@ -21,13 +23,47 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
 
     return Scaffold(
       body: Container(
-        child: Column(
+        // color: Colors.yellow,
+        child: Stack(
+          fit: StackFit.expand,
           children: [
-            this._header(mediaQueryData, this.tabController),
-            Expanded(
-              child: TabBarView(
-                controller: this.tabController,
-                children: [Icon(Icons.ac_unit_sharp), Icon(Icons.search)],
+            // Background view
+            Container(
+              child: Column(
+                children: [
+                  this._header(mediaQueryData, this.tabController),
+                  Expanded(
+                    child: TabBarView(
+                      controller: this.tabController,
+                      children: [Icon(Icons.ac_unit_sharp), Icon(Icons.search)],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Button to create
+            Container(
+              alignment: Alignment.bottomCenter,
+              width: 180.0,
+              margin: EdgeInsets.only(bottom: mediaQueryData.padding.bottom),
+              child: FlatButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+                color: Color(0xFF148F12),
+                textColor: Colors.white,
+                height: 56.0,
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => TakePictureScreen(
+                              camera: CameraService.instance.getCamera())));
+                },
+                child: Text(
+                  'Créer',
+                  style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ],
@@ -74,8 +110,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
             child: TabBar(
               indicatorColor: Color(0xFFD4D4D4),
               labelPadding: EdgeInsets.only(bottom: 10.0),
-              tabs: [
-                Text('Proches'), Text('Nouveaux')],
+              tabs: [Text('Proches'), Text('Nouveaux')],
               controller: this.tabController,
             ),
           )

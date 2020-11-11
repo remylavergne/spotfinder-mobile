@@ -43,10 +43,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     return Scaffold(
       body: Container(
         child: Stack(
+          fit: StackFit.expand,
           children: [
             this._cameraPreview(),
-            this._header(),
-            this._pictureAction(context),
+            this._actionsButtons(context),
           ],
         ),
       ),
@@ -65,6 +65,58 @@ class TakePictureScreenState extends State<TakePictureScreen> {
           color: Colors.white,
           fontSize: 24.0,
         ),
+      ),
+    );
+  }
+
+  Widget _actionsButtons(BuildContext context) {
+    MediaQueryData mediaQueryData = MediaQuery.of(context);
+
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.only(left: 16.0, right: 16.0),
+      alignment: Alignment.bottomCenter,
+      padding: EdgeInsets.only(bottom: mediaQueryData.padding.bottom),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            width: 180.0,
+            child: FlatButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+              color: Color(0xFF011627),
+              textColor: Colors.white,
+              height: 56.0,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(
+                'Retour',
+                style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          Container(
+            width: 180.0,
+            child: FlatButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+              color: Color(0xFF276FBF),
+              textColor: Colors.white,
+              height: 56.0,
+              onPressed: () {
+                this._takePicture(context);
+              },
+              child: Text(
+                'Capturer',
+                style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
