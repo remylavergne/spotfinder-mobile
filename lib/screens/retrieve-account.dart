@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:spotfinder/repositories/repository.dart';
+import 'package:spotfinder/screens/main.dart';
 
-class RetrieveAccount extends StatelessWidget {
+class RetrieveAccount extends StatefulWidget {
   RetrieveAccount({Key key}) : super(key: key);
 
-  final controller = PageController(initialPage: 0);
+  @override
+  State<StatefulWidget> createState() => _RetrieveAccount();
+}
+
+class _RetrieveAccount extends State<RetrieveAccount> {
+  PageController controller = PageController(initialPage: 0);
   final _formKey = GlobalKey<FormState>();
 
+  bool creationError = false;
+  TextEditingController idController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,12 +101,13 @@ class RetrieveAccount extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.only(bottom: 16.0),
                   child: TextFormField(
+                    controller: this.idController,
                     decoration: InputDecoration(
                       hintStyle: TextStyle(
                         color: Color(0xFF989898),
                         fontSize: 18.0,
                       ),
-                      hintText: 'Entre ton id',
+                      hintText: 'Entres ton id',
                       fillColor: Colors.white,
                       filled: true,
                       border: OutlineInputBorder(
@@ -108,8 +118,12 @@ class RetrieveAccount extends StatelessWidget {
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Please enter your id';
+                      } else if (creationError) {
+                        creationError = false;
+                        return 'This id doesn\'t exist';
+                      } else {
+                        return null;
                       }
-                      return null;
                     },
                   ),
                 ),
@@ -147,14 +161,19 @@ class RetrieveAccount extends StatelessWidget {
                           color: Color(0xFF276FBF),
                           textColor: Colors.white,
                           height: 56.0,
-                          onPressed: () {
+                          onPressed: () async {
                             if (_formKey.currentState.validate()) {
-                              // TODO: Check backend + redirect
-
-                              //             Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(builder: (context) => RetrieveAccount()),
-                              // );
+                              bool success = await Repository()
+                                  .connectUserById(this.idController.text);
+                              if (success) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => MainActivity()));
+                              } else {
+                                creationError = true;
+                                _formKey.currentState.validate();
+                              }
                             }
                           },
                           child: Text(

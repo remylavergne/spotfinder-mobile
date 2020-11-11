@@ -92,4 +92,17 @@ class RestService implements SpotService {
       return null;
     }
   }
+
+  Future<User> connectUserById(String id) async {
+     final response = await http.post(Constants.getBaseApi() + '/user/connect',
+        body: id);
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = jsonDecode(response.body);
+      User user = User.fromJson(data);
+      return user;
+    } else {
+      return null;
+    }
+  }
 }
