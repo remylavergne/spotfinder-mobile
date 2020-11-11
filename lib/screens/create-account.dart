@@ -106,7 +106,7 @@ class _CreateAccountState extends State<CreateAccount> {
                     color: Color(0xFF989898),
                     fontSize: 18.0,
                   ),
-                  hintText: 'Entre ton pseudo',
+                  hintText: 'Choisis ton pseudo',
                   fillColor: Colors.white,
                   filled: true,
                   border: OutlineInputBorder(

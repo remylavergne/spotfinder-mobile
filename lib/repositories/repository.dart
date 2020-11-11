@@ -1,3 +1,4 @@
+import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/models/user.model.dart';
@@ -14,7 +15,17 @@ class Repository {
 
   Future<bool> createAccount(String username) async {
     User user = await RestService().createAccount(username);
-    // TODO: If user well created -> persist info into SharedPrefs
+    SharedPrefsHelper.instance.saveUser(user);
+    if (user != null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> connectUserById(String id) async {
+    User user = await RestService().connectUserById(id);
+    SharedPrefsHelper.instance.saveUser(user);
     if (user != null) {
       return true;
     } else {
