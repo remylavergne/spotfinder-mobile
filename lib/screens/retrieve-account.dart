@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class CreateAccount extends StatelessWidget {
-  CreateAccount({Key key}) : super(key: key);
+class RetrieveAccount extends StatelessWidget {
+  RetrieveAccount({Key key}) : super(key: key);
 
   final controller = PageController(initialPage: 0);
   final _formKey = GlobalKey<FormState>();
@@ -14,7 +14,7 @@ class CreateAccount extends StatelessWidget {
         children: [
           this._viewPager(),
           this._appName(),
-          Positioned.fill(child: this._form()),
+          Positioned.fill(child: this._form(context)),
         ],
       ),
     );
@@ -78,7 +78,7 @@ class CreateAccount extends StatelessWidget {
     );
   }
 
-  Widget _form() {
+  Widget _form(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(
         left: 16.0,
@@ -97,7 +97,7 @@ class CreateAccount extends StatelessWidget {
                         color: Color(0xFF989898),
                         fontSize: 18.0,
                       ),
-                      hintText: 'Entre ton pseudo',
+                      hintText: 'Entre ton id',
                       fillColor: Colors.white,
                       filled: true,
                       border: OutlineInputBorder(
@@ -107,7 +107,7 @@ class CreateAccount extends StatelessWidget {
                     ),
                     validator: (value) {
                       if (value.isEmpty) {
-                        return 'Please enter your username';
+                        return 'Please enter your id';
                       }
                       return null;
                     },
@@ -115,41 +115,58 @@ class CreateAccount extends StatelessWidget {
                 ),
                 Container(
                   width: double.infinity,
-                  child: FlatButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4.0),
-                    ),
-                    color: Color(0xFF276FBF),
-                    textColor: Colors.white,
-                    height: 56.0,
-                    onPressed: () {
-                      if (_formKey.currentState.validate()) {
-                        // TODO: Redirection vers la home
-                      }
-                    },
-                    child: Text(
-                      'Continuer',
-                      style: TextStyle(
-                          fontSize: 26.0, fontWeight: FontWeight.bold),
-                    ),
+                  margin: EdgeInsets.only(bottom: 55.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: 180.0,
+                        child: FlatButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                          color: Color(0xFF011627),
+                          textColor: Colors.white,
+                          height: 56.0,
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            'Retour',
+                            style: TextStyle(
+                                fontSize: 26.0, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 180.0,
+                        child: FlatButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                          color: Color(0xFF276FBF),
+                          textColor: Colors.white,
+                          height: 56.0,
+                          onPressed: () {
+                            if (_formKey.currentState.validate()) {
+                              // TODO: Check backend + redirect
+
+                              //             Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(builder: (context) => RetrieveAccount()),
+                              // );
+                            }
+                          },
+                          child: Text(
+                            'Continuer',
+                            style: TextStyle(
+                                fontSize: 26.0, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                GestureDetector(
-                  child: Container(
-                    margin: EdgeInsets.only(bottom: 24.0, top: 16.0),
-                    child: Text(
-                      'J\'ai déjà un ID',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    debugPrint('Ouvrir connexion compte existant');
-                  },
-                )
               ])),
     );
   }

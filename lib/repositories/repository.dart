@@ -15,9 +15,7 @@ class Repository {
     return RestService().getSpots();
   }
 
-   Future<ResultWrapper<List<Spot>>> getPaginatedSpots(int page, int limit) {
-     return RestService().getPaginatedSpots(page, limit);
-   }
-
-
+  Future<ResultWrapper<List<Spot>>> getPaginatedSpots(int page, int limit) {
+    return RestService().getPaginatedSpots(page, limit);
+  }
 }

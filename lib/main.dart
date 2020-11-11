@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spotfinder/camera.helper.dart';
-import 'package:spotfinder/screens/onboarding.dart';
+import 'package:spotfinder/screens/create-account.dart';
 import 'package:spotfinder/views/spot-list.widget.dart';
 import 'package:spotfinder/views/take-picture.dart';
 
