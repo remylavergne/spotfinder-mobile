@@ -24,7 +24,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
         child: Column(
           children: [
             this._header(mediaQueryData, this.tabController),
-            Container(
+            Expanded(
               child: TabBarView(
                 controller: this.tabController,
                 children: [Icon(Icons.ac_unit_sharp), Icon(Icons.search)],
