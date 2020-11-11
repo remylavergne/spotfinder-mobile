@@ -4,12 +4,16 @@ import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/main.dart';
 import 'package:spotfinder/screens/retrieve-account.dart';
 
-class CreateAccount extends StatelessWidget {
+class CreateAccount extends StatefulWidget {
   CreateAccount({Key key}) : super(key: key);
 
+  @override
+  State<StatefulWidget> createState() => _CreateAccountState();
+}
+
+class _CreateAccountState extends State<CreateAccount> {
   final controller = PageController(initialPage: 0);
   final _formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,6 +87,7 @@ class CreateAccount extends StatelessWidget {
 
   Widget _form(BuildContext context) {
     final usernameController = TextEditingController();
+    bool creationError = false;
     return Container(
       margin: EdgeInsets.only(
         left: 16.0,
@@ -112,8 +117,12 @@ class CreateAccount extends StatelessWidget {
                 validator: (value) {
                   if (value.isEmpty) {
                     return 'Please enter your username';
+                  } else if (creationError) {
+                    creationError = false;
+                    return 'This username already exist. Please choose another one.';
+                  } else {
+                    return null;
                   }
-                  return null;
                 },
               ),
             ),
@@ -136,8 +145,8 @@ class CreateAccount extends StatelessWidget {
                           MaterialPageRoute(
                               builder: (context) => MainActivity()));
                     } else {
-                      // TODO: Display an error
-                      debugPrint('Creation error');
+                      creationError = true;
+                      _formKey.currentState.validate();
                     }
                   }
                 },
