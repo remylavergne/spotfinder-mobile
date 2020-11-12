@@ -2,12 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:spotfinder/repositories/repository.dart';
 
 class DisplayPictureScreen extends StatefulWidget {
   final String imagePath;
+  final Position position;
 
-  DisplayPictureScreen({Key key, @required this.imagePath}) : super(key: key);
+  DisplayPictureScreen({Key key, @required this.imagePath, this.position})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _DisplayPictureScreenState();

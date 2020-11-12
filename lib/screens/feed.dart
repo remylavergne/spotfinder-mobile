@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:spotfinder/camera.helper.dart';
+import 'package:spotfinder/helpers/geolocation.helper.dart';
 import 'package:spotfinder/views/take-picture.dart';
 
 class Feed extends StatefulWidget {
@@ -52,12 +54,31 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                 color: Color(0xFF148F12),
                 textColor: Colors.white,
                 height: 56.0,
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => TakePictureScreen(
-                              camera: CameraService.instance.getCamera())));
+                onPressed: () async {
+                  bool hasPermission =
+                      await GeolocationHelper.instance.hasPermission();
+
+                  if (hasPermission) {
+                    this.getCurrentPositionAndNavigate(context);
+                  } else {
+                    bool hasDenied =
+                        await GeolocationHelper.instance.hasDenied();
+
+                    if (hasDenied) {
+                      this.showSnackbarSettings(context);
+                    } else {
+                      GeolocationHelper.instance
+                          .askForPermissions()
+                          .then((LocationPermission p) {
+                        if (p == LocationPermission.always ||
+                            p == LocationPermission.whileInUse) {
+                          this.getCurrentPositionAndNavigate(context);
+                        } else {
+                          this.showSnackbarSettings(context);
+                        }
+                      });
+                    }
+                  }
                 },
                 child: Text(
                   'Créer',
@@ -118,291 +139,428 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     );
   }
 
+  void showSnackbarSettings(BuildContext context) {
+    final snackBar = SnackBar(
+      content: Text('Vous devez accepter la localisaiton.'),
+      action: SnackBarAction(
+        label: 'Settings',
+        onPressed: () {
+          // TODO: Ouvrir les settings avec l'API Geoloc
+        },
+      ),
+    );
+
+    Scaffold.of(context).showSnackBar(snackBar);
+  }
+
+  void getCurrentPositionAndNavigate(BuildContext context) {
+    GeolocationHelper.instance.getCurrentPosition().then((Position position) =>
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => TakePictureScreen(
+                    position: position,
+                    camera: CameraService.instance.getCamera()))));
+  }
+
   Widget _gridCloseSpotMOCK() {
     return GridView.count(
       padding: EdgeInsets.only(top: 0),
       crossAxisCount: 3,
-    children: [
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://www.skatereview.com/wp-content/uploads/2017/07/skateboard-trick-tipp-nollie-heelflip.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.pinimg.com/originals/f2/26/15/f22615c8787e5e99406c22c791d62d32.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://www.activethrills.com/wp-content/uploads/2017/09/skateboard-tricks-780x400.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.ytimg.com/vi/gSEvU9drzfw/maxresdefault.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.ytimg.com/vi/9hySkXBQJTM/hqdefault.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.pinimg.com/originals/c5/2b/5b/c52b5b980bbfe3e79993823bb93149f7.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://c0.wallpaperflare.com/preview/67/584/1008/man-skate-board-trick.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://www.skatereview.com/wp-content/uploads/2017/07/skateboard-trick-tipp-nollie-heelflip.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.pinimg.com/originals/f2/26/15/f22615c8787e5e99406c22c791d62d32.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://www.activethrills.com/wp-content/uploads/2017/09/skateboard-tricks-780x400.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.ytimg.com/vi/gSEvU9drzfw/maxresdefault.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.ytimg.com/vi/9hySkXBQJTM/hqdefault.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.pinimg.com/originals/c5/2b/5b/c52b5b980bbfe3e79993823bb93149f7.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://c0.wallpaperflare.com/preview/67/584/1008/man-skate-board-trick.jpg', fit: BoxFit.cover))),
-          GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://www.skatereview.com/wp-content/uploads/2017/07/skateboard-trick-tipp-nollie-heelflip.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.pinimg.com/originals/f2/26/15/f22615c8787e5e99406c22c791d62d32.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://www.activethrills.com/wp-content/uploads/2017/09/skateboard-tricks-780x400.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.ytimg.com/vi/gSEvU9drzfw/maxresdefault.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.ytimg.com/vi/9hySkXBQJTM/hqdefault.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.pinimg.com/originals/c5/2b/5b/c52b5b980bbfe3e79993823bb93149f7.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://c0.wallpaperflare.com/preview/67/584/1008/man-skate-board-trick.jpg', fit: BoxFit.cover))),
-          GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://www.skatereview.com/wp-content/uploads/2017/07/skateboard-trick-tipp-nollie-heelflip.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.pinimg.com/originals/f2/26/15/f22615c8787e5e99406c22c791d62d32.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://www.activethrills.com/wp-content/uploads/2017/09/skateboard-tricks-780x400.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.ytimg.com/vi/gSEvU9drzfw/maxresdefault.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.ytimg.com/vi/9hySkXBQJTM/hqdefault.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.pinimg.com/originals/c5/2b/5b/c52b5b980bbfe3e79993823bb93149f7.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://c0.wallpaperflare.com/preview/67/584/1008/man-skate-board-trick.jpg', fit: BoxFit.cover))),
-          GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://www.skatereview.com/wp-content/uploads/2017/07/skateboard-trick-tipp-nollie-heelflip.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.pinimg.com/originals/f2/26/15/f22615c8787e5e99406c22c791d62d32.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://www.activethrills.com/wp-content/uploads/2017/09/skateboard-tricks-780x400.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.ytimg.com/vi/gSEvU9drzfw/maxresdefault.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.ytimg.com/vi/9hySkXBQJTM/hqdefault.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.pinimg.com/originals/c5/2b/5b/c52b5b980bbfe3e79993823bb93149f7.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://c0.wallpaperflare.com/preview/67/584/1008/man-skate-board-trick.jpg', fit: BoxFit.cover))),
-          GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://www.skatereview.com/wp-content/uploads/2017/07/skateboard-trick-tipp-nollie-heelflip.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.pinimg.com/originals/f2/26/15/f22615c8787e5e99406c22c791d62d32.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://www.activethrills.com/wp-content/uploads/2017/09/skateboard-tricks-780x400.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.ytimg.com/vi/gSEvU9drzfw/maxresdefault.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.ytimg.com/vi/9hySkXBQJTM/hqdefault.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.pinimg.com/originals/c5/2b/5b/c52b5b980bbfe3e79993823bb93149f7.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://c0.wallpaperflare.com/preview/67/584/1008/man-skate-board-trick.jpg', fit: BoxFit.cover))),
-          GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://www.skatereview.com/wp-content/uploads/2017/07/skateboard-trick-tipp-nollie-heelflip.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.pinimg.com/originals/f2/26/15/f22615c8787e5e99406c22c791d62d32.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://www.activethrills.com/wp-content/uploads/2017/09/skateboard-tricks-780x400.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.ytimg.com/vi/gSEvU9drzfw/maxresdefault.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.ytimg.com/vi/9hySkXBQJTM/hqdefault.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.pinimg.com/originals/c5/2b/5b/c52b5b980bbfe3e79993823bb93149f7.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://c0.wallpaperflare.com/preview/67/584/1008/man-skate-board-trick.jpg', fit: BoxFit.cover))),
-          GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://www.skatereview.com/wp-content/uploads/2017/07/skateboard-trick-tipp-nollie-heelflip.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.pinimg.com/originals/f2/26/15/f22615c8787e5e99406c22c791d62d32.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://www.activethrills.com/wp-content/uploads/2017/09/skateboard-tricks-780x400.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.ytimg.com/vi/gSEvU9drzfw/maxresdefault.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.ytimg.com/vi/9hySkXBQJTM/hqdefault.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://i.pinimg.com/originals/c5/2b/5b/c52b5b980bbfe3e79993823bb93149f7.jpg', fit: BoxFit.cover))),
-      GridTile(
-        child: Container(
-          decoration:
-      BoxDecoration(border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network('https://c0.wallpaperflare.com/preview/67/584/1008/man-skate-board-trick.jpg', fit: BoxFit.cover))),
-    ],);
+      children: [
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://www.skatereview.com/wp-content/uploads/2017/07/skateboard-trick-tipp-nollie-heelflip.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.pinimg.com/originals/f2/26/15/f22615c8787e5e99406c22c791d62d32.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://www.activethrills.com/wp-content/uploads/2017/09/skateboard-tricks-780x400.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.ytimg.com/vi/gSEvU9drzfw/maxresdefault.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.ytimg.com/vi/9hySkXBQJTM/hqdefault.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.pinimg.com/originals/c5/2b/5b/c52b5b980bbfe3e79993823bb93149f7.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://c0.wallpaperflare.com/preview/67/584/1008/man-skate-board-trick.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://www.skatereview.com/wp-content/uploads/2017/07/skateboard-trick-tipp-nollie-heelflip.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.pinimg.com/originals/f2/26/15/f22615c8787e5e99406c22c791d62d32.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://www.activethrills.com/wp-content/uploads/2017/09/skateboard-tricks-780x400.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.ytimg.com/vi/gSEvU9drzfw/maxresdefault.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.ytimg.com/vi/9hySkXBQJTM/hqdefault.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.pinimg.com/originals/c5/2b/5b/c52b5b980bbfe3e79993823bb93149f7.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://c0.wallpaperflare.com/preview/67/584/1008/man-skate-board-trick.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://www.skatereview.com/wp-content/uploads/2017/07/skateboard-trick-tipp-nollie-heelflip.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.pinimg.com/originals/f2/26/15/f22615c8787e5e99406c22c791d62d32.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://www.activethrills.com/wp-content/uploads/2017/09/skateboard-tricks-780x400.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.ytimg.com/vi/gSEvU9drzfw/maxresdefault.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.ytimg.com/vi/9hySkXBQJTM/hqdefault.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.pinimg.com/originals/c5/2b/5b/c52b5b980bbfe3e79993823bb93149f7.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://c0.wallpaperflare.com/preview/67/584/1008/man-skate-board-trick.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://www.skatereview.com/wp-content/uploads/2017/07/skateboard-trick-tipp-nollie-heelflip.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.pinimg.com/originals/f2/26/15/f22615c8787e5e99406c22c791d62d32.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://www.activethrills.com/wp-content/uploads/2017/09/skateboard-tricks-780x400.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.ytimg.com/vi/gSEvU9drzfw/maxresdefault.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.ytimg.com/vi/9hySkXBQJTM/hqdefault.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.pinimg.com/originals/c5/2b/5b/c52b5b980bbfe3e79993823bb93149f7.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://c0.wallpaperflare.com/preview/67/584/1008/man-skate-board-trick.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://www.skatereview.com/wp-content/uploads/2017/07/skateboard-trick-tipp-nollie-heelflip.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.pinimg.com/originals/f2/26/15/f22615c8787e5e99406c22c791d62d32.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://www.activethrills.com/wp-content/uploads/2017/09/skateboard-tricks-780x400.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.ytimg.com/vi/gSEvU9drzfw/maxresdefault.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.ytimg.com/vi/9hySkXBQJTM/hqdefault.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.pinimg.com/originals/c5/2b/5b/c52b5b980bbfe3e79993823bb93149f7.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://c0.wallpaperflare.com/preview/67/584/1008/man-skate-board-trick.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://www.skatereview.com/wp-content/uploads/2017/07/skateboard-trick-tipp-nollie-heelflip.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.pinimg.com/originals/f2/26/15/f22615c8787e5e99406c22c791d62d32.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://www.activethrills.com/wp-content/uploads/2017/09/skateboard-tricks-780x400.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.ytimg.com/vi/gSEvU9drzfw/maxresdefault.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.ytimg.com/vi/9hySkXBQJTM/hqdefault.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.pinimg.com/originals/c5/2b/5b/c52b5b980bbfe3e79993823bb93149f7.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://c0.wallpaperflare.com/preview/67/584/1008/man-skate-board-trick.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://www.skatereview.com/wp-content/uploads/2017/07/skateboard-trick-tipp-nollie-heelflip.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.pinimg.com/originals/f2/26/15/f22615c8787e5e99406c22c791d62d32.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://www.activethrills.com/wp-content/uploads/2017/09/skateboard-tricks-780x400.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.ytimg.com/vi/gSEvU9drzfw/maxresdefault.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.ytimg.com/vi/9hySkXBQJTM/hqdefault.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.pinimg.com/originals/c5/2b/5b/c52b5b980bbfe3e79993823bb93149f7.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://c0.wallpaperflare.com/preview/67/584/1008/man-skate-board-trick.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://www.skatereview.com/wp-content/uploads/2017/07/skateboard-trick-tipp-nollie-heelflip.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.pinimg.com/originals/f2/26/15/f22615c8787e5e99406c22c791d62d32.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://www.activethrills.com/wp-content/uploads/2017/09/skateboard-tricks-780x400.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.ytimg.com/vi/gSEvU9drzfw/maxresdefault.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.ytimg.com/vi/9hySkXBQJTM/hqdefault.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://i.pinimg.com/originals/c5/2b/5b/c52b5b980bbfe3e79993823bb93149f7.jpg',
+                    fit: BoxFit.cover))),
+        GridTile(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 0.5)),
+                child: Image.network(
+                    'https://c0.wallpaperflare.com/preview/67/584/1008/man-skate-board-trick.jpg',
+                    fit: BoxFit.cover))),
+      ],
+    );
   }
 }

@@ -1,16 +1,19 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:spotfinder/views/display-picture-to-create.dart';
 
 class TakePictureScreen extends StatefulWidget {
   final CameraDescription camera;
+  final Position position;
 
   const TakePictureScreen({
     Key key,
     @required this.camera,
+    @required this.position,
   }) : super(key: key);
 
   @override
@@ -161,7 +164,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       Navigator.push(
         ctx,
         MaterialPageRoute(
-          builder: (context) => DisplayPictureScreen(imagePath: path),
+          builder: (context) => DisplayPictureScreen(
+            imagePath: path,
+            position: widget.position,
+          ),
         ),
       );
     } catch (e) {
