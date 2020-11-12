@@ -6,7 +6,10 @@ class GeolocationHelper {
   static final GeolocationHelper instance =
       GeolocationHelper._privateConstructor();
 
-  checkPermission() {}
+  /// First time, [LocationPermission] is 
+  Future<LocationPermission> whichPermission() async {
+    return await Geolocator.checkPermission();
+  }
 
   Future<bool> hasPermission() async {
     LocationPermission permission = await Geolocator.checkPermission();

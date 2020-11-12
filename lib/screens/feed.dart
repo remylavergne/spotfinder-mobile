@@ -55,29 +55,23 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                 textColor: Colors.white,
                 height: 56.0,
                 onPressed: () async {
-                  bool hasPermission =
-                      await GeolocationHelper.instance.hasPermission();
+                  // Get permission type
+                  LocationPermission locationPermission =
+                      await GeolocationHelper.instance.whichPermission();
 
-                  if (hasPermission) {
-                    this.getCurrentPositionAndNavigate(context);
-                  } else {
-                    bool hasDenied =
-                        await GeolocationHelper.instance.hasDenied();
-
-                    if (hasDenied) {
+                  switch (locationPermission) {
+                    case LocationPermission.always:
+                    case LocationPermission.whileInUse:
+                      this.getCurrentPositionAndNavigate(context);
+                      break;
+                    case LocationPermission.denied:
+                      this.askPermissionAndNavigate(context);
+                      break;
+                    case LocationPermission.deniedForever:
                       this.showSnackbarSettings(context);
-                    } else {
-                      GeolocationHelper.instance
-                          .askForPermissions()
-                          .then((LocationPermission p) {
-                        if (p == LocationPermission.always ||
-                            p == LocationPermission.whileInUse) {
-                          this.getCurrentPositionAndNavigate(context);
-                        } else {
-                          this.showSnackbarSettings(context);
-                        }
-                      });
-                    }
+                      break;
+                    default:
+                      this.askPermissionAndNavigate(context);
                   }
                 },
                 child: Text(
@@ -151,6 +145,17 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     );
 
     Scaffold.of(context).showSnackBar(snackBar);
+  }
+
+  void askPermissionAndNavigate(BuildContext context) {
+    GeolocationHelper.instance.askForPermissions().then((LocationPermission p) {
+      if (p == LocationPermission.always ||
+          p == LocationPermission.whileInUse) {
+        this.getCurrentPositionAndNavigate(context);
+      } else {
+        this.showSnackbarSettings(context);
+      }
+    });
   }
 
   void getCurrentPositionAndNavigate(BuildContext context) {
