@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
@@ -39,5 +41,9 @@ class Repository {
 
   Future<ResultWrapper<List<Spot>>> getPaginatedSpots(int page, int limit) {
     return RestService().getPaginatedSpots(page, limit);
+  }
+
+  Future<bool> uploadPicture(File file) {
+    
   }
 }
