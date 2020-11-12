@@ -55,6 +55,12 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                 textColor: Colors.white,
                 height: 56.0,
                 onPressed: () async {
+                  bool isActivate = await GeolocationHelper.instance
+                      .isLocationServiceEnabled();
+                  if (!isActivate) {
+                    this.showSnackbarToEnableLocationService(context);
+                    return;
+                  }
                   // Get permission type
                   LocationPermission locationPermission =
                       await GeolocationHelper.instance.whichPermission();
@@ -133,13 +139,25 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     );
   }
 
+  void showSnackbarToEnableLocationService(BuildContext context) {
+    final snackBar = SnackBar(
+        content: Text('Le service de localisation est inactif.'),
+        action: SnackBarAction(
+            label: 'Activer',
+            onPressed: () async {
+              await Geolocator.openLocationSettings();
+            }));
+
+    Scaffold.of(context).showSnackBar(snackBar);
+  }
+
   void showSnackbarSettings(BuildContext context) {
     final snackBar = SnackBar(
-      content: Text('Vous devez accepter la localisaiton.'),
+      content: Text('La localisation est obligatoire.'),
       action: SnackBarAction(
         label: 'Settings',
-        onPressed: () {
-          // TODO: Ouvrir les settings avec l'API Geoloc
+        onPressed: () async {
+          await Geolocator.openAppSettings();
         },
       ),
     );
