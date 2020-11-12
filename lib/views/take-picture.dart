@@ -53,22 +53,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     );
   }
 
-  Widget _header() {
-    return Container(
-      margin: EdgeInsets.only(
-        top: 32.0,
-        left: 16.0,
-      ),
-      child: Text(
-        'SpotFinder',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 24.0,
-        ),
-      ),
-    );
-  }
-
   Widget _actionsButtons(BuildContext context) {
     MediaQueryData mediaQueryData = MediaQuery.of(context);
 
