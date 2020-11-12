@@ -45,5 +45,9 @@
 		<false/>
 		<key>NSCameraUsageDescription</key>
 		<string>La caméra est nécessaire pour prendre une photo de votre spot.</string>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>This app needs access to location when open.</string>
+		<key>NSLocationAlwaysUsageDescription</key>
+		<string>This app needs access to location when in the background.</string>
 	</dict>
 </plist>
