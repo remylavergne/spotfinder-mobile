@@ -55,30 +55,29 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                 textColor: Colors.white,
                 height: 56.0,
                 onPressed: () async {
-                  bool isActivate = await GeolocationHelper.instance
-                      .isLocationServiceEnabled();
-                  if (!isActivate) {
-                    this.showSnackbarToEnableLocationService(context);
-                    return;
-                  }
-                  // Get permission type
-                  LocationPermission locationPermission =
-                      await GeolocationHelper.instance.whichPermission();
-
-                  switch (locationPermission) {
-                    case LocationPermission.always:
-                    case LocationPermission.whileInUse:
+                  CameraHelper.instance.canUse().then((bool canUse) {
+                    if (canUse) {
+                      return GeolocationHelper.instance
+                          .isLocationServiceEnabled();
+                    } else {
+                      this.showDialogOpenSettings(context, Text('Problem...'),
+                          Text('Vous devez donner accès à l\'appareil photo'));
+                    }
+                  }).then((bool isLocationServiceEnable) {
+                    if (isLocationServiceEnable) {
+                      return GeolocationHelper.instance.hasPermission();
+                    } else {
+                      this.showDialogOpenSettings(context, Text('Problem...'),
+                          Text('Vous devez donner accès à l\'appareil photo'));
+                    }
+                  }).then((bool hasAccessToGeolocation) {
+                    if (hasAccessToGeolocation) {
                       this.getCurrentPositionAndNavigate(context);
-                      break;
-                    case LocationPermission.denied:
-                      this.askPermissionAndNavigate(context);
-                      break;
-                    case LocationPermission.deniedForever:
-                      this.showSnackbarSettings(context);
-                      break;
-                    default:
-                      this.askPermissionAndNavigate(context);
-                  }
+                    } else {
+                      this.showDialogOpenSettings(context, Text('Problem...'),
+                          Text('Vous devez donner accès à la géolocalisation'));
+                    }
+                  });
                 },
                 child: Text(
                   'Créer',
@@ -130,7 +129,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
             child: TabBar(
               indicatorColor: Color(0xFFD4D4D4),
               labelPadding: EdgeInsets.only(bottom: 10.0),
-              tabs: [Text('Proches'), Text('Nouveaux')],
+              tabs: [Text('Proches'), Text('Récents')],
               controller: this.tabController,
             ),
           )
@@ -139,41 +138,26 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     );
   }
 
-  void showSnackbarToEnableLocationService(BuildContext context) {
-    final snackBar = SnackBar(
-        content: Text('Le service de localisation est inactif.'),
-        action: SnackBarAction(
-            label: 'Activer',
-            onPressed: () async {
-              await Geolocator.openLocationSettings();
-            }));
-
-    Scaffold.of(context).showSnackBar(snackBar);
-  }
-
-  void showSnackbarSettings(BuildContext context) {
-    final snackBar = SnackBar(
-      content: Text('La localisation est obligatoire.'),
-      action: SnackBarAction(
-        label: 'Settings',
-        onPressed: () async {
-          await Geolocator.openAppSettings();
-        },
-      ),
-    );
-
-    Scaffold.of(context).showSnackBar(snackBar);
-  }
-
-  void askPermissionAndNavigate(BuildContext context) {
-    GeolocationHelper.instance.askForPermissions().then((LocationPermission p) {
-      if (p == LocationPermission.always ||
-          p == LocationPermission.whileInUse) {
-        this.getCurrentPositionAndNavigate(context);
-      } else {
-        this.showSnackbarSettings(context);
-      }
-    });
+  void showDialogOpenSettings(
+      BuildContext context, Widget title, Widget message) {
+    showDialog(
+        builder: (_) => AlertDialog(
+              title: title,
+              content: message,
+              actions: [
+                FlatButton(
+                    onPressed: () async {
+                      await Geolocator.openAppSettings();
+                    },
+                    child: Text('Open settings')),
+                FlatButton(
+                    onPressed: () =>
+                        Navigator.of(context, rootNavigator: true).pop(),
+                    child: Text('Ok')),
+              ],
+            ),
+        barrierDismissible: false,
+        context: context);
   }
 
   void getCurrentPositionAndNavigate(BuildContext context) {
@@ -183,7 +167,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
             MaterialPageRoute(
                 builder: (context) => TakePictureScreen(
                     position: position,
-                    camera: CameraService.instance.getCamera()))));
+                    camera: CameraHelper.instance.getCamera()))));
   }
 
   Widget _gridCloseSpotMOCK() {

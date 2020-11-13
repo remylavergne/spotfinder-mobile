@@ -7,7 +7,8 @@ import 'package:spotfinder/screens/feed.dart';
 import 'camera.helper.dart';
 
 void main() async {
-  await CameraService.instance.initCameras();
+  WidgetsFlutterBinding.ensureInitialized();
+  await CameraHelper.instance.initCameras();
 
   runApp(SpotFinderApp());
 }
