@@ -122,41 +122,13 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     );
   }
 
-  Widget _pictureAction(BuildContext context) {
-    return Positioned.fill(
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: GestureDetector(
-          onTap: () async {
-            this._takePicture(context);
-          },
-          onLongPress: () {
-            // TODO: Record clip
-          },
-          child: Container(
-            margin: EdgeInsets.only(
-              bottom: 16.0,
-            ),
-            width: 80.0,
-            height: 80.0,
-            child: Text(''),
-            decoration:
-                BoxDecoration(shape: BoxShape.circle, color: Colors.pink[100]),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future<Widget> _takePicture(BuildContext ctx) async {
-    debugPrint('Prise de photo');
-
+  Future<void> _takePicture(BuildContext ctx) async {
     try {
       await _initializeControllerFuture;
 
       final path = join(
         (await getTemporaryDirectory()).path,
-        '${DateTime.now()}.png', // TODO => get user specific id
+        '${DateTime.now()}.png',
       );
 
       await _controller.takePicture(path);

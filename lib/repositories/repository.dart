@@ -43,7 +43,9 @@ class Repository {
     return RestService().getPaginatedSpots(page, limit);
   }
 
-  Future<bool> uploadPicture(File file) {
-    
+  Future<bool> uploadPicture(File file) async {
+    await new Future.delayed(const Duration(seconds : 3));
+
+    return Future.value(true);
   }
 }
