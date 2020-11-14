@@ -38,26 +38,24 @@ class Repository {
   }
 
   Future<List<Spot>> getSpots() {
-    return RestService().getSpots();
+    return null;
   }
 
   Future<ResultWrapper<List<Spot>>> getPaginatedSpots(int page, int limit) {
     return RestService().getPaginatedSpots(page, limit);
   }
 
-  Future<bool> createSpot(Position position, String name) async {
+  Future<String> createSpot(Position position, String name) async {
     String id = await SharedPrefsHelper.instance.getId();
     CreateSpot newSpot =
         new CreateSpot(name, position.longitude, position.latitude, id);
 
-    bool result = await RestService().createSpot(newSpot);
+    String idSpot = await RestService().createSpot(newSpot);
 
-    return result;
+    return idSpot;
   }
 
-  Future<bool> uploadPicture(File file) async {
-    await new Future.delayed(const Duration(seconds: 3));
-
-    return Future.value(true);
+  Future<bool> uploadPicture(String idSpot, String idUser, File file) async {
+    return await RestService().uploadPicture(idSpot, idUser, file);
   }
 }
