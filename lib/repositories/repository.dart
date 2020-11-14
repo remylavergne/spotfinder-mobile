@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:geolocator/geolocator.dart';
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
+import 'package:spotfinder/models/dto/create-spot.dto.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/models/user.model.dart';
@@ -43,7 +45,19 @@ class Repository {
     return RestService().getPaginatedSpots(page, limit);
   }
 
-  Future<bool> uploadPicture(File file) {
-    
+  Future<bool> createSpot(Position position, String name) async {
+    String id = await SharedPrefsHelper.instance.getId();
+    CreateSpot newSpot =
+        new CreateSpot(name, position.longitude, position.latitude, id);
+
+    bool result = await RestService().createSpot(newSpot);
+
+    return result;
+  }
+
+  Future<bool> uploadPicture(File file) async {
+    await new Future.delayed(const Duration(seconds: 3));
+
+    return Future.value(true);
   }
 }

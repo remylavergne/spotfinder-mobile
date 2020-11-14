@@ -19,8 +19,8 @@ class DisplayPictureScreen extends StatefulWidget {
 class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   TextEditingController spotNameController;
   GlobalKey<FormState> _formKey;
-  bool _isLoading = false;
   MediaQueryData mediaQueryData;
+  String alertDialogContent = 'Synchronisation du Spot';
 
   @override
   void initState() {
@@ -51,16 +51,13 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
             ),
           ),
           this._actionsButtons(context),
-          Visibility(
-              visible: this._isLoading,
-              child: this._loadingScreen(
-                  this.mediaQueryData, appBar.preferredSize.height))
         ],
       ),
     );
   }
 
   Widget _actionsButtons(BuildContext context) {
+    var dialogState;
     return Container(
       // color: Colors.red[200],
       width: double.infinity,
@@ -101,12 +98,40 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 height: 56.0,
                 onPressed: () {
                   if (this._formKey.currentState.validate()) {
-                    setState(() {
-                      _showLoadingScreen();
+                    showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (BuildContext dialogContext) =>
+                            StatefulBuilder(builder: (dialogContext, setState) {
+                              dialogState = setState;
+                              return AlertDialog(
+                                title: Text('Création'),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    CircularProgressIndicator(),
+                                    SizedBox(
+                                      height: 16.0,
+                                    ),
+                                    Text(alertDialogContent),
+                                  ],
+                                ),
+                              );
+                            }));
+
+                    Repository()
+                        .createSpot(
+                            widget.position, this.spotNameController.text)
+                        .then((bool success) {
+                      if (success) {
+                        dialogState(() {
+                          alertDialogContent =
+                              'Synchronisation de la photo du Spot';
+                        });
+                      } else {
+                        // todo: display error...
+                      }
                     });
-                    Repository().uploadPicture(File(widget.imagePath));
-                    // TODO: upload picture
-                    // TODO: create Spot
                   }
                 },
                 child: Text(
@@ -119,36 +144,5 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
         ),
       ),
     );
-  }
-
-  Widget _loadingScreen(MediaQueryData mediaQuery, double appBarHeight) {
-    double marginTop = ((mediaQuery.size.height -
-                (appBarHeight + mediaQueryData.padding.top)) /
-            2) -
-        25.0;
-    double marginLeft = (mediaQuery.size.width / 2) - 25.0;
-
-    return Container(
-      color: Color(0xAB011627),
-      child: AspectRatio(
-        aspectRatio: mediaQuery.size.aspectRatio,
-        child: Container(
-          margin: EdgeInsets.only(
-              top: marginTop,
-              left: marginLeft,
-              bottom: marginTop,
-              right: marginLeft),
-          child: CircularProgressIndicator(),
-        ),
-      ),
-    );
-  }
-
-  Widget _showLoadingScreen() {
-    this._isLoading = true;
-  }
-
-  Widget _hideLoadingScreen() {
-    this._isLoading = false;
   }
 }

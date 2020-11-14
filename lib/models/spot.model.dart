@@ -2,7 +2,6 @@ import 'dart:core';
 
 class Spot {
   String id;
-  String bio;
   String name;
   String address;
   String country;
@@ -28,7 +27,6 @@ class Spot {
       bool allowed,
       String rider) {
     this.id = id;
-    this.bio = bio;
     this.name = name;
     this.address = address;
     this.country = country;
