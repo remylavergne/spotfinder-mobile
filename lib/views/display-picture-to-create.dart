@@ -120,7 +120,8 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                             }));
 
                     Repository()
-                        .uploadPicture(File(widget.imagePath))
+                        .createSpot(
+                            widget.position, this.spotNameController.text)
                         .then((bool success) {
                       if (success) {
                         dialogState(() {

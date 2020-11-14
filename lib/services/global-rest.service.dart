@@ -1,42 +1,21 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:spotfinder/constants.dart';
+import 'package:spotfinder/models/dto/create-spot.dto.dart';
 import 'package:spotfinder/models/mocks/spot.mocks.dart';
 import 'package:spotfinder/models/pagination.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/models/user.model.dart';
-import 'package:spotfinder/services/spot-rest.service.dart';
 
-class RestService implements SpotService {
+class RestService {
   RestService._privateConstructor();
 
   static final RestService _instance = RestService._privateConstructor();
 
   factory RestService() {
     return _instance;
-  }
-
-  @override
-  Future<List<Spot>> getSpots() async {
-    if (Constants.mockEnabled) {
-      return Future.value(SpotMocks.getSpots());
-    } else {
-      final response = await http.get(Constants.getBaseApi() + '/spot/all');
-
-      if (response.statusCode == 200) {
-        final jsonSpots = jsonDecode(response.body);
-        List<Spot> spots = List<Spot>.from(
-            jsonSpots.map((jsonSpot) => Spot.fromJson(jsonSpot)));
-
-        debugPrint(spots[0].bio);
-        return Future.value(spots);
-      } else {
-        throw Exception('Failed to get spots');
-      }
-    }
   }
 
   Future<ResultWrapper<List<Spot>>> getPaginatedSpots(
@@ -62,22 +41,15 @@ class RestService implements SpotService {
     }
   }
 
-  @override
-  Future<void> createNewSpot(Spot s) {
-    // TODO: implement createNewSpot
-    throw UnimplementedError();
-  }
+  Future<bool> createSpot(CreateSpot s) async {
+    final response = await http.post(Constants.getBaseApi() + '/spot/create',
+        body: s.toString());
 
-  @override
-  Future<Spot> getSpotById(String id) {
-    // TODO: implement getSpotById
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<Spot>> getSpotsByRider(String id) {
-    // TODO: implement getSpotsByRider
-    throw UnimplementedError();
+    if (response.statusCode == 200) {
+      return Future.value(true);
+    } else {
+      return Future.value(false);
+    }
   }
 
   Future<User> createAccount(String username) async {
@@ -94,8 +66,8 @@ class RestService implements SpotService {
   }
 
   Future<User> connectUserById(String id) async {
-     final response = await http.post(Constants.getBaseApi() + '/user/connect',
-        body: id);
+    final response =
+        await http.post(Constants.getBaseApi() + '/user/connect', body: id);
 
     if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
