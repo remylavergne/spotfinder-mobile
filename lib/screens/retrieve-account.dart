@@ -4,6 +4,7 @@ import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/feed.dart';
 
 class RetrieveAccount extends StatefulWidget {
+  static String route = '/retrieve-account';
   RetrieveAccount({Key key}) : super(key: key);
 
   @override

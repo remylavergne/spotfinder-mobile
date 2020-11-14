@@ -3,6 +3,9 @@ import 'package:spotfinder/camera.helper.dart';
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/screens/create-account.dart';
 import 'package:spotfinder/screens/feed.dart';
+import 'package:spotfinder/screens/retrieve-account.dart';
+import 'package:spotfinder/views/display-picture-to-create.dart';
+import 'package:spotfinder/views/take-picture.dart';
 
 import 'camera.helper.dart';
 
@@ -21,6 +24,16 @@ class SpotFinderApp extends StatelessWidget {
         WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
       },
       child: MaterialApp(
+        routes: <String, WidgetBuilder>{
+          CreateAccount.route: (BuildContext context) => CreateAccount(),
+          RetrieveAccount.route: (BuildContext context) => RetrieveAccount(),
+          TakePictureScreen.route: (BuildContext context) =>
+          // ignore: missing_required_param
+              TakePictureScreen(),
+          DisplayPictureScreen.route: (BuildContext context) =>
+          // ignore: missing_required_param
+              DisplayPictureScreen(),
+        },
         theme: ThemeData(
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
