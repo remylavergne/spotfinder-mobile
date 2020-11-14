@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:spotfinder/views/display-picture-to-create.dart';
 
 class TakePictureScreen extends StatefulWidget {
+  static String route = '/take-picture';
   final CameraDescription camera;
   final Position position;
 

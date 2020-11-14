@@ -7,6 +7,7 @@ import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/repositories/repository.dart';
 
 class DisplayPictureScreen extends StatefulWidget {
+  static String route = '/display-picture';
   final String imagePath;
   final Position position;
 
@@ -145,7 +146,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                           alertDialogContent = 'Création validée';
                         });
                         await Future.delayed(Duration(seconds: 3));
-                        // todo: Fermer la popup et revenir au Feed
+                        Navigator.popUntil(context, ModalRoute.withName('/'));
                       } else {
                         // todo: error
                         print('');

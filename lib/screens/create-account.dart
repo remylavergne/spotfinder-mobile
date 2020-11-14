@@ -5,7 +5,10 @@ import 'package:spotfinder/screens/feed.dart';
 import 'package:spotfinder/screens/retrieve-account.dart';
 
 class CreateAccount extends StatefulWidget {
+  static String route = '/create-account';
+  
   CreateAccount({Key key}) : super(key: key);
+
 
   @override
   State<StatefulWidget> createState() => _CreateAccountState();
