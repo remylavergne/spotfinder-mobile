@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/repositories/repository.dart';
 
 class DisplayPictureScreen extends StatefulWidget {
@@ -21,11 +22,15 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   GlobalKey<FormState> _formKey;
   MediaQueryData mediaQueryData;
   String alertDialogContent = 'Synchronisation du Spot';
+  String idUser;
 
   @override
   void initState() {
     this.spotNameController = TextEditingController();
     this._formKey = GlobalKey<FormState>();
+    SharedPrefsHelper.instance
+        .getId()
+        .then((String idUser) => this.idUser = idUser);
 
     super.initState();
   }
@@ -122,14 +127,28 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                     Repository()
                         .createSpot(
                             widget.position, this.spotNameController.text)
-                        .then((bool success) {
-                      if (success) {
+                        .then((String idSpot) {
+                      if (idSpot != null) {
                         dialogState(() {
                           alertDialogContent =
                               'Synchronisation de la photo du Spot';
                         });
+                        return Repository().uploadPicture(
+                            idSpot, idUser, File(widget.imagePath));
                       } else {
                         // todo: display error...
+                      }
+                    }).then((bool imageUploaded) async {
+                      if (imageUploaded) {
+                        // Popup Success
+                        dialogState(() {
+                          alertDialogContent = 'Création validée';
+                        });
+                        await Future.delayed(Duration(seconds: 3));
+                        // todo: Fermer la popup et revenir au Feed
+                      } else {
+                        // todo: error
+                        print('');
                       }
                     });
                   }

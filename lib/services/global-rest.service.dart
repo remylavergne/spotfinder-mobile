@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/models/dto/create-spot.dto.dart';
-import 'package:spotfinder/models/mocks/spot.mocks.dart';
 import 'package:spotfinder/models/pagination.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
@@ -41,14 +42,17 @@ class RestService {
     }
   }
 
-  Future<bool> createSpot(CreateSpot s) async {
+  Future<String> createSpot(CreateSpot s) async {
     final response = await http.post(Constants.getBaseApi() + '/spot/create',
-        body: s.toString());
+        body: s.toDto());
 
     if (response.statusCode == 200) {
-      return Future.value(true);
+      Map<String, dynamic> spotJson = jsonDecode(response.body);
+      Spot createdSpot = Spot.fromJson(spotJson);
+
+      return Future.value(createdSpot.id);
     } else {
-      return Future.value(false);
+      return Future.value(null);
     }
   }
 
@@ -75,6 +79,23 @@ class RestService {
       return user;
     } else {
       return null;
+    }
+  }
+
+  Future<bool> uploadPicture(String idSpot, String idUser, File file) async {
+    MultipartRequest request = http.MultipartRequest(
+        'POST', Uri.parse(Constants.getBaseApi() + '/upload/picture'));
+    // Add MultiPart data
+    request.files.add(await http.MultipartFile.fromPath('picture', file.path));
+    request.fields['spotId'] = idSpot;
+    request.fields['userId'] = idUser;
+
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      return Future.value(true);
+    } else {
+      return Future.value(false);
     }
   }
 }
