@@ -1,9 +1,10 @@
-import 'package:camera/new/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:spotfinder/camera.helper.dart';
 import 'package:spotfinder/helpers/geolocation.helper.dart';
+import 'package:spotfinder/helpers/throttling.dart';
+import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/views/take-picture.dart';
 
 class Feed extends StatefulWidget {
@@ -13,6 +14,9 @@ class Feed extends StatefulWidget {
 
 class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   TabController tabController;
+  Throttling createSpotThrottling = Throttling(Duration(seconds: 2));
+  List<Spot> _newest;
+  List<Spot> _closest;
 
   @override
   void initState() {
@@ -37,7 +41,10 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                   Expanded(
                     child: TabBarView(
                       controller: this.tabController,
-                      children: [this._gridCloseSpotMOCK(), Icon(Icons.search)],
+                      children: [
+                        this._gridCloseSpotMOCK(),
+                        this._displayNewestSpots()
+                      ],
                     ),
                   ),
                 ],
@@ -47,7 +54,8 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
             Container(
               alignment: Alignment.bottomCenter,
               width: 180.0,
-              margin: EdgeInsets.only(bottom: mediaQueryData.padding.bottom + 16.0),
+              margin:
+                  EdgeInsets.only(bottom: mediaQueryData.padding.bottom + 16.0),
               child: FlatButton(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4.0),
@@ -56,28 +64,8 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                 textColor: Colors.white,
                 height: 56.0,
                 onPressed: () async {
-                  CameraHelper.instance.canUse().then((bool canUse) {
-                    if (canUse) {
-                      return GeolocationHelper.instance
-                          .isLocationServiceEnabled();
-                    } else {
-                      this.showDialogOpenSettings(context, Text('Problem...'),
-                          Text('Vous devez donner accès à l\'appareil photo'));
-                    }
-                  }).then((bool isLocationServiceEnable) {
-                    if (isLocationServiceEnable) {
-                      return GeolocationHelper.instance.hasPermission();
-                    } else {
-                      this.showDialogOpenSettings(context, Text('Problem...'),
-                          Text('Vous devez donner accès à l\'appareil photo'));
-                    }
-                  }).then((bool hasAccessToGeolocation) {
-                    if (hasAccessToGeolocation) {
-                      this.getCurrentPositionAndNavigate(context);
-                    } else {
-                      this.showDialogOpenSettings(context, Text('Problem...'),
-                          Text('Vous devez donner accès à la géolocalisation'));
-                    }
+                  this.createSpotThrottling.throttle(() {
+                    this._startCreation(context);
                   });
                 },
                 child: Text(
@@ -187,6 +175,35 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   void getCurrentPositionAndNavigate(BuildContext context) {
     GeolocationHelper.instance.getCurrentPosition().then((Position position) =>
         Navigator.push(context, this._animateCreationSpotScreen(position)));
+  }
+
+  void _startCreation(BuildContext context) {
+    CameraHelper.instance.canUse().then((bool canUse) {
+      if (canUse) {
+        return GeolocationHelper.instance.isLocationServiceEnabled();
+      } else {
+        this.showDialogOpenSettings(context, Text('Problem...'),
+            Text('Vous devez donner accès à l\'appareil photo'));
+      }
+    }).then((bool isLocationServiceEnable) {
+      if (isLocationServiceEnable) {
+        return GeolocationHelper.instance.hasPermission();
+      } else {
+        this.showDialogOpenSettings(context, Text('Problem...'),
+            Text('Vous devez donner accès à l\'appareil photo'));
+      }
+    }).then((bool hasAccessToGeolocation) {
+      if (hasAccessToGeolocation) {
+        this.getCurrentPositionAndNavigate(context);
+      } else {
+        this.showDialogOpenSettings(context, Text('Problem...'),
+            Text('Vous devez donner accès à la géolocalisation'));
+      }
+    });
+  }
+
+  Widget _displayNewestSpots() {
+    return Icon(Icons.search);
   }
 
   Widget _gridCloseSpotMOCK() {
