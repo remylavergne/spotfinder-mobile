@@ -24,6 +24,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   MediaQueryData mediaQueryData;
   String alertDialogContent = 'Synchronisation du Spot';
   String idUser;
+  void Function(void Function()) dialogState;
 
   @override
   void initState() {
@@ -63,13 +64,12 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   Widget _actionsButtons(BuildContext context) {
-    var dialogState;
     return Container(
       // color: Colors.red[200],
       width: double.infinity,
       margin: EdgeInsets.only(left: 16.0, right: 16.0),
       // alignment: Alignment.bottomCenter,
-      padding: EdgeInsets.only(bottom: mediaQueryData.padding.bottom),
+      padding: EdgeInsets.only(bottom: mediaQueryData.padding.bottom + 16.0),
       child: Form(
         key: this._formKey,
         child: Column(
@@ -104,54 +104,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 height: 56.0,
                 onPressed: () {
                   if (this._formKey.currentState.validate()) {
-                    showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (BuildContext dialogContext) =>
-                            StatefulBuilder(builder: (dialogContext, setState) {
-                              dialogState = setState;
-                              return AlertDialog(
-                                title: Text('Création'),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    CircularProgressIndicator(),
-                                    SizedBox(
-                                      height: 16.0,
-                                    ),
-                                    Text(alertDialogContent),
-                                  ],
-                                ),
-                              );
-                            }));
-
-                    Repository()
-                        .createSpot(
-                            widget.position, this.spotNameController.text)
-                        .then((String idSpot) {
-                      if (idSpot != null) {
-                        dialogState(() {
-                          alertDialogContent =
-                              'Synchronisation de la photo du Spot';
-                        });
-                        return Repository().uploadPicture(
-                            idSpot, idUser, File(widget.imagePath));
-                      } else {
-                        // todo: display error...
-                      }
-                    }).then((bool imageUploaded) async {
-                      if (imageUploaded) {
-                        // Popup Success
-                        dialogState(() {
-                          alertDialogContent = 'Création validée';
-                        });
-                        await Future.delayed(Duration(seconds: 3));
-                        Navigator.popUntil(context, ModalRoute.withName('/'));
-                      } else {
-                        // todo: error
-                        print('');
-                      }
-                    });
+                    this._spotCreationFlow(context);
                   }
                 },
                 child: Text(
@@ -164,5 +117,66 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
         ),
       ),
     );
+  }
+
+  /// Business
+
+  void _spotCreationFlow(BuildContext context) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext dialogContext) =>
+            StatefulBuilder(builder: (dialogContext, setState) {
+              this.dialogState = setState;
+              return AlertDialog(
+                title: Center(child: Text('Création')),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(
+                      height: 16.0,
+                    ),
+                    Text(alertDialogContent),
+                  ],
+                ),
+              );
+            }));
+
+    Repository()
+        .createSpot(widget.position, this.spotNameController.text.trim())
+        .then((String idSpot) {
+      if (idSpot != null) {
+        dialogState(() {
+          alertDialogContent = 'Synchronisation de la photo du Spot';
+        });
+        return Repository()
+            .uploadPicture(idSpot, idUser, File(widget.imagePath));
+      } else {
+        dialogState(() {
+          alertDialogContent =
+              'Erreur pendant la création. Retour à l\'accueil.';
+        });
+        this._returnToHome(context);
+      }
+    }).then((bool imageUploaded) async {
+      if (imageUploaded) {
+        dialogState(() {
+          alertDialogContent = 'Création validée';
+        });
+        this._returnToHome(context);
+      } else {
+        dialogState(() {
+          alertDialogContent =
+              'Erreur pendant la création. Retour à l\'accueil.';
+        });
+        this._returnToHome(context);
+      }
+    });
+  }
+
+  void _returnToHome(BuildContext context) async {
+    await Future.delayed(Duration(seconds: 3));
+    Navigator.popUntil(context, ModalRoute.withName('/'));
   }
 }
