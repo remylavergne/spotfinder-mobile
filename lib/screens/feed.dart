@@ -47,7 +47,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
             Container(
               alignment: Alignment.bottomCenter,
               width: 180.0,
-              margin: EdgeInsets.only(bottom: mediaQueryData.padding.bottom),
+              margin: EdgeInsets.only(bottom: mediaQueryData.padding.bottom + 16.0),
               child: FlatButton(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4.0),

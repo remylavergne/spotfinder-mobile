@@ -64,7 +64,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       width: double.infinity,
       margin: EdgeInsets.only(left: 16.0, right: 16.0),
       alignment: Alignment.bottomCenter,
-      padding: EdgeInsets.only(bottom: mediaQueryData.padding.bottom),
+      padding: EdgeInsets.only(bottom: mediaQueryData.padding.bottom + 16.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
