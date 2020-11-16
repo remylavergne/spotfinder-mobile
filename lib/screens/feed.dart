@@ -227,8 +227,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                   this._getSpotWidget(spots[index]),
             );
           } else if (snapshot.hasError) {
-            print('');
-            return this._loadingScreen(mediaQuery);
+            return Text('Erreur pendant la récupération des Spots...');
           } else {
             return this._loadingScreen(mediaQuery);
           }
