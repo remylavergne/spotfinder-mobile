@@ -4,6 +4,7 @@ import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/screens/create-account.dart';
 import 'package:spotfinder/screens/feed.dart';
 import 'package:spotfinder/screens/retrieve-account.dart';
+import 'package:spotfinder/screens/spot-details.screen.dart';
 import 'package:spotfinder/views/display-picture-to-create.dart';
 import 'package:spotfinder/views/take-picture.dart';
 
@@ -28,11 +29,13 @@ class SpotFinderApp extends StatelessWidget {
           CreateAccount.route: (BuildContext context) => CreateAccount(),
           RetrieveAccount.route: (BuildContext context) => RetrieveAccount(),
           TakePictureScreen.route: (BuildContext context) =>
-          // ignore: missing_required_param
+              // ignore: missing_required_param
               TakePictureScreen(),
           DisplayPictureScreen.route: (BuildContext context) =>
-          // ignore: missing_required_param
+              // ignore: missing_required_param
               DisplayPictureScreen(),
+          SpotDetailsScreen.route: (BuildContext context) =>
+              SpotDetailsScreen(),
         },
         theme: ThemeData(
           primarySwatch: Colors.blue,

@@ -26,11 +26,11 @@ class CameraHelper {
     bool canAccess = false;
     switch (status) {
       case PermissionStatus.granted:
+      case PermissionStatus.undetermined:
         canAccess = true;
         break;
       case PermissionStatus.denied:
       case PermissionStatus.restricted:
-      case PermissionStatus.undetermined:
       case PermissionStatus.permanentlyDenied:
       default:
         break;
