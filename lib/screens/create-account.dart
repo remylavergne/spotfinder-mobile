@@ -6,9 +6,8 @@ import 'package:spotfinder/screens/retrieve-account.dart';
 
 class CreateAccount extends StatefulWidget {
   static String route = '/create-account';
-  
-  CreateAccount({Key key}) : super(key: key);
 
+  CreateAccount({Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _CreateAccountState();
@@ -141,12 +140,10 @@ class _CreateAccountState extends State<CreateAccount> {
                 onPressed: () async {
                   if (_formKey.currentState.validate()) {
                     bool success = await Repository()
-                        .createAccount(usernameController.text);
+                        .createAccount(usernameController.text.trim());
                     if (success) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Feed()));
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Feed()));
                     } else {
                       creationError = true;
                       _formKey.currentState.validate();
