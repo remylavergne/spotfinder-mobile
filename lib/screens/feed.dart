@@ -8,6 +8,7 @@ import 'package:spotfinder/helpers/throttling.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
+import 'package:spotfinder/screens/spot-details.screen.dart';
 import 'package:spotfinder/views/take-picture.dart';
 
 class Feed extends StatefulWidget {
@@ -218,13 +219,19 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
           if (snapshot.hasData) {
             ResultWrapper<List<Spot>> wrapper = snapshot.data;
             List<Spot> spots = wrapper.result;
+
             return GridView.builder(
               itemCount: spots.length,
               padding: EdgeInsets.only(top: 0),
               gridDelegate:
                   SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-              itemBuilder: (BuildContext context, int index) =>
-                  this._getSpotWidget(spots[index]),
+              itemBuilder: (BuildContext context, int index) => GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, SpotDetailsScreen.route,
+                      arguments: spots[index]);
+                },
+                child: this._getSpotWidget(spots[index]),
+              ),
             );
           } else if (snapshot.hasError) {
             return Text('Erreur pendant la récupération des Spots...');
@@ -306,20 +313,6 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
       ],
     );
   }
-
-  // List<Widget> _getSpotWidgets(List<Spot> spots) {
-  //   List<Widget> widgets = [];
-
-  //   spots.forEach((Spot spot) => GridTile(
-  //       child: Container(
-  //           decoration: BoxDecoration(
-  //               border: Border.all(color: Colors.black, width: 0.5)),
-  //           child: Image.network(
-  //               '${Constants.getBaseApi()}/picture/id/${spot.pictureId}',
-  //               fit: BoxFit.cover))));
-
-  //   return widgets;
-  // }
 
   Widget _getSpotWidget(Spot spot) {
     return GridTile(
