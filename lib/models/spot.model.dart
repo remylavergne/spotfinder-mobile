@@ -5,13 +5,14 @@ class Spot {
   String name;
   String address;
   String country;
+  String pictureId;
   int disciplines;
   double longitude;
   double latitude;
   int creationDate;
   int modificationDate;
   bool allowed;
-  String rider;
+  String user;
 
   Spot(
       String id,
@@ -19,24 +20,26 @@ class Spot {
       String name,
       String address,
       String country,
+      String pictureId,
       int disciplines,
       double longitude,
       double latitude,
       int creationDate,
       int modificationDate,
       bool allowed,
-      String rider) {
+      String user) {
     this.id = id;
     this.name = name;
     this.address = address;
     this.country = country;
+    this.pictureId = pictureId;
     this.disciplines = disciplines;
     this.longitude = longitude;
     this.latitude = latitude;
     this.creationDate = creationDate;
     this.modificationDate = modificationDate;
     this.allowed = allowed;
-    this.rider = rider;
+    this.user = user;
   }
 
   factory Spot.fromJson(Map<String, dynamic> json) {
@@ -46,13 +49,14 @@ class Spot {
         json['name'],
         json['address'],
         json['country'],
+        json['pictureId'],
         json['disciplines'],
         json['longitude'],
         json['latitude'],
         json['creationDate'],
         json['modificationDate'],
         json['allowed'],
-        json['rider']);
+        json['user']);
   }
 
   static List<Spot> fromJsonList(List<dynamic> jsonSpots) {

@@ -164,8 +164,8 @@ class _RetrieveAccount extends State<RetrieveAccount> {
                           height: 56.0,
                           onPressed: () async {
                             if (_formKey.currentState.validate()) {
-                              bool success = await Repository()
-                                  .connectUserById(this.idController.text);
+                              bool success = await Repository().connectUserById(
+                                  this.idController.text.trim());
                               if (success) {
                                 Navigator.push(
                                     context,

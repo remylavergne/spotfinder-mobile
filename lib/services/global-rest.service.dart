@@ -33,7 +33,7 @@ class RestService {
       Map<String, dynamic> paginationJson = wrapperMap['pagination'];
       Pagination pagination = Pagination.fromJson(paginationJson);
       // Création du ResultWrapper
-      ResultWrapper rw = ResultWrapper.fromJson(wrapperMap, spots);
+      ResultWrapper<List<Spot>> rw = ResultWrapper.fromJson(wrapperMap, spots);
       rw.pagination = pagination;
 
       return rw;
@@ -70,7 +70,7 @@ class RestService {
   }
 
   Future<User> connectUserById(String id) async {
-    final response =
+    Response response =
         await http.post(Constants.getBaseApi() + '/user/connect', body: id);
 
     if (response.statusCode == 200) {
