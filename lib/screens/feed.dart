@@ -99,6 +99,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
             margin: EdgeInsets.only(
               left: 16.0,
               right: 16.0,
+              top: 16.0,
             ),
             child: Container(
               height: 35.0,
