@@ -41,7 +41,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
               this._header(widget.spot, mediaQueryData.size),
               this._generalInformations(widget.spot),
               this._lastPictures(),
-              this._lastComments(),
+              // this._lastComments(),
             ],
           ),
         ),
@@ -87,12 +87,18 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
               child: Text(spot.getSpotAddress())),
           Container(
             margin: EdgeInsets.only(top: 4.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Icon(Icons.directions_run),
-                Text('Distance : 3,2 km'),
-              ],
+            child: FlatButton(
+              onPressed: () {
+                debugPrint('Navigate to Spot');
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(Icons.directions_run),
+                  Text('Distance : '),
+                  Text('3,2 km'),
+                ],
+              ),
             ),
           ),
         ],
@@ -105,7 +111,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
       padding: EdgeInsets.only(
         left: 16.0,
         right: 16.0,
-        top: 16.0,
+        // top: 8.0,
         bottom: 16.0,
       ),
       // color: Colors.red[200],
@@ -115,18 +121,29 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
                 children: [
                   Text('Dernières photos',
                       style: TextStyle(
                           fontSize: 16.0, fontWeight: FontWeight.w500)),
                   Text(' - '),
-                  Text('Afficher tout',
-                      style:
-                          TextStyle(fontSize: 14.0, color: Color(0xFF2196F3)))
+                  GestureDetector(
+                    onTap: () {
+                      debugPrint('Display all pictures');
+                    },
+                    child: Text('Afficher tout',
+                        style: TextStyle(
+                            fontSize: 14.0, color: Color(0xFF2196F3))),
+                  )
                 ],
               ),
-              Text('+ Ajouter',
-                  style: TextStyle(fontSize: 14.0, color: Color(0xFF2196F3))),
+              GestureDetector(
+                onTap: () {
+                  debugPrint('Add new picture to spot');
+                },
+                child: Text('+ Ajouter',
+                    style: TextStyle(fontSize: 14.0, color: Color(0xFF2196F3))),
+              ),
             ],
           ),
           Container(
