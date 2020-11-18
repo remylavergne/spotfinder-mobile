@@ -4,18 +4,21 @@ import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:spotfinder/enums/take-picture-for.enum.dart';
 import 'package:spotfinder/views/display-picture-to-create.dart';
 
 class TakePictureScreen extends StatefulWidget {
   static String route = '/take-picture';
   final CameraDescription camera;
   final Position position;
+  final TakePictureFor takePictureFor;
 
-  const TakePictureScreen({
-    Key key,
-    @required this.camera,
-    @required this.position,
-  }) : super(key: key);
+  const TakePictureScreen(
+      {Key key,
+      @required this.camera,
+      @required this.position,
+      @required this.takePictureFor})
+      : super(key: key);
 
   @override
   TakePictureScreenState createState() => TakePictureScreenState();
@@ -140,6 +143,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
           builder: (context) => DisplayPictureScreen(
             imagePath: path,
             position: widget.position,
+            takePictureFor: widget.takePictureFor,
           ),
         ),
       );

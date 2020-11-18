@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:spotfinder/camera.helper.dart';
 import 'package:spotfinder/constants.dart';
+import 'package:spotfinder/enums/take-picture-for.enum.dart';
 import 'package:spotfinder/helpers/geolocation.helper.dart';
 import 'package:spotfinder/helpers/throttling.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
@@ -163,6 +164,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
           TakePictureScreen(
         position: position,
         camera: CameraHelper.instance.getCamera(),
+        takePictureFor: TakePictureFor.creation,
       ),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         var begin = Offset(0.0, 1.0);

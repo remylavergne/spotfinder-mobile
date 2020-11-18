@@ -1,0 +1,4 @@
+enum TakePictureFor {
+  creation,
+  spot
+}

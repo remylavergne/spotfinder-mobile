@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:spotfinder/enums/take-picture-for.enum.dart';
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/repositories/repository.dart';
 
@@ -10,8 +11,13 @@ class DisplayPictureScreen extends StatefulWidget {
   static String route = '/display-picture';
   final String imagePath;
   final Position position;
+  final TakePictureFor takePictureFor;
 
-  DisplayPictureScreen({Key key, @required this.imagePath, this.position})
+  DisplayPictureScreen(
+      {Key key,
+      @required this.imagePath,
+      @required this.position,
+      @required this.takePictureFor})
       : super(key: key);
 
   @override
@@ -104,7 +110,16 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 height: 56.0,
                 onPressed: () {
                   if (this._formKey.currentState.validate()) {
-                    this._spotCreationFlow(context);
+                    switch (widget.takePictureFor) {
+                      case TakePictureFor.spot:
+                        this._spotCreationFlow(context);
+                        break;
+                      case TakePictureFor.spot:
+                        //todo: Implement business logic
+                        break;
+                      default:
+                        throw Exception('Unknown flow picture');
+                    }
                   }
                 },
                 child: Text(
