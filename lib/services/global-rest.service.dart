@@ -6,6 +6,7 @@ import 'package:http/http.dart';
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/models/dto/create-spot.dto.dart';
 import 'package:spotfinder/models/pagination.model.dart';
+import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/models/user.model.dart';
@@ -34,6 +35,30 @@ class RestService {
       Pagination pagination = Pagination.fromJson(paginationJson);
       // Création du ResultWrapper
       ResultWrapper<List<Spot>> rw = ResultWrapper.fromJson(wrapperMap, spots);
+      rw.pagination = pagination;
+
+      return rw;
+    } else {
+      throw Exception('Failed to get paginated spots');
+    }
+  }
+
+  Future<ResultWrapper<List<Picture>>> getPaginatedPictures(
+      int page, int limit, String spotID) async {
+    final response = await http.get(Constants.getBaseApi() +
+        '/spot/$spotID/pictures?page=$page&limit=$limit');
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> wrapperMap = jsonDecode(response.body);
+      // Serialize Spots objects
+      List<dynamic> picturesJson = wrapperMap['result'];
+      List<Picture> pictures = Picture.fromJsonList(picturesJson);
+      // Serialize Pagination
+      Map<String, dynamic> paginationJson = wrapperMap['pagination'];
+      Pagination pagination = Pagination.fromJson(paginationJson);
+      // Création du ResultWrapper
+      ResultWrapper<List<Picture>> rw =
+          ResultWrapper.fromJson(wrapperMap, pictures);
       rw.pagination = pagination;
 
       return rw;

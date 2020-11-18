@@ -64,4 +64,14 @@ class Spot {
         List<Spot>.from(jsonSpots.map((jsonSpot) => Spot.fromJson(jsonSpot)));
     return spots;
   }
+
+  String getSpotName() {
+    return this.name != null && this.name.isNotEmpty
+        ? this.name
+        : 'Spot sans nom';
+  }
+
+  String getSpotAddress() {
+    return this.address != null && this.address.isNotEmpty ? this.address : 'L\'adresse n\'a pas encore été calculée par le système...';
+  }
 }

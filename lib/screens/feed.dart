@@ -99,6 +99,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
             margin: EdgeInsets.only(
               left: 16.0,
               right: 16.0,
+              top: 16.0,
             ),
             child: Container(
               height: 35.0,
@@ -227,14 +228,19 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                   SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
               itemBuilder: (BuildContext context, int index) => GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, SpotDetailsScreen.route,
-                      arguments: spots[index]);
+                  // Navigator.pushNamed(context, SpotDetailsScreen.route,
+                  //     arguments: spots[index]);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              SpotDetailsScreen(spot: spots[index])));
                 },
                 child: this._getSpotWidget(spots[index]),
               ),
             );
           } else if (snapshot.hasError) {
-            return Text('Erreur pendant la récupération des Spots...');
+            return Center(child: Text('Erreur pendant la récupération des Spots...'));
           } else {
             return this._loadingScreen(mediaQuery);
           }
