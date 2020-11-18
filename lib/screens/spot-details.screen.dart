@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:spotfinder/camera.helper.dart';
 import 'package:spotfinder/constants.dart';
+import 'package:spotfinder/enums/take-picture-for.enum.dart';
+import 'package:spotfinder/helpers/geolocation.helper.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/services/global-rest.service.dart';
+import 'package:spotfinder/views/take-picture.dart';
 
 class SpotDetailsScreen extends StatefulWidget {
   static String route = '/spot-details';
@@ -88,6 +92,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
           Container(
             margin: EdgeInsets.only(top: 4.0),
             child: FlatButton(
+              color: Color(0xAAE5E5E5),
               onPressed: () {
                 debugPrint('Navigate to Spot');
               },
@@ -140,6 +145,8 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
               GestureDetector(
                 onTap: () {
                   debugPrint('Add new picture to spot');
+                  //todo: Check all permissions before...
+                  this._takeAndAddPicture(context, widget.spot);
                 },
                 child: Text('+ Ajouter',
                     style: TextStyle(fontSize: 14.0, color: Color(0xFF2196F3))),
@@ -160,7 +167,6 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
 
                 return this._getLastPicturesWidgets(pictures);
               } else if (snapshot.hasError) {
-                print('');
                 return CircularProgressIndicator();
               } else {
                 return CircularProgressIndicator();
@@ -269,5 +275,17 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: picturesWidgets,
     );
+  }
+
+  void _takeAndAddPicture(BuildContext context, Spot spot) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) => TakePictureScreen(
+                  camera: CameraHelper.instance.getCamera(),
+                  position:
+                      GeolocationHelper.instance.getPositionFromSpot(spot),
+                  takePictureFor: TakePictureFor.spot,
+                )));
   }
 }

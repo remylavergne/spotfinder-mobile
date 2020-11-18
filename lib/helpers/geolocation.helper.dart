@@ -1,4 +1,5 @@
 import 'package:geolocator/geolocator.dart';
+import 'package:spotfinder/models/spot.model.dart';
 
 class GeolocationHelper {
   GeolocationHelper._privateConstructor();
@@ -49,5 +50,9 @@ class GeolocationHelper {
   Future<Position> getCurrentPosition() async {
     return await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
+  }
+
+  Position getPositionFromSpot(Spot spot) {
+    return Position(longitude: spot.longitude, latitude: spot.latitude);
   }
 }
