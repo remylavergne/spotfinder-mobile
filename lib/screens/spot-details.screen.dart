@@ -2,21 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/models/picture.model.dart';
+import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
+import 'package:spotfinder/services/global-rest.service.dart';
 
 class SpotDetailsScreen extends StatefulWidget {
   static String route = '/spot-details';
+  final Spot spot;
 
-  SpotDetailsScreen({Key key}) : super(key: key);
+  SpotDetailsScreen({Key key, @required this.spot}) : super(key: key);
 
   @override
   _SpotDetailsScreenState createState() => _SpotDetailsScreenState();
 }
 
 class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
+  Future<ResultWrapper<List<Picture>>> pictures;
+
+  @override
+  void initState() {
+    this.pictures = RestService().getPaginatedPictures(1, 3, widget.spot.id);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final Spot spot = ModalRoute.of(context).settings.arguments;
     MediaQueryData mediaQueryData = MediaQuery.of(context);
     return Scaffold(
       appBar: AppBar(
@@ -28,8 +38,8 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
           color: Colors.green,
           child: Column(
             children: [
-              this._header(spot, mediaQueryData.size),
-              this._generalInformations(spot),
+              this._header(widget.spot, mediaQueryData.size),
+              this._generalInformations(widget.spot),
               this._lastPictures(),
               this._lastComments(),
             ],
@@ -90,10 +100,13 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
             height: 1.0,
             color: Colors.grey,
           ),
-          FutureBuilder<List<Widget>>(
+          FutureBuilder<ResultWrapper<List<Picture>>>(
+            future: this.pictures,
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
-                List<Picture> pictures = snapshot.data;
+                ResultWrapper<List<Picture>> picturesWrapper = snapshot.data;
+                List<Picture> pictures = picturesWrapper.result;
+
                 return this._getLastPicturesWidgets(pictures);
               } else if (snapshot.hasError) {
                 print('');
@@ -109,7 +122,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
   }
 
   Widget _lastComments() {
-     return Container(
+    return Container(
       color: Colors.orange[200],
       child: Column(
         children: [
@@ -117,7 +130,10 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
-                children: [Text('Derniers commentaires - '), Text('Afficher tout')],
+                children: [
+                  Text('Derniers commentaires - '),
+                  Text('Afficher tout')
+                ],
               ),
               Text('+ Ajouter'),
             ],
@@ -149,23 +165,40 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
 
     pictures.forEach((Picture picture) {
       Widget w = Container(
+          width: 100.0,
+          height: 100.0,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(6.0)),
-              border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network(
-              '${Constants.getBaseApi()}/picture/id/${picture.id}',
-              fit: BoxFit.cover));
+            borderRadius: BorderRadius.all(Radius.circular(6.0)),
+            // border: Border.all(color: Colors.black, width: 0.5),
+          ),
+          child: ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.network(
+                '${Constants.getBaseApi()}/picture/id/${picture.id}',
+                height: 100.0,
+                width: 100.0,
+                fit: BoxFit.cover,
+              )));
+
+      // Widget w = ClipRRect(
+      //     borderRadius: BorderRadius.circular(8.0),
+      //     child: Image.network(
+      //       '${Constants.getBaseApi()}/picture/id/${picture.id}',
+      //       height: 100.0,
+      //       width: 100.0,
+      //     ));
 
       picturesWidgets.add(w);
     });
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: picturesWidgets,
     );
   }
 
-  Row _getLastCommentsWidgets(List<Picture> pictures) { // todo refactor
+  Row _getLastCommentsWidgets(List<Picture> pictures) {
+    // todo refactor
     List<Widget> picturesWidgets = [];
 
     pictures.forEach((Picture picture) {
