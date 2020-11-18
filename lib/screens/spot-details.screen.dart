@@ -30,12 +30,12 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
     MediaQueryData mediaQueryData = MediaQuery.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Spot 🛹'),
+        title: Text(widget.spot.getSpotName()),
         backgroundColor: Color(0xFF011627),
       ),
       body: SingleChildScrollView(
         child: Container(
-          color: Colors.green,
+          // color: Colors.green,
           child: Column(
             children: [
               this._header(widget.spot, mediaQueryData.size),
@@ -53,7 +53,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
     return Container(
         height: screenSize.height / 4,
         width: double.infinity,
-        color: Colors.red,
+        // color: Colors.red,
         child: Image.network(
             '${Constants.getBaseApi()}/picture/id/${spot.pictureId}',
             fit: BoxFit.cover));
@@ -61,21 +61,39 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
 
   Widget _generalInformations(Spot spot) {
     return Container(
-      color: Colors.blue,
+      padding: EdgeInsets.only(
+        left: 16.0,
+        right: 16.0,
+        top: 16.0,
+        bottom: 16.0,
+      ),
+      // color: Colors.blue,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(spot.address != null
-              ? spot.address
-              : 'Pas d\'addresse pour ce spot.'),
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Visibility(visible: spot.name != null, child: Text(spot.name)),
-              Icon(Icons.directions_walk),
-              Text('Distance : 3,2 km'),
+              Text(
+                spot.getSpotName(),
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              ),
+              Text('FakeRunner', style: TextStyle(color: Colors.grey)),
             ],
+          ),
+          Container(
+              margin: EdgeInsets.only(top: 8.0),
+              child: Text(spot.getSpotAddress())),
+          Container(
+            margin: EdgeInsets.only(top: 4.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(Icons.directions_run),
+                Text('Distance : 3,2 km'),
+              ],
+            ),
           ),
         ],
       ),
@@ -84,19 +102,35 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
 
   Widget _lastPictures() {
     return Container(
-      color: Colors.red[200],
+      padding: EdgeInsets.only(
+        left: 16.0,
+        right: 16.0,
+        top: 16.0,
+        bottom: 16.0,
+      ),
+      // color: Colors.red[200],
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
-                children: [Text('Dernières photos - '), Text('Afficher tout')],
+                children: [
+                  Text('Dernières photos',
+                      style: TextStyle(
+                          fontSize: 16.0, fontWeight: FontWeight.w500)),
+                  Text(' - '),
+                  Text('Afficher tout',
+                      style:
+                          TextStyle(fontSize: 14.0, color: Color(0xFF2196F3)))
+                ],
               ),
-              Text('+ Ajouter'),
+              Text('+ Ajouter',
+                  style: TextStyle(fontSize: 14.0, color: Color(0xFF2196F3))),
             ],
           ),
           Container(
+            margin: EdgeInsets.only(top: 4.0),
             height: 1.0,
             color: Colors.grey,
           ),
@@ -123,7 +157,13 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
 
   Widget _lastComments() {
     return Container(
-      color: Colors.orange[200],
+      padding: EdgeInsets.only(
+        left: 16.0,
+        right: 16.0,
+        top: 16.0,
+        bottom: 16.0,
+      ),
+      // color: Colors.orange[200],
       child: Column(
         children: [
           Row(
@@ -160,13 +200,13 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
     );
   }
 
-  Row _getLastPicturesWidgets(List<Picture> pictures) {
+  Container _getLastPicturesWidgets(List<Picture> pictures) {
     List<Widget> picturesWidgets = [];
-
+    // todo: taille des images en fonction de la taille de l'écran ! => MediaQueryData
     pictures.forEach((Picture picture) {
       Widget w = Container(
-          width: 100.0,
-          height: 100.0,
+          width: 120.0,
+          height: 120.0,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(6.0)),
             // border: Border.all(color: Colors.black, width: 0.5),
@@ -175,25 +215,20 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
               borderRadius: BorderRadius.circular(8.0),
               child: Image.network(
                 '${Constants.getBaseApi()}/picture/id/${picture.id}',
-                height: 100.0,
-                width: 100.0,
+                height: 120.0,
+                width: 120.0,
                 fit: BoxFit.cover,
               )));
-
-      // Widget w = ClipRRect(
-      //     borderRadius: BorderRadius.circular(8.0),
-      //     child: Image.network(
-      //       '${Constants.getBaseApi()}/picture/id/${picture.id}',
-      //       height: 100.0,
-      //       width: 100.0,
-      //     ));
 
       picturesWidgets.add(w);
     });
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: picturesWidgets,
+    return Container(
+      margin: EdgeInsets.only(top: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: picturesWidgets,
+      ),
     );
   }
 
