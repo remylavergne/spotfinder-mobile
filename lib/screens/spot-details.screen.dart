@@ -286,6 +286,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                   position:
                       GeolocationHelper.instance.getPositionFromSpot(spot),
                   takePictureFor: TakePictureFor.spot,
+                  spotID: spot.id,
                 )));
   }
 }

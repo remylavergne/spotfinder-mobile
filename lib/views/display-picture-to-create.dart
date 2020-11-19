@@ -6,18 +6,21 @@ import 'package:geolocator/geolocator.dart';
 import 'package:spotfinder/enums/take-picture-for.enum.dart';
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/repositories/repository.dart';
+import 'package:spotfinder/screens/spot-details.screen.dart';
 
 class DisplayPictureScreen extends StatefulWidget {
   static String route = '/display-picture';
   final String imagePath;
   final Position position;
   final TakePictureFor takePictureFor;
+  final String spotID;
 
   DisplayPictureScreen(
       {Key key,
       @required this.imagePath,
       @required this.position,
-      @required this.takePictureFor})
+      @required this.takePictureFor,
+      this.spotID})
       : super(key: key);
 
   @override
@@ -47,7 +50,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   Widget build(BuildContext context) {
     this.mediaQueryData = MediaQuery.of(context);
     AppBar appBar = AppBar(
-      title: Text('Création d\'un nouveau spot'),
+      title: Text('Création d\'un nouveau spot'), //todo: update title
       backgroundColor: Color(0xFF011627),
     );
 
@@ -111,11 +114,11 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 onPressed: () {
                   if (this._formKey.currentState.validate()) {
                     switch (widget.takePictureFor) {
-                      case TakePictureFor.spot:
+                      case TakePictureFor.creation:
                         this._spotCreationFlow(context);
                         break;
                       case TakePictureFor.spot:
-                        //todo: Implement business logic
+                        this._addPictureFlow(context);
                         break;
                       default:
                         throw Exception('Unknown flow picture');
@@ -123,7 +126,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   }
                 },
                 child: Text(
-                  'Créer',
+                  'Créer', // todo: update texte
                   style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -144,7 +147,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
             StatefulBuilder(builder: (dialogContext, setState) {
               this.dialogState = setState;
               return AlertDialog(
-                title: Center(child: Text('Création')),
+                title: Center(child: Text('Création')), // todo: update text
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -190,8 +193,57 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     });
   }
 
+  void _addPictureFlow(BuildContext context) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext dialogContext) =>
+            StatefulBuilder(builder: (dialogContext, setState) {
+              this.dialogState = setState;
+              return AlertDialog(
+                title: Center(child: Text('Ajout d\'une photo')),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(
+                      height: 16.0,
+                    ),
+                    Text(alertDialogContent),
+                  ],
+                ),
+              );
+            }));
+
+    // dialogState(() {
+    //   alertDialogContent = 'Envoi de l\'image en cours...';
+    // });
+
+    Repository()
+        .uploadPicture(widget.spotID, idUser, File(widget.imagePath))
+        .then((bool uploadSuccess) {
+      if (uploadSuccess) {
+        dialogState(() {
+          alertDialogContent = 'La photo a bien été ajoutée au Spot.';
+        });
+        this._returnToSpot(context);
+      } else {
+        dialogState(() {
+          alertDialogContent =
+              'Erreur à l\'ajout de la photo. Réessayez plus tard.';
+        });
+        this._returnToSpot(context);
+      }
+    });
+  }
+
   void _returnToHome(BuildContext context) async {
     await Future.delayed(Duration(seconds: 3));
     Navigator.popUntil(context, ModalRoute.withName('/'));
+  }
+
+  void _returnToSpot(BuildContext context) async {
+    await Future.delayed(Duration(seconds: 3));
+    Navigator.popUntil(context, ModalRoute.withName(SpotDetailsScreen.route));
   }
 }

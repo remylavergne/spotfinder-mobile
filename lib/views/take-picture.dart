@@ -12,12 +12,14 @@ class TakePictureScreen extends StatefulWidget {
   final CameraDescription camera;
   final Position position;
   final TakePictureFor takePictureFor;
+  final String spotID;
 
   const TakePictureScreen(
       {Key key,
       @required this.camera,
       @required this.position,
-      @required this.takePictureFor})
+      @required this.takePictureFor,
+      this.spotID})
       : super(key: key);
 
   @override
@@ -144,6 +146,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             imagePath: path,
             position: widget.position,
             takePictureFor: widget.takePictureFor,
+            spotID: widget.spotID,
           ),
         ),
       );
