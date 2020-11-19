@@ -55,4 +55,18 @@ class GeolocationHelper {
   Position getPositionFromSpot(Spot spot) {
     return Position(longitude: spot.longitude, latitude: spot.latitude);
   }
+
+  double getDistanceBetweenToPosition(
+      Position userPosition, Position spotPosition) {
+    return Geolocator.distanceBetween(userPosition.latitude,
+        userPosition.longitude, spotPosition.latitude, spotPosition.longitude);
+  }
+
+  String formatDistance(double distance) {
+    if (distance < 1000) {
+      return '${distance.toStringAsPrecision(2)} m';
+    } else {
+      return '${distance.toStringAsPrecision(2)} km';
+    }
+  }
 }
