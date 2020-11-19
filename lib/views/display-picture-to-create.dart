@@ -226,12 +226,12 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
         .uploadPicture(widget.spotID, idUser, File(widget.imagePath))
         .then((bool uploadSuccess) {
       if (uploadSuccess) {
-        dialogState(() {
+        this.dialogState(() {
           this.alertDialogContent = 'La photo a bien été ajoutée au Spot.';
         });
         this._returnToTakePictureScreen(context);
       } else {
-        dialogState(() {
+        this.dialogState(() {
           this.alertDialogContent =
               'Erreur à l\'ajout de la photo. Réessayez plus tard.';
         });
@@ -241,12 +241,12 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   void _returnToHome(BuildContext context) async {
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 2));
     Navigator.popUntil(context, ModalRoute.withName('/'));
   }
 
   void _returnToTakePictureScreen(BuildContext context) async {
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 2));
     Navigator.pop(context);
     Navigator.pop(context);
   }
