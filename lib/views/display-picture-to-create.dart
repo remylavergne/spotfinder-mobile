@@ -12,12 +12,14 @@ class DisplayPictureScreen extends StatefulWidget {
   final String imagePath;
   final Position position;
   final TakePictureFor takePictureFor;
+  final String spotID;
 
   DisplayPictureScreen(
       {Key key,
       @required this.imagePath,
       @required this.position,
-      @required this.takePictureFor})
+      @required this.takePictureFor,
+      this.spotID})
       : super(key: key);
 
   @override
@@ -47,7 +49,9 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   Widget build(BuildContext context) {
     this.mediaQueryData = MediaQuery.of(context);
     AppBar appBar = AppBar(
-      title: Text('Création d\'un nouveau spot'),
+      title: Text(widget.takePictureFor == TakePictureFor.creation
+          ? 'Création d\'un nouveau spot'
+          : 'Ajouter une photo'),
       backgroundColor: Color(0xFF011627),
     );
 
@@ -81,22 +85,25 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            TextFormField(
-              controller: this.spotNameController,
-              decoration: InputDecoration(
-                hintStyle: TextStyle(
-                  color: Color(0xFF989898),
-                  fontSize: 18.0,
+            Visibility(
+              visible: widget.takePictureFor == TakePictureFor.creation,
+              child: TextFormField(
+                controller: this.spotNameController,
+                decoration: InputDecoration(
+                  hintStyle: TextStyle(
+                    color: Color(0xFF989898),
+                    fontSize: 18.0,
+                  ),
+                  hintText: 'Nom du spot (facultatif)',
+                  fillColor: Colors.white,
+                  filled: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(4.0),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
-                hintText: 'Nom du spot (facultatif)',
-                fillColor: Colors.white,
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(4.0),
-                  borderSide: BorderSide.none,
-                ),
+                validator: (value) => null,
               ),
-              validator: (value) => null,
             ),
             Container(
               width: 180.0,
@@ -111,11 +118,11 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 onPressed: () {
                   if (this._formKey.currentState.validate()) {
                     switch (widget.takePictureFor) {
-                      case TakePictureFor.spot:
+                      case TakePictureFor.creation:
                         this._spotCreationFlow(context);
                         break;
                       case TakePictureFor.spot:
-                        //todo: Implement business logic
+                        this._addPictureFlow(context);
                         break;
                       default:
                         throw Exception('Unknown flow picture');
@@ -123,7 +130,9 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   }
                 },
                 child: Text(
-                  'Créer',
+                  widget.takePictureFor == TakePictureFor.creation
+                      ? 'Créer'
+                      : 'Ajouter', // todo: update texte
                   style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -144,7 +153,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
             StatefulBuilder(builder: (dialogContext, setState) {
               this.dialogState = setState;
               return AlertDialog(
-                title: Center(child: Text('Création')),
+                title: Center(child: Text('Création')), // todo: update text
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -190,8 +199,55 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     });
   }
 
+  void _addPictureFlow(BuildContext context) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext dialogContext) =>
+            StatefulBuilder(builder: (dialogContext, setState) {
+              this.dialogState = setState;
+              this.alertDialogContent = 'Envoi de l\'image en cours...';
+              return AlertDialog(
+                title: Center(child: Text('Ajout d\'une photo')),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(
+                      height: 16.0,
+                    ),
+                    Text(this.alertDialogContent),
+                  ],
+                ),
+              );
+            }));
+
+    Repository()
+        .uploadPicture(widget.spotID, idUser, File(widget.imagePath))
+        .then((bool uploadSuccess) {
+      if (uploadSuccess) {
+        this.dialogState(() {
+          this.alertDialogContent = 'La photo a bien été ajoutée au Spot.';
+        });
+        this._returnToTakePictureScreen(context);
+      } else {
+        this.dialogState(() {
+          this.alertDialogContent =
+              'Erreur à l\'ajout de la photo. Réessayez plus tard.';
+        });
+        this._returnToTakePictureScreen(context);
+      }
+    });
+  }
+
   void _returnToHome(BuildContext context) async {
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 2));
     Navigator.popUntil(context, ModalRoute.withName('/'));
+  }
+
+  void _returnToTakePictureScreen(BuildContext context) async {
+    await Future.delayed(Duration(seconds: 2));
+    Navigator.pop(context);
+    Navigator.pop(context);
   }
 }
