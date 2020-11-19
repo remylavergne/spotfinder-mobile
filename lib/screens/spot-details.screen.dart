@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:spotfinder/camera.helper.dart';
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/enums/take-picture-for.enum.dart';
@@ -89,23 +90,41 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
           Container(
               margin: EdgeInsets.only(top: 8.0),
               child: Text(spot.getSpotAddress())),
-          Container(
-            margin: EdgeInsets.only(top: 4.0),
-            child: FlatButton(
-              color: Color(0xAAE5E5E5),
-              onPressed: () {
-                debugPrint('Navigate to Spot');
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Icon(Icons.directions_run),
-                  Text('Distance : '),
-                  Text('3,2 km'),
-                ],
-              ),
-            ),
-          ),
+          FutureBuilder<Position>(
+              future: GeolocationHelper.instance.getCurrentPosition(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  Position userPosition = snapshot.data;
+
+                  double distance = GeolocationHelper.instance
+                      .getDistanceBetweenToPosition(userPosition,
+                          GeolocationHelper.instance.getPositionFromSpot(spot));
+                  String realDistance =
+                      GeolocationHelper.instance.formatDistance(distance);
+
+                  return Container(
+                    margin: EdgeInsets.only(top: 4.0),
+                    child: FlatButton(
+                      color: Color(0xAAE5E5E5),
+                      onPressed: () {
+                        debugPrint('Navigate to Spot');
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(Icons.directions_run),
+                          Text('Distance : '),
+                          Text(realDistance),
+                        ],
+                      ),
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Container(); // todo: Display navigation button only
+                } else {
+                  return Container();
+                }
+              }),
         ],
       ),
     );
