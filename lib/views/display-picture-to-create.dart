@@ -6,7 +6,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:spotfinder/enums/take-picture-for.enum.dart';
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/repositories/repository.dart';
-import 'package:spotfinder/screens/spot-details.screen.dart';
 
 class DisplayPictureScreen extends StatefulWidget {
   static String route = '/display-picture';
@@ -50,7 +49,9 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   Widget build(BuildContext context) {
     this.mediaQueryData = MediaQuery.of(context);
     AppBar appBar = AppBar(
-      title: Text('Création d\'un nouveau spot'), //todo: update title
+      title: Text(widget.takePictureFor == TakePictureFor.creation
+          ? 'Création d\'un nouveau spot'
+          : 'Ajouter une photo'),
       backgroundColor: Color(0xFF011627),
     );
 
@@ -84,22 +85,25 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            TextFormField(
-              controller: this.spotNameController,
-              decoration: InputDecoration(
-                hintStyle: TextStyle(
-                  color: Color(0xFF989898),
-                  fontSize: 18.0,
+            Visibility(
+              visible: widget.takePictureFor == TakePictureFor.creation,
+              child: TextFormField(
+                controller: this.spotNameController,
+                decoration: InputDecoration(
+                  hintStyle: TextStyle(
+                    color: Color(0xFF989898),
+                    fontSize: 18.0,
+                  ),
+                  hintText: 'Nom du spot (facultatif)',
+                  fillColor: Colors.white,
+                  filled: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(4.0),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
-                hintText: 'Nom du spot (facultatif)',
-                fillColor: Colors.white,
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(4.0),
-                  borderSide: BorderSide.none,
-                ),
+                validator: (value) => null,
               ),
-              validator: (value) => null,
             ),
             Container(
               width: 180.0,
@@ -126,7 +130,9 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   }
                 },
                 child: Text(
-                  'Créer', // todo: update texte
+                  widget.takePictureFor == TakePictureFor.creation
+                      ? 'Créer'
+                      : 'Ajouter', // todo: update texte
                   style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -200,6 +206,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
         builder: (BuildContext dialogContext) =>
             StatefulBuilder(builder: (dialogContext, setState) {
               this.dialogState = setState;
+              this.alertDialogContent = 'Envoi de l\'image en cours...';
               return AlertDialog(
                 title: Center(child: Text('Ajout d\'une photo')),
                 content: Column(
@@ -209,30 +216,26 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                     SizedBox(
                       height: 16.0,
                     ),
-                    Text(alertDialogContent),
+                    Text(this.alertDialogContent),
                   ],
                 ),
               );
             }));
-
-    // dialogState(() {
-    //   alertDialogContent = 'Envoi de l\'image en cours...';
-    // });
 
     Repository()
         .uploadPicture(widget.spotID, idUser, File(widget.imagePath))
         .then((bool uploadSuccess) {
       if (uploadSuccess) {
         dialogState(() {
-          alertDialogContent = 'La photo a bien été ajoutée au Spot.';
+          this.alertDialogContent = 'La photo a bien été ajoutée au Spot.';
         });
-        this._returnToSpot(context);
+        this._returnToTakePictureScreen(context);
       } else {
         dialogState(() {
-          alertDialogContent =
+          this.alertDialogContent =
               'Erreur à l\'ajout de la photo. Réessayez plus tard.';
         });
-        this._returnToSpot(context);
+        this._returnToTakePictureScreen(context);
       }
     });
   }
@@ -242,8 +245,9 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     Navigator.popUntil(context, ModalRoute.withName('/'));
   }
 
-  void _returnToSpot(BuildContext context) async {
+  void _returnToTakePictureScreen(BuildContext context) async {
     await Future.delayed(Duration(seconds: 3));
-    Navigator.popUntil(context, ModalRoute.withName(SpotDetailsScreen.route));
+    Navigator.pop(context);
+    Navigator.pop(context);
   }
 }
