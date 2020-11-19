@@ -35,6 +35,7 @@ dependencies:
   shared_preferences: ^0.5.12+2
   uuid: ^2.2.2
   geolocator: ^6.1.6
+  url_launcher: ^5.7.10
 
 dev_dependencies:
   flutter_test:
