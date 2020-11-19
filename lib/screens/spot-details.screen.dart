@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
@@ -10,6 +12,7 @@ import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/services/global-rest.service.dart';
 import 'package:spotfinder/views/take-picture.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SpotDetailsScreen extends StatefulWidget {
   static String route = '/spot-details';
@@ -107,7 +110,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                     child: FlatButton(
                       color: Color(0xAAE5E5E5),
                       onPressed: () {
-                        debugPrint('Navigate to Spot');
+                        this._navigateToSpot(spot);
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -119,10 +122,23 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                       ),
                     ),
                   );
-                } else if (snapshot.hasError) {
-                  return Container(); // todo: Display navigation button only
                 } else {
-                  return Container();
+                  return Container(
+                    margin: EdgeInsets.only(top: 4.0),
+                    child: FlatButton(
+                      color: Color(0xAAE5E5E5),
+                      onPressed: () {
+                        this._navigateToSpot(spot);
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(Icons.directions_run),
+                          Text('Voir itinéraire')
+                        ],
+                      ),
+                    ),
+                  );
                 }
               }),
         ],
@@ -163,7 +179,6 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
               ),
               GestureDetector(
                 onTap: () {
-                  debugPrint('Add new picture to spot');
                   //todo: Check all permissions before...
                   this._takeAndAddPicture(context, widget.spot);
                 },
@@ -307,5 +322,21 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                   takePictureFor: TakePictureFor.spot,
                   spotID: spot.id,
                 )));
+  }
+
+  void _navigateToSpot(Spot spot) async {
+    String url;
+    if (Platform.isIOS) {
+      url = 'https://maps.apple.com/?q=${spot.latitude},${spot.longitude}';
+    } else if (Platform.isAndroid) {
+      url =
+          'https://www.google.com/maps/search/?api=1&query=${spot.latitude},${spot.longitude}';
+    }
+
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
