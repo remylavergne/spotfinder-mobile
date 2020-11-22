@@ -64,9 +64,9 @@ class GeolocationHelper {
 
   String formatDistance(double distance) {
     if (distance < 1000) {
-      return '${distance.toStringAsPrecision(2)} m';
+      return '${distance.truncate()} m';
     } else {
-      return '${distance.toStringAsPrecision(2)} km';
+      return '${distance.toStringAsFixed(3)} km';
     }
   }
 }
