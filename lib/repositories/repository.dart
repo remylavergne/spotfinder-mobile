@@ -58,4 +58,9 @@ class Repository {
   Future<bool> uploadPicture(String idSpot, String idUser, File file) async {
     return await RestService().uploadPicture(idSpot, idUser, file);
   }
+
+  Future<ResultWrapper<List<Spot>>> getNearestPaginatedSpots(
+      Position position, int page, int limit) {
+    return RestService().getNearestPaginatedSpots(position, page, limit);
+  }
 }

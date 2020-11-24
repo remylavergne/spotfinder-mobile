@@ -72,6 +72,8 @@ class Spot {
   }
 
   String getSpotAddress() {
-    return this.address != null && this.address.isNotEmpty ? this.address : 'L\'adresse n\'a pas encore été calculée par le système...';
+    return this.address != null && this.address.isNotEmpty
+        ? this.address
+        : 'L\'adresse n\'a pas encore été calculée par le système...';
   }
 }

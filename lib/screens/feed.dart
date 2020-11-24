@@ -22,7 +22,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   Throttling createSpotThrottling = Throttling(Duration(seconds: 2));
   GlobalKey _keyHeader = GlobalKey();
   Future<ResultWrapper<List<Spot>>> _newest;
-  Future<ResultWrapper<List<Spot>>> _closest;
+  Future<ResultWrapper<List<Spot>>> _nearest;
 
   @override
   void initState() {
@@ -49,8 +49,27 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                     child: TabBarView(
                       controller: this.tabController,
                       children: [
-                        this._gridCloseSpotMOCK(),
                         this._displayNewestSpots(mediaQueryData),
+                        FutureBuilder<Position>(
+                            future:
+                                GeolocationHelper.instance.getCurrentPosition(),
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                              if (snapshot.hasData) {
+                                Position position = snapshot.data;
+
+                                this._nearest = Repository()
+                                    .getNearestPaginatedSpots(position, 1, 20);
+
+                                return this
+                                    ._displayNearestSpots(mediaQueryData);
+                              }
+                              if (snapshot.hasError) {
+                                return this._displayNewestSpots(mediaQueryData);
+                              } else {
+                                return CircularProgressIndicator();
+                              }
+                            }),
                       ],
                     ),
                   ),
@@ -127,7 +146,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
             child: TabBar(
               indicatorColor: Color(0xFFD4D4D4),
               labelPadding: EdgeInsets.only(bottom: 10.0),
-              tabs: [Text('Proches'), Text('Récents')],
+              tabs: [Text('Récents'), Text('Proches'),],
               controller: this.tabController,
             ),
           )
@@ -242,7 +261,41 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
               ),
             );
           } else if (snapshot.hasError) {
-            return Center(child: Text('Erreur pendant la récupération des Spots...'));
+            return Center(
+                child: Text('Erreur pendant la récupération des Spots...'));
+          } else {
+            return this._loadingScreen(mediaQuery);
+          }
+        });
+  }
+
+  Widget _displayNearestSpots(MediaQueryData mediaQuery) {
+    return FutureBuilder<ResultWrapper<List<Spot>>>(
+        future: this._nearest,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            ResultWrapper<List<Spot>> wrapper = snapshot.data;
+            List<Spot> spots = wrapper.result;
+
+            return GridView.builder(
+              itemCount: spots.length,
+              padding: EdgeInsets.only(top: 0),
+              gridDelegate:
+                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+              itemBuilder: (BuildContext context, int index) => GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              SpotDetailsScreen(spot: spots[index])));
+                },
+                child: this._getSpotWidget(spots[index]),
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+                child: Text('Erreur pendant la récupération des Spots...'));
           } else {
             return this._loadingScreen(mediaQuery);
           }
