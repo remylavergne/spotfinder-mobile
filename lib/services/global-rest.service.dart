@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:spotfinder/constants.dart';
@@ -40,6 +41,31 @@ class RestService {
       return rw;
     } else {
       throw Exception('Failed to get paginated spots');
+    }
+  }
+
+  Future<ResultWrapper<List<Spot>>> getNearestPaginatedSpots(
+      Position position, int page, int limit) async {
+    final response = await http.post(
+        Constants.getBaseApi() + '/spots/nearest?page=$page&limit=$limit',
+        body: jsonEncode(
+            {"longitude": position.longitude, "latitude": position.latitude}));
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> wrapperMap = jsonDecode(response.body);
+      // Serialize Spots objects
+      List<dynamic> spotsJson = wrapperMap['result'];
+      List<Spot> spots = Spot.fromJsonList(spotsJson);
+      // Serialize Pagination
+      Map<String, dynamic> paginationJson = wrapperMap['pagination'];
+      Pagination pagination = Pagination.fromJson(paginationJson);
+      // Création du ResultWrapper
+      ResultWrapper<List<Spot>> rw = ResultWrapper.fromJson(wrapperMap, spots);
+      rw.pagination = pagination;
+
+      return rw;
+    } else {
+      throw Exception('Failed to get nearest paginated spots');
     }
   }
 
