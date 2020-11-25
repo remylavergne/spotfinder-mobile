@@ -3,6 +3,8 @@ import 'package:spotfinder/camera.helper.dart';
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/screens/create-account.dart';
 import 'package:spotfinder/screens/feed.dart';
+import 'package:spotfinder/screens/picture-full.screen.dart';
+import 'package:spotfinder/screens/pictures-list.screen.dart';
 import 'package:spotfinder/screens/retrieve-account.dart';
 import 'package:spotfinder/screens/spot-details.screen.dart';
 import 'package:spotfinder/views/display-picture-to-create.dart';
@@ -35,7 +37,14 @@ class SpotFinderApp extends StatelessWidget {
               // ignore: missing_required_param
               DisplayPictureScreen(),
           SpotDetailsScreen.route: (BuildContext context) =>
+              // ignore: missing_required_param
               SpotDetailsScreen(),
+          PicturesDisplayScreen.route: (BuildContext context) =>
+              // ignore: missing_required_param
+              PicturesDisplayScreen(),
+          PictureFullScreen.route: (BuildContext context) =>
+              // ignore: missing_required_param
+              PictureFullScreen(),
         },
         theme: ThemeData(
           primarySwatch: Colors.blue,
