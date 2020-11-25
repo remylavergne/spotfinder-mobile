@@ -69,7 +69,7 @@ class RestService {
     }
   }
 
-  Future<ResultWrapper<List<Picture>>> getPaginatedPictures(
+  Future<ResultWrapper<List<Picture>>> getPaginatedSpotPictures(
       int page, int limit, String spotID) async {
     final response = await http.get(Constants.getBaseApi() +
         '/spot/$spotID/pictures?page=$page&limit=$limit');

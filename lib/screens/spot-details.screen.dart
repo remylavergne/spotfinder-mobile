@@ -10,6 +10,7 @@ import 'package:spotfinder/helpers/geolocation.helper.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
+import 'package:spotfinder/screens/pictures-list.screen.dart';
 import 'package:spotfinder/services/global-rest.service.dart';
 import 'package:spotfinder/views/take-picture.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -29,7 +30,8 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
 
   @override
   void initState() {
-    this.pictures = RestService().getPaginatedPictures(1, 3, widget.spot.id);
+    this.pictures =
+        RestService().getPaginatedSpotPictures(1, 3, widget.spot.id);
     super.initState();
   }
 
@@ -169,7 +171,14 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                   Text(' - '),
                   GestureDetector(
                     onTap: () {
-                      debugPrint('Display all pictures');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              PicturesDisplayScreen(
+                                  id: widget.spot.id, type: PicturesFrom.SPOT),
+                        ),
+                      );
                     },
                     child: Text('Afficher tout',
                         style: TextStyle(
