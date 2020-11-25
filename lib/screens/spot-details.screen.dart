@@ -10,6 +10,7 @@ import 'package:spotfinder/helpers/geolocation.helper.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
+import 'package:spotfinder/screens/picture-full.screen.dart';
 import 'package:spotfinder/screens/pictures-list.screen.dart';
 import 'package:spotfinder/services/global-rest.service.dart';
 import 'package:spotfinder/views/take-picture.dart';
@@ -270,21 +271,33 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
     List<Widget> picturesWidgets = [];
     // todo: taille des images en fonction de la taille de l'écran ! => MediaQueryData
     pictures.forEach((Picture picture) {
-      Widget w = Container(
+      Widget w = GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  PictureFullScreen(picture: picture),
+            ),
+          );
+        },
+        child: Container(
           width: 120.0,
           height: 120.0,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(6.0)),
-            // border: Border.all(color: Colors.black, width: 0.5),
           ),
           child: ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              child: Image.network(
-                '${Constants.getBaseApi()}/picture/id/${picture.id}',
-                height: 120.0,
-                width: 120.0,
-                fit: BoxFit.cover,
-              )));
+            borderRadius: BorderRadius.circular(8.0),
+            child: Image.network(
+              '${Constants.getBaseApi()}/picture/id/${picture.id}',
+              height: 120.0,
+              width: 120.0,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+      );
 
       picturesWidgets.add(w);
     });

@@ -4,6 +4,7 @@ import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
+import 'package:spotfinder/screens/picture-full.screen.dart';
 
 enum PicturesFrom { SPOT, USER }
 
@@ -71,11 +72,13 @@ class _PicturesDisplayScreenState extends State<PicturesDisplayScreen> {
           SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
       itemBuilder: (BuildContext context, int index) => GestureDetector(
         onTap: () {
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (BuildContext context) =>
-          //             SpotDetailsScreen(spot: spots[index])));
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  PictureFullScreen(picture: pictures[index]),
+            ),
+          );
         },
         child: this._getItemView(pictures[index]),
       ),
