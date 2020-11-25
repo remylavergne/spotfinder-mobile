@@ -42,6 +42,7 @@ class _PicturesDisplayScreenState extends State<PicturesDisplayScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Photos'),
+        backgroundColor: Color(0xFF011627),
       ),
       body: FutureBuilder<ResultWrapper<List<Picture>>>(
         future: this._pictures,
@@ -53,9 +54,9 @@ class _PicturesDisplayScreenState extends State<PicturesDisplayScreen> {
 
             return this._gridView(pictures);
           } else if (snapshot.hasError) {
-            return Text('ERROR...');
+            return Center(child: Text('An error occured... Please go back.'));
           } else {
-            return CircularProgressIndicator();
+            return Container(child: Center(child: CircularProgressIndicator()));
           }
         },
       ),
@@ -70,8 +71,6 @@ class _PicturesDisplayScreenState extends State<PicturesDisplayScreen> {
           SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
       itemBuilder: (BuildContext context, int index) => GestureDetector(
         onTap: () {
-          // Navigator.pushNamed(context, SpotDetailsScreen.route,
-          //     arguments: spots[index]);
           // Navigator.push(
           //     context,
           //     MaterialPageRoute(
@@ -85,11 +84,13 @@ class _PicturesDisplayScreenState extends State<PicturesDisplayScreen> {
 
   GridTile _getItemView(Picture picture) {
     return GridTile(
-        child: Container(
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black, width: 0.5)),
-            child: Image.network(
-                '${Constants.getBaseApi()}/picture/id/${picture.id}',
-                fit: BoxFit.cover)));
+      child: Container(
+        decoration:
+            BoxDecoration(border: Border.all(color: Colors.white, width: 0.5)),
+        child: Image.network(
+            '${Constants.getBaseApi()}/picture/id/${picture.id}',
+            fit: BoxFit.cover),
+      ),
+    );
   }
 }

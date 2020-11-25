@@ -319,7 +319,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     return GridTile(
         child: Container(
             decoration: BoxDecoration(
-                border: Border.all(color: Colors.black, width: 0.5)),
+                border: Border.all(color: Colors.white, width: 0.5)),
             child: Image.network(
                 '${Constants.getBaseApi()}/picture/id/${spot.pictureId}',
                 fit: BoxFit.cover)));
