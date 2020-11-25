@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:geolocator/geolocator.dart';
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/models/dto/create-spot.dto.dart';
+import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/models/user.model.dart';
@@ -62,5 +63,10 @@ class Repository {
   Future<ResultWrapper<List<Spot>>> getNearestPaginatedSpots(
       Position position, int page, int limit) {
     return RestService().getNearestPaginatedSpots(position, page, limit);
+  }
+
+  Future<ResultWrapper<List<Picture>>> getPaginatedSpotPictures(
+      int page, int limit, String spotID) async {
+    return RestService().getPaginatedSpotPictures(page, limit, spotID);
   }
 }
