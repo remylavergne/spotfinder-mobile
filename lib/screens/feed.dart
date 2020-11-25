@@ -61,8 +61,8 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                 this._nearest = Repository()
                                     .getNearestPaginatedSpots(position, 1, 20);
 
-                                return this
-                                    ._displayNearestSpots(mediaQueryData, position);
+                                return this._displayNearestSpots(
+                                    mediaQueryData, position);
                               }
                               if (snapshot.hasError) {
                                 return this._displayNewestSpots(mediaQueryData);
@@ -77,29 +77,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
               ),
             ),
             // Button to create
-            Container(
-              alignment: Alignment.bottomCenter,
-              width: 180.0,
-              margin:
-                  EdgeInsets.only(bottom: mediaQueryData.padding.bottom + 16.0),
-              child: FlatButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4.0),
-                ),
-                color: Color(0xFF148F12),
-                textColor: Colors.white,
-                height: 56.0,
-                onPressed: () async {
-                  this.createSpotThrottling.throttle(() {
-                    this._startCreation(context);
-                  });
-                },
-                child: Text(
-                  'Créer',
-                  style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
+            this._createButton(mediaQueryData),
           ],
         ),
       ),
@@ -286,9 +264,8 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
             List<Spot> spots = wrapper.result;
 
             return RefreshIndicator(
-              onRefresh: () =>
-                  this._nearest = Repository()
-                                    .getNearestPaginatedSpots(position, 1, 20),
+              onRefresh: () => this._nearest =
+                  Repository().getNearestPaginatedSpots(position, 1, 20),
               child: GridView.builder(
                 itemCount: spots.length,
                 padding: EdgeInsets.only(top: 0),
@@ -338,57 +315,6 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     );
   }
 
-  Widget _gridCloseSpotMOCK() {
-    return GridView.count(
-      padding: EdgeInsets.only(top: 0),
-      crossAxisCount: 3,
-      children: [
-        GridTile(
-            child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black, width: 0.5)),
-                child: Image.network(
-                    'https://www.skatereview.com/wp-content/uploads/2017/07/skateboard-trick-tipp-nollie-heelflip.jpg',
-                    fit: BoxFit.cover))),
-        GridTile(
-            child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black, width: 0.5)),
-                child: Image.network(
-                    'https://i.pinimg.com/originals/f2/26/15/f22615c8787e5e99406c22c791d62d32.jpg',
-                    fit: BoxFit.cover))),
-        GridTile(
-            child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black, width: 0.5)),
-                child: Image.network(
-                    'https://www.activethrills.com/wp-content/uploads/2017/09/skateboard-tricks-780x400.jpg',
-                    fit: BoxFit.cover))),
-        GridTile(
-            child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black, width: 0.5)),
-                child: Image.network(
-                    'https://i.ytimg.com/vi/gSEvU9drzfw/maxresdefault.jpg',
-                    fit: BoxFit.cover))),
-        GridTile(
-            child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black, width: 0.5)),
-                child: Image.network(
-                    'https://i.ytimg.com/vi/9hySkXBQJTM/hqdefault.jpg',
-                    fit: BoxFit.cover))),
-        GridTile(
-            child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black, width: 0.5)),
-                child: Image.network(
-                    'https://i.pinimg.com/originals/c5/2b/5b/c52b5b980bbfe3e79993823bb93149f7.jpg',
-                    fit: BoxFit.cover))),
-      ],
-    );
-  }
-
   Widget _getSpotWidget(Spot spot) {
     return GridTile(
         child: Container(
@@ -397,5 +323,30 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
             child: Image.network(
                 '${Constants.getBaseApi()}/picture/id/${spot.pictureId}',
                 fit: BoxFit.cover)));
+  }
+
+  Container _createButton(MediaQueryData mediaQueryData) {
+    return Container(
+      alignment: Alignment.bottomCenter,
+      width: 180.0,
+      margin: EdgeInsets.only(bottom: mediaQueryData.padding.bottom + 16.0),
+      child: FlatButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4.0),
+        ),
+        color: Color(0xFF148F12),
+        textColor: Colors.white,
+        height: 56.0,
+        onPressed: () async {
+          this.createSpotThrottling.throttle(() {
+            this._startCreation(context);
+          });
+        },
+        child: Text(
+          'Créer',
+          style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
   }
 }
