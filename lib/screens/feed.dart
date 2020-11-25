@@ -62,7 +62,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                     .getNearestPaginatedSpots(position, 1, 20);
 
                                 return this
-                                    ._displayNearestSpots(mediaQueryData);
+                                    ._displayNearestSpots(mediaQueryData, position);
                               }
                               if (snapshot.hasError) {
                                 return this._displayNewestSpots(mediaQueryData);
@@ -146,7 +146,10 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
             child: TabBar(
               indicatorColor: Color(0xFFD4D4D4),
               labelPadding: EdgeInsets.only(bottom: 10.0),
-              tabs: [Text('Récents'), Text('Proches'),],
+              tabs: [
+                Text('Récents'),
+                Text('Proches'),
+              ],
               controller: this.tabController,
             ),
           )
@@ -242,22 +245,27 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
             ResultWrapper<List<Spot>> wrapper = snapshot.data;
             List<Spot> spots = wrapper.result;
 
-            return GridView.builder(
-              itemCount: spots.length,
-              padding: EdgeInsets.only(top: 0),
-              gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-              itemBuilder: (BuildContext context, int index) => GestureDetector(
-                onTap: () {
-                  // Navigator.pushNamed(context, SpotDetailsScreen.route,
-                  //     arguments: spots[index]);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              SpotDetailsScreen(spot: spots[index])));
-                },
-                child: this._getSpotWidget(spots[index]),
+            return RefreshIndicator(
+              onRefresh: () =>
+                  this._newest = Repository().getPaginatedSpots(1, 20),
+              child: GridView.builder(
+                itemCount: spots.length,
+                padding: EdgeInsets.only(top: 0),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3),
+                itemBuilder: (BuildContext context, int index) =>
+                    GestureDetector(
+                  onTap: () {
+                    // Navigator.pushNamed(context, SpotDetailsScreen.route,
+                    //     arguments: spots[index]);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                SpotDetailsScreen(spot: spots[index])));
+                  },
+                  child: this._getSpotWidget(spots[index]),
+                ),
               ),
             );
           } else if (snapshot.hasError) {
@@ -269,7 +277,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
         });
   }
 
-  Widget _displayNearestSpots(MediaQueryData mediaQuery) {
+  Widget _displayNearestSpots(MediaQueryData mediaQuery, Position position) {
     return FutureBuilder<ResultWrapper<List<Spot>>>(
         future: this._nearest,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -277,20 +285,26 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
             ResultWrapper<List<Spot>> wrapper = snapshot.data;
             List<Spot> spots = wrapper.result;
 
-            return GridView.builder(
-              itemCount: spots.length,
-              padding: EdgeInsets.only(top: 0),
-              gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-              itemBuilder: (BuildContext context, int index) => GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              SpotDetailsScreen(spot: spots[index])));
-                },
-                child: this._getSpotWidget(spots[index]),
+            return RefreshIndicator(
+              onRefresh: () =>
+                  this._nearest = Repository()
+                                    .getNearestPaginatedSpots(position, 1, 20),
+              child: GridView.builder(
+                itemCount: spots.length,
+                padding: EdgeInsets.only(top: 0),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3),
+                itemBuilder: (BuildContext context, int index) =>
+                    GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                SpotDetailsScreen(spot: spots[index])));
+                  },
+                  child: this._getSpotWidget(spots[index]),
+                ),
               ),
             );
           } else if (snapshot.hasError) {
