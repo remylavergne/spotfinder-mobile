@@ -250,12 +250,17 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
             return Center(
                 child: Text('Erreur pendant la récupération des Spots...'));
           } else {
-            return this._loadingScreen(mediaQuery);
+            return Container(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
           }
         });
   }
 
-  Widget _displayNearestSpots(MediaQueryData mediaQuery, Position position) {
+  FutureBuilder<ResultWrapper<List<Spot>>> _displayNearestSpots(
+      MediaQueryData mediaQuery, Position position) {
     return FutureBuilder<ResultWrapper<List<Spot>>>(
         future: this._nearest,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -288,34 +293,16 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
             return Center(
                 child: Text('Erreur pendant la récupération des Spots...'));
           } else {
-            return this._loadingScreen(mediaQuery);
+            return Container(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
           }
         });
   }
 
-  Widget _loadingScreen(MediaQueryData mediaQuery) {
-    double marginTop =
-        ((mediaQuery.size.height - (80.0 + mediaQuery.padding.top)) / 2) - 25.0;
-    double marginLeft = (mediaQuery.size.width / 2) - 25.0;
-    // todo: Use KeyHeader here, for header height -> replace 56.0
-
-    return Container(
-      color: Color(0xAB011627),
-      child: AspectRatio(
-        aspectRatio: mediaQuery.size.aspectRatio,
-        child: Container(
-          margin: EdgeInsets.only(
-              top: marginTop,
-              left: marginLeft,
-              bottom: marginTop,
-              right: marginLeft),
-          child: CircularProgressIndicator(),
-        ),
-      ),
-    );
-  }
-
-  Widget _getSpotWidget(Spot spot) {
+  GridTile _getSpotWidget(Spot spot) {
     return GridTile(
         child: Container(
             decoration: BoxDecoration(
