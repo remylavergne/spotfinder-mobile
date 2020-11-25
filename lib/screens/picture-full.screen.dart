@@ -16,10 +16,11 @@ class PictureFullScreen extends StatelessWidget {
         backgroundColor: Color(0xFF011627),
       ),
       body: Container(
+        height: double.infinity,
         color: Colors.red,
         child: Image.network(
           '${Constants.getBaseApi()}/picture/id/${picture.id}',
-          fit: BoxFit.cover,
+          fit: BoxFit.fill,
         ),
       ),
     );
