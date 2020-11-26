@@ -66,7 +66,7 @@ class GeolocationHelper {
     if (distance < 1000) {
       return '${distance.truncate()} m';
     } else {
-      return '${distance.toStringAsFixed(3)} km';
+      return '${(distance / 1000).toStringAsFixed(3)} km';
     }
   }
 }

@@ -255,7 +255,6 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                 List<Picture> pictures = snapshot.data;
                 return this._getLastCommentsWidgets(pictures);
               } else if (snapshot.hasError) {
-                print('');
                 return CircularProgressIndicator();
               } else {
                 return CircularProgressIndicator();
