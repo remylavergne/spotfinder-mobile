@@ -3,17 +3,33 @@ import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
+import 'package:spotfinder/screens/spot-details.screen.dart';
 
 class Search extends SearchDelegate {
   @override
   ThemeData appBarTheme(BuildContext context) {
     return ThemeData(
+        inputDecorationTheme: InputDecorationTheme(
+          hintStyle: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+          ),
+        ),
+        primaryIconTheme: IconThemeData(
+          color: Colors.white,
+        ),
+        textTheme: TextTheme(
+          headline6: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+          ),
+        ),
         primaryColor: Color(0xFF011627),
         primaryTextTheme: TextTheme(
           bodyText2: TextStyle(color: Colors.white),
         ),
         secondaryHeaderColor: Colors.white);
-  } // TODO: refaire couleur
+  }
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -37,10 +53,13 @@ class Search extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    debugPrint(this.query);
-    // Faire la recherche :)
-
-    if (this.query.length <= 3) {
+    if (this.query.length == 0) {
+      return Container(
+        child: Center(
+          child: Text('Veuillez taper une recherche'),
+        ),
+      );
+    } else if (this.query.length <= 3) {
       return Container(
         child: Center(
           child: Text('Recherche trop courte'),
@@ -62,13 +81,11 @@ class Search extends SearchDelegate {
                 SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
             itemBuilder: (BuildContext context, int index) => GestureDetector(
               onTap: () {
-                // Navigator.pushNamed(context, SpotDetailsScreen.route,
-                //     arguments: spots[index]);
-                // Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //         builder: (BuildContext context) =>
-                //             SpotDetailsScreen(spot: spots[index])));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            SpotDetailsScreen(spot: spots[index])));
               },
               child: this._getSpotWidget(spots[index]),
             ),
