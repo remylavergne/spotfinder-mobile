@@ -64,7 +64,7 @@ class _PicturesDisplayScreenState extends State<PicturesDisplayScreen> {
     );
   }
 
-  GridView _gridView(List<Picture> pictures) {
+  GridView _gridView(List<Picture> pictures) { // TODO: Export into component
     return GridView.builder(
       itemCount: pictures.length,
       padding: EdgeInsets.only(top: 0),

@@ -10,6 +10,8 @@ import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/spot-details.screen.dart';
+import 'package:spotfinder/views/application-title.wiget.dart';
+import 'package:spotfinder/views/search-field.dart';
 import 'package:spotfinder/views/take-picture.dart';
 
 class Feed extends StatefulWidget {
@@ -20,7 +22,6 @@ class Feed extends StatefulWidget {
 class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   TabController tabController;
   Throttling createSpotThrottling = Throttling(Duration(seconds: 2));
-  GlobalKey _keyHeader = GlobalKey();
   Future<ResultWrapper<List<Spot>>> _newest;
   Future<ResultWrapper<List<Spot>>> _nearest;
 
@@ -35,7 +36,37 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     MediaQueryData mediaQueryData = MediaQuery.of(context);
 
+    AppBar _appBar = AppBar(
+      title: ApplicationTitle(
+        title: 'SpotFinder',
+        size: 56.0,
+        strokeSize: 2.0,
+        backgroundColor: Color(0xFF011627),
+      ),
+      backgroundColor: Color(0xFF011627),
+      bottom: TabBar(
+        indicatorColor: Color(0xFFD4D4D4),
+        // labelPadding: EdgeInsets.only(bottom: 10.0),
+        tabs: [
+          Tab(icon: Text('Récents')),
+          Tab(icon: Text('Proches')),
+        ],
+        controller: this.tabController,
+      ),
+      actions: [
+        IconButton(icon: Icon(Icons.chat), onPressed: () {}),
+        IconButton(icon: Icon(Icons.mail), onPressed: () {}),
+        IconButton(icon: Icon(Icons.account_circle), onPressed: () {}),
+        IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(context: context, delegate: Search());
+            }),
+      ],
+    );
+
     return Scaffold(
+      appBar: _appBar,
       body: Container(
         child: Stack(
           fit: StackFit.expand,
@@ -44,7 +75,6 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
             Container(
               child: Column(
                 children: [
-                  this._header(mediaQueryData, this.tabController),
                   Expanded(
                     child: TabBarView(
                       controller: this.tabController,
@@ -80,58 +110,6 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
             this._createButton(mediaQueryData),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _header(MediaQueryData mediaQueryData, TabController tabController) {
-    return Container(
-      key: this._keyHeader,
-      color: Color(0xFF011627),
-      // height: 150.0,
-      padding: EdgeInsets.only(top: mediaQueryData.padding.top),
-      child: Column(
-        children: [
-          // Champs de recherche
-          Container(
-            margin: EdgeInsets.only(
-              left: 16.0,
-              right: 16.0,
-              top: 16.0,
-            ),
-            child: Container(
-              height: 35.0,
-              child: TextField(
-                decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.search),
-                    contentPadding: const EdgeInsets.all(8.0),
-                    // isDense: true,
-                    border: new OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                        const Radius.circular(6.0),
-                      ),
-                    ),
-                    filled: true,
-                    fillColor: Color(0xFFD4D4D4),
-                    hintText: 'Search'),
-              ),
-            ),
-          ),
-          // TabBar
-          Container(
-            margin: EdgeInsets.only(top: 16.0),
-            // padding: EdgeInsets.only(bottom: 10.0),
-            child: TabBar(
-              indicatorColor: Color(0xFFD4D4D4),
-              labelPadding: EdgeInsets.only(bottom: 10.0),
-              tabs: [
-                Text('Récents'),
-                Text('Proches'),
-              ],
-              controller: this.tabController,
-            ),
-          )
-        ],
       ),
     );
   }
