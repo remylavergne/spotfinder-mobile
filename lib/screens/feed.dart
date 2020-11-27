@@ -196,7 +196,8 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   Widget _displayNewestSpots(MediaQueryData mediaQuery) {
     return FutureBuilder<ResultWrapper<List<Spot>>>(
         future: this._newest,
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
+        builder: (BuildContext context,
+            AsyncSnapshot<ResultWrapper<List<Spot>>> snapshot) {
           if (snapshot.hasData) {
             ResultWrapper<List<Spot>> wrapper = snapshot.data;
             List<Spot> spots = wrapper.result;

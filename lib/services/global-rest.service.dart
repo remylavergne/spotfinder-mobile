@@ -7,7 +7,6 @@ import 'package:http/http.dart';
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/models/dto/create-spot.dto.dart';
 import 'package:spotfinder/models/dto/search-dto.dto.dart';
-import 'package:spotfinder/models/pagination.model.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
@@ -29,17 +28,7 @@ class RestService {
 
     if (response.statusCode == 200) {
       Map<String, dynamic> wrapperMap = jsonDecode(response.body);
-      // Serialize Spots objects
-      List<dynamic> spotsJson = wrapperMap['result'];
-      List<Spot> spots = Spot.fromJsonList(spotsJson);
-      // Serialize Pagination
-      Map<String, dynamic> paginationJson = wrapperMap['pagination'];
-      Pagination pagination = Pagination.fromJson(paginationJson);
-      // Création du ResultWrapper
-      ResultWrapper<List<Spot>> rw = ResultWrapper.fromJson(wrapperMap, spots);
-      rw.pagination = pagination;
-
-      return rw;
+      return ResultWrapper.fromJsonMap<Spot>(wrapperMap) as ResultWrapper<List<Spot>>;
     } else {
       throw Exception('Failed to get paginated spots');
     }
@@ -54,17 +43,7 @@ class RestService {
 
     if (response.statusCode == 200) {
       Map<String, dynamic> wrapperMap = jsonDecode(response.body);
-      // Serialize Spots objects
-      List<dynamic> spotsJson = wrapperMap['result'];
-      List<Spot> spots = Spot.fromJsonList(spotsJson);
-      // Serialize Pagination
-      Map<String, dynamic> paginationJson = wrapperMap['pagination'];
-      Pagination pagination = Pagination.fromJson(paginationJson);
-      // Création du ResultWrapper
-      ResultWrapper<List<Spot>> rw = ResultWrapper.fromJson(wrapperMap, spots);
-      rw.pagination = pagination;
-
-      return rw;
+      return ResultWrapper.fromJsonMap<Spot>(wrapperMap);
     } else {
       throw Exception('Failed to get nearest paginated spots');
     }
@@ -77,18 +56,7 @@ class RestService {
 
     if (response.statusCode == 200) {
       Map<String, dynamic> wrapperMap = jsonDecode(response.body);
-      // Serialize Spots objects
-      List<dynamic> picturesJson = wrapperMap['result'];
-      List<Picture> pictures = Picture.fromJsonList(picturesJson);
-      // Serialize Pagination
-      Map<String, dynamic> paginationJson = wrapperMap['pagination'];
-      Pagination pagination = Pagination.fromJson(paginationJson);
-      // Création du ResultWrapper
-      ResultWrapper<List<Picture>> rw =
-          ResultWrapper.fromJson(wrapperMap, pictures);
-      rw.pagination = pagination;
-
-      return rw;
+      return ResultWrapper.fromJsonMap<Picture>(wrapperMap);
     } else {
       throw Exception('Failed to get paginated spots');
     }
@@ -151,24 +119,13 @@ class RestService {
     }
   }
 
-  // TODO: Refactor methods to decode Spot wrapper json
   Future<ResultWrapper<List<Spot>>> search(String query) async {
     final response = await http.post(Constants.getBaseApi() + '/search',
         body: SearchDto(query).toDto());
 
     if (response.statusCode == 200) {
       Map<String, dynamic> wrapperMap = jsonDecode(response.body);
-      // Serialize Spots objects
-      List<dynamic> spotsJson = wrapperMap['result'];
-      List<Spot> spots = Spot.fromJsonList(spotsJson);
-      // Serialize Pagination
-      Map<String, dynamic> paginationJson = wrapperMap['pagination'];
-      Pagination pagination = Pagination.fromJson(paginationJson);
-      // Création du ResultWrapper
-      ResultWrapper<List<Spot>> rw = ResultWrapper.fromJson(wrapperMap, spots);
-      rw.pagination = pagination;
-
-      return rw;
+      return ResultWrapper.fromJsonMap<Spot>(wrapperMap);
     } else {
       return Future.value(null);
     }
