@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/feed.dart';
 import 'package:spotfinder/screens/retrieve-account.dart';
+import 'package:spotfinder/views/application-title.wiget.dart';
 
 class CreateAccount extends StatefulWidget {
   static String route = '/create-account';
@@ -22,40 +23,10 @@ class _CreateAccountState extends State<CreateAccount> {
       body: Stack(
         children: [
           this._viewPager(),
-          this._appName(),
+          ApplicationTitle(title: 'SpotFinder', size: 130.0),
           Positioned.fill(child: this._form(context)),
         ],
       ),
-    );
-  }
-
-  Widget _appName() {
-    Paint paint = Paint();
-    paint.color = Colors.white;
-    paint.style = PaintingStyle.stroke;
-    paint.strokeWidth = 3;
-
-    return Container(
-      margin: EdgeInsets.only(top: 35.0),
-      alignment: Alignment.topCenter,
-      child: Stack(children: [
-        Text(
-          'SpotFinder',
-          style: TextStyle(
-            foreground: paint,
-            fontFamily: 'NorthCoast',
-            fontSize: 130.0,
-          ),
-        ),
-        Text(
-          'SpotFinder',
-          style: TextStyle(
-            fontFamily: 'NorthCoast',
-            fontSize: 130.0,
-            color: Color(0xFFFF7761),
-          ),
-        ),
-      ]),
     );
   }
 
@@ -65,24 +36,29 @@ class _CreateAccountState extends State<CreateAccount> {
       children: [
         Container(
           child: Image(
-              image: AssetImage('assets/onboarding/onboarding-1.jpg'),
-              fit: BoxFit.cover),
-        ),
-        Container(
-          child: Image(
               image: AssetImage('assets/onboarding/onboarding-2.jpg'),
               fit: BoxFit.cover),
         ),
-        Container(
-          child: Image(
-              image: AssetImage('assets/onboarding/onboarding-3.jpg'),
-              fit: BoxFit.cover),
-        ),
-        Container(
-          child: Image(
-              image: AssetImage('assets/onboarding/onboarding-4.jpg'),
-              fit: BoxFit.cover),
-        ),
+        // Container(
+        //   child: Image(
+        //       image: AssetImage('assets/onboarding/onboarding-1.jpg'),
+        //       fit: BoxFit.cover),
+        // ),
+        // Container(
+        //   child: Image(
+        //       image: AssetImage('assets/onboarding/onboarding-2.jpg'),
+        //       fit: BoxFit.cover),
+        // ),
+        // Container(
+        //   child: Image(
+        //       image: AssetImage('assets/onboarding/onboarding-3.jpg'),
+        //       fit: BoxFit.cover),
+        // ),
+        // Container(
+        //   child: Image(
+        //       image: AssetImage('assets/onboarding/onboarding-4.jpg'),
+        //       fit: BoxFit.cover),
+        // ),
       ],
     );
   }
