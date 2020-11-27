@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/models/dto/create-spot.dto.dart';
+import 'package:spotfinder/models/dto/search-dto.dto.dart';
 import 'package:spotfinder/models/pagination.model.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
@@ -147,6 +148,29 @@ class RestService {
       return Future.value(true);
     } else {
       return Future.value(false);
+    }
+  }
+
+  // TODO: Refactor methods to decode Spot wrapper json
+  Future<ResultWrapper<List<Spot>>> search(String query) async {
+    final response = await http.post(Constants.getBaseApi() + '/search',
+        body: SearchDto(query).toDto());
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> wrapperMap = jsonDecode(response.body);
+      // Serialize Spots objects
+      List<dynamic> spotsJson = wrapperMap['result'];
+      List<Spot> spots = Spot.fromJsonList(spotsJson);
+      // Serialize Pagination
+      Map<String, dynamic> paginationJson = wrapperMap['pagination'];
+      Pagination pagination = Pagination.fromJson(paginationJson);
+      // Création du ResultWrapper
+      ResultWrapper<List<Spot>> rw = ResultWrapper.fromJson(wrapperMap, spots);
+      rw.pagination = pagination;
+
+      return rw;
+    } else {
+      return Future.value(null);
     }
   }
 }

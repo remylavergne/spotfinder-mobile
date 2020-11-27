@@ -69,4 +69,8 @@ class Repository {
       int page, int limit, String spotID) async {
     return RestService().getPaginatedSpotPictures(page, limit, spotID);
   }
+
+  Future<ResultWrapper<List<Spot>>> search(String query) {
+    return RestService().search(query);
+  }
 }
