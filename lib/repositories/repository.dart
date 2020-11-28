@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:geolocator/geolocator.dart';
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
+import 'package:spotfinder/models/comment.model.dart';
 import 'package:spotfinder/models/dto/create-spot.dto.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
@@ -72,5 +73,10 @@ class Repository {
 
   Future<ResultWrapper<List<Spot>>> search(String query) {
     return RestService().search(query);
+  }
+
+  Future<ResultWrapper<List<Comment>>> getPaginatedSpotComments(
+      int page, int limit, String spotId) {
+        return RestService().getPaginatedSpotComments(spotId, page, limit);
   }
 }
