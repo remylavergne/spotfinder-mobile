@@ -23,7 +23,11 @@ class _CreateAccountState extends State<CreateAccount> {
       body: Stack(
         children: [
           this._viewPager(),
-          ApplicationTitle(title: 'SpotFinder', size: 130.0),
+          Container(
+            // color: Colors.red,
+              margin: EdgeInsets.only(top: 35.0),
+              alignment: Alignment.topCenter,
+              child: ApplicationTitle(title: 'SpotFinder', size: 130.0)),
           Positioned.fill(child: this._form(context)),
         ],
       ),
