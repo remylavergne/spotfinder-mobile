@@ -226,23 +226,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
               ),
             );
           } else if (snapshot.hasError) {
-            return Container(
-              child: Column(
-                children: [
-                  Text('Erreur pendant la récupération des Spots...'),
-                  const SizedBox(
-                    height: 16.0,
-                  ),
-                  IconButton(
-                      icon: Icon(Icons.restore),
-                      onPressed: () {
-                        setState(() {
-                          this._newest = Repository().getPaginatedSpots(1, 20);
-                        });
-                      })
-                ],
-              ),
-            );
+            return this._networkProblem(() => this._refreshNewestSpots());
           } else {
             return Container(
               child: Center(
@@ -251,6 +235,39 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
             );
           }
         });
+  }
+
+  Container _networkProblem(Function() refresh) {
+    return Container(
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text('Erreur pendant la récupération des Spots...'),
+          const SizedBox(
+            height: 16.0,
+          ),
+          IconButton(
+              icon: Icon(Icons.restore),
+              onPressed: () {
+                refresh();
+              })
+        ],
+      ),
+    );
+  }
+
+  void _refreshNewestSpots() {
+    setState(() {
+      this._newest = Repository().getPaginatedSpots(1, 20);
+    });
+  }
+
+  void _refreshNearestSpots(Position position) {
+    setState(() {
+      this._nearest = Repository().getNearestPaginatedSpots(position, 1, 20);
+    });
   }
 
   FutureBuilder<ResultWrapper<List<Spot>>> _displayNearestSpots(
@@ -284,24 +301,8 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
               ),
             );
           } else if (snapshot.hasError) {
-            return Container(
-              child: Column(
-                children: [
-                  Text('Erreur pendant la récupération des Spots...'),
-                  const SizedBox(
-                    height: 16.0,
-                  ),
-                  IconButton(
-                      icon: Icon(Icons.restore),
-                      onPressed: () {
-                        setState(() {
-                          this._nearest = Repository()
-                              .getNearestPaginatedSpots(position, 1, 20);
-                        });
-                      })
-                ],
-              ),
-            );
+            return this
+                ._networkProblem(() => this._refreshNearestSpots(position));
           } else {
             return Container(
               child: Center(
