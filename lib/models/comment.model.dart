@@ -10,11 +10,19 @@ class Comment {
   String pictureId;
   String commentId;
   bool child;
-
   User user;
 
-  Comment(String id, int createdAt, String message, String userId, bool allowed,
-      String spotId, String pictureId, String commentId, bool child) {
+  Comment(
+      String id,
+      int createdAt,
+      String message,
+      String userId,
+      bool allowed,
+      String spotId,
+      String pictureId,
+      String commentId,
+      bool child,
+      User user) {
     this.id = id;
     this.createdAt = createdAt;
     this.message = message;
@@ -24,6 +32,7 @@ class Comment {
     this.pictureId = pictureId;
     this.commentId = commentId;
     this.child = child;
+    this.user = user;
   }
 
   static Comment fromJson(Map<String, dynamic> json) {
@@ -36,7 +45,8 @@ class Comment {
         json['spotId'],
         json['pictureId'],
         json['commentId'],
-        json['child']);
+        json['child'],
+        User.fromJson(json['user'][0]));
   }
 
   static List<Comment> fromJsonList(List<dynamic> json) {

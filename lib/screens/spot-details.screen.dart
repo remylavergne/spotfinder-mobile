@@ -348,8 +348,16 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
   }
 
   Container _getLastCommentsWidget(List<Comment> comments) {
-    List<CommentWidget> widgets = [];
+    if (comments.length == 0) {
+      return Container(
+        margin: const EdgeInsets.only(top: 8.0),
+        child: Center(
+          child: Text('Aucun commentaire disponible'),
+        ),
+      );
+    }
 
+    List<CommentWidget> widgets = [];
     comments.forEach((Comment comment) {
       CommentWidget cw = CommentWidget(comment: comment);
       widgets.add(cw);

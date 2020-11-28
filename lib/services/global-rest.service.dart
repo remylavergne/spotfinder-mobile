@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:spotfinder/constants.dart';
+import 'package:spotfinder/models/comment.model.dart';
 import 'package:spotfinder/models/dto/create-spot.dto.dart';
 import 'package:spotfinder/models/dto/search-dto.dto.dart';
 import 'package:spotfinder/models/picture.model.dart';
@@ -128,6 +129,18 @@ class RestService {
       return ResultWrapper.fromJsonMap<Spot>(wrapperMap);
     } else {
       return Future.value(null);
+    }
+  }
+
+  Future<ResultWrapper<List<Comment>>> getPaginatedSpotComments(String spotId, int page, int limit) async {
+     final response = await http
+        .get(Constants.getBaseApi() + '/spot/$spotId/comments?page=$page&limit=$limit');
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> wrapperMap = jsonDecode(response.body);
+      return ResultWrapper.fromJsonMap<Comment>(wrapperMap) as ResultWrapper<List<Comment>>;
+    } else {
+      throw Exception('Failed to get paginated spots');
     }
   }
 }

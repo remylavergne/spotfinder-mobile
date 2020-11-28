@@ -20,8 +20,11 @@ class CommentWidget extends StatelessWidget {
                 debugPrint('Open user profile => ${this.comment.user.id}');
               },
               leading: CircleAvatar(
-                backgroundImage: NetworkImage(
-                    '${Constants.getBaseApi()}/picture/id/${this.comment.user.pictureId}'),
+                backgroundColor: Colors.red[100],
+                backgroundImage: this.comment.user.pictureId != null
+                    ? NetworkImage(
+                        '${Constants.getBaseApi()}/picture/id/${this.comment.user.pictureId}')
+                    : null,
               ),
               title: Text(this.comment.user.username),
               // subtitle: Text(
@@ -40,23 +43,6 @@ class CommentWidget extends StatelessWidget {
                 ),
               ),
             ),
-            // ButtonBar(
-            //   alignment: MainAxisAlignment.start,
-            //   children: [
-            //     FlatButton(
-            //       textColor: const Color(0xFF011627),
-            //       onPressed: () {
-            //         // Perform some action
-            //       },
-            //       child: const Text('LIKE'),
-            //     ),
-            // FlatButton(
-            //   textColor: const Color(0xFF011627),
-            //   onPressed: () {
-            //     // Perform some action
-            //   },
-            //   child: const Text('ACTION 2'),
-            // ),
           ],
           // ),
           // ),

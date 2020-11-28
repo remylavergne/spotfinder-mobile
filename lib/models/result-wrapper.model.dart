@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:spotfinder/models/comment.model.dart';
 import 'package:spotfinder/models/pagination.model.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
@@ -41,6 +41,17 @@ class ResultWrapper<T> {
       // Création du ResultWrapper
       ResultWrapper<List<Picture>> rw =
           ResultWrapper.fromJson<List<Picture>>(json, pictures);
+      rw.pagination = pagination;
+
+      return rw;
+    } else if (T == Comment){
+       List<Comment> comments = Comment.fromJsonList(resultJson);
+      // Serialize Pagination
+      Map<String, dynamic> paginationJson = json['pagination'];
+      Pagination pagination = Pagination.fromJson(paginationJson);
+      // Création du ResultWrapper
+      ResultWrapper<List<Comment>> rw =
+          ResultWrapper.fromJson<List<Comment>>(json, comments);
       rw.pagination = pagination;
 
       return rw;
