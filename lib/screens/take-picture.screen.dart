@@ -5,7 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:spotfinder/enums/take-picture-for.enum.dart';
-import 'package:spotfinder/views/display-picture-to-create.dart';
+import 'package:spotfinder/screens/display-picture-to-create.screen.dart';
 
 class TakePictureScreen extends StatefulWidget {
   static String route = '/take-picture';

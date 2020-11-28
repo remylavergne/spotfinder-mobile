@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:spotfinder/camera.helper.dart';
+import 'package:spotfinder/helpers/camera.helper.dart';
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
-import 'package:spotfinder/screens/create-account.dart';
-import 'package:spotfinder/screens/feed.dart';
+import 'package:spotfinder/screens/create-account.screen.dart';
+import 'package:spotfinder/screens/display-picture-to-create.screen.dart';
+import 'package:spotfinder/screens/feed.screen.dart';
 import 'package:spotfinder/screens/picture-full.screen.dart';
 import 'package:spotfinder/screens/pictures-list.screen.dart';
-import 'package:spotfinder/screens/retrieve-account.dart';
+import 'package:spotfinder/screens/retrieve-account.screen.dart';
 import 'package:spotfinder/screens/spot-details.screen.dart';
-import 'package:spotfinder/views/display-picture-to-create.dart';
-import 'package:spotfinder/views/take-picture.dart';
+import 'package:spotfinder/screens/take-picture.screen.dart';
 
-import 'camera.helper.dart';
+import 'helpers/camera.helper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,8 +28,8 @@ class SpotFinderApp extends StatelessWidget {
       },
       child: MaterialApp(
         routes: <String, WidgetBuilder>{
-          CreateAccount.route: (BuildContext context) => CreateAccount(),
-          RetrieveAccount.route: (BuildContext context) => RetrieveAccount(),
+          CreateAccountScreen.route: (BuildContext context) => CreateAccountScreen(),
+          RetrieveAccountScreen.route: (BuildContext context) => RetrieveAccountScreen(),
           TakePictureScreen.route: (BuildContext context) =>
               // ignore: missing_required_param
               TakePictureScreen(),
@@ -57,9 +57,9 @@ class SpotFinderApp extends StatelessWidget {
                 bool isConnected = snapshot.data;
 
                 if (isConnected) {
-                  return Feed();
+                  return FeedScreen();
                 } else {
-                  return CreateAccount();
+                  return CreateAccountScreen();
                 }
               } else {
                 return Container(

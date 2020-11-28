@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spotfinder/repositories/repository.dart';
-import 'package:spotfinder/screens/feed.dart';
-import 'package:spotfinder/screens/retrieve-account.dart';
-import 'package:spotfinder/views/application-title.wiget.dart';
+import 'package:spotfinder/screens/feed.screen.dart';
+import 'package:spotfinder/screens/retrieve-account.screen.dart';
+import 'package:spotfinder/widgets/application-title.dart';
 
-class CreateAccount extends StatefulWidget {
+class CreateAccountScreen extends StatefulWidget {
   static String route = '/create-account';
 
-  CreateAccount({Key key}) : super(key: key);
+  CreateAccountScreen({Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _CreateAccountState();
 }
 
-class _CreateAccountState extends State<CreateAccount> {
+class _CreateAccountState extends State<CreateAccountScreen> {
   final controller = PageController(initialPage: 0);
   final _formKey = GlobalKey<FormState>();
   @override
@@ -123,7 +123,7 @@ class _CreateAccountState extends State<CreateAccount> {
                         .createAccount(usernameController.text.trim());
                     if (success) {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Feed()));
+                          MaterialPageRoute(builder: (context) => FeedScreen()));
                     } else {
                       creationError = true;
                       _formKey.currentState.validate();
@@ -142,7 +142,7 @@ class _CreateAccountState extends State<CreateAccount> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => RetrieveAccount()),
+                    MaterialPageRoute(builder: (context) => RetrieveAccountScreen()),
                   );
                 },
                 child: Text(

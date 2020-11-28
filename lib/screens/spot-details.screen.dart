@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:spotfinder/camera.helper.dart';
+import 'package:spotfinder/helpers/camera.helper.dart';
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/enums/take-picture-for.enum.dart';
 import 'package:spotfinder/helpers/geolocation.helper.dart';
@@ -13,7 +13,7 @@ import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/screens/picture-full.screen.dart';
 import 'package:spotfinder/screens/pictures-list.screen.dart';
 import 'package:spotfinder/services/global-rest.service.dart';
-import 'package:spotfinder/views/take-picture.dart';
+import 'package:spotfinder/screens/take-picture.screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SpotDetailsScreen extends StatefulWidget {
