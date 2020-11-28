@@ -226,8 +226,23 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
               ),
             );
           } else if (snapshot.hasError) {
-            return Center(
-                child: Text('Erreur pendant la récupération des Spots...'));
+            return Container(
+              child: Column(
+                children: [
+                  Text('Erreur pendant la récupération des Spots...'),
+                  const SizedBox(
+                    height: 16.0,
+                  ),
+                  IconButton(
+                      icon: Icon(Icons.restore),
+                      onPressed: () {
+                        setState(() {
+                          this._newest = Repository().getPaginatedSpots(1, 20);
+                        });
+                      })
+                ],
+              ),
+            );
           } else {
             return Container(
               child: Center(
@@ -269,8 +284,24 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
               ),
             );
           } else if (snapshot.hasError) {
-            return Center(
-                child: Text('Erreur pendant la récupération des Spots...'));
+            return Container(
+              child: Column(
+                children: [
+                  Text('Erreur pendant la récupération des Spots...'),
+                  const SizedBox(
+                    height: 16.0,
+                  ),
+                  IconButton(
+                      icon: Icon(Icons.restore),
+                      onPressed: () {
+                        setState(() {
+                          this._nearest = Repository()
+                              .getNearestPaginatedSpots(position, 1, 20);
+                        });
+                      })
+                ],
+              ),
+            );
           } else {
             return Container(
               child: Center(
