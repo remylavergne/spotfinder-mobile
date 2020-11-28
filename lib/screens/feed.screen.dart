@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:spotfinder/camera.helper.dart';
+import 'package:spotfinder/helpers/camera.helper.dart';
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/enums/take-picture-for.enum.dart';
 import 'package:spotfinder/helpers/geolocation.helper.dart';
@@ -10,16 +10,16 @@ import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/spot-details.screen.dart';
-import 'package:spotfinder/views/application-title.wiget.dart';
-import 'package:spotfinder/views/search-field.dart';
-import 'package:spotfinder/views/take-picture.dart';
+import 'package:spotfinder/widgets/application-title.dart';
+import 'package:spotfinder/widgets/search-field.dart';
+import 'package:spotfinder/screens/take-picture.screen.dart';
 
-class Feed extends StatefulWidget {
+class FeedScreen extends StatefulWidget {
   @override
   _FeedState createState() => _FeedState();
 }
 
-class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
+class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
   TabController tabController;
   Throttling createSpotThrottling = Throttling(Duration(seconds: 2));
   Future<ResultWrapper<List<Spot>>> _newest;

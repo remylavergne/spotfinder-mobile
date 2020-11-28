@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spotfinder/repositories/repository.dart';
-import 'package:spotfinder/screens/feed.dart';
-import 'package:spotfinder/views/application-title.wiget.dart';
+import 'package:spotfinder/screens/feed.screen.dart';
+import 'package:spotfinder/widgets/application-title.dart';
 
-class RetrieveAccount extends StatefulWidget {
+class RetrieveAccountScreen extends StatefulWidget {
   static String route = '/retrieve-account';
-  RetrieveAccount({Key key}) : super(key: key);
+  RetrieveAccountScreen({Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _RetrieveAccount();
 }
 
-class _RetrieveAccount extends State<RetrieveAccount> {
+class _RetrieveAccount extends State<RetrieveAccountScreen> {
   PageController controller = PageController(initialPage: 0);
   final _formKey = GlobalKey<FormState>();
 
@@ -126,7 +126,7 @@ class _RetrieveAccount extends State<RetrieveAccount> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => Feed()));
+                                        builder: (context) => FeedScreen()));
                               } else {
                                 creationError = true;
                                 _formKey.currentState.validate();
