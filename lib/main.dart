@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:spotfinder/helpers/camera.helper.dart';
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/screens/create-account.screen.dart';
+import 'package:spotfinder/screens/display-clear-password.screen.dart';
 import 'package:spotfinder/screens/display-picture-to-create.screen.dart';
 import 'package:spotfinder/screens/feed.screen.dart';
 import 'package:spotfinder/screens/picture-full.screen.dart';
@@ -28,8 +29,12 @@ class SpotFinderApp extends StatelessWidget {
       },
       child: MaterialApp(
         routes: <String, WidgetBuilder>{
-          CreateAccountScreen.route: (BuildContext context) => CreateAccountScreen(),
-          RetrieveAccountScreen.route: (BuildContext context) => RetrieveAccountScreen(),
+          CreateAccountScreen.route: (BuildContext context) =>
+              CreateAccountScreen(),
+          RetrieveAccountScreen.route: (BuildContext context) =>
+              RetrieveAccountScreen(),
+          ClearPasswordScreen.route: (BuildContext context) =>
+              ClearPasswordScreen(),
           TakePictureScreen.route: (BuildContext context) =>
               // ignore: missing_required_param
               TakePictureScreen(),
