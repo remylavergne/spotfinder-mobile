@@ -8,12 +8,11 @@ import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/models/comment.model.dart';
 import 'package:spotfinder/models/dto/create-spot.dto.dart';
-import 'package:spotfinder/models/dto/new-account.dto.dart';
+import 'package:spotfinder/models/dto/login-infos.dto.dart';
 import 'package:spotfinder/models/dto/search-dto.dto.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
-import 'package:spotfinder/models/user.model.dart';
 
 class RestService {
   RestService._privateConstructor();
@@ -80,29 +79,30 @@ class RestService {
     }
   }
 
-  Future<User> createAccount(String username) async {
+  Future<LoginInfos> createAccount(String username) async {
     final response = await http.post(Constants.getBaseApi() + '/user/create',
         body: username);
 
     if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
-      User user = User.fromJson(data);
-      return user;
+      LoginInfos infos = LoginInfos.fromJson(data);
+      // User user = User.fromLoginInfos(infos);
+      return infos;
     } else {
       return null;
     }
   }
 
-  Future<User> connectUserByCredentials(String username, String password) async {
+  Future<LoginInfos> connectUserByCredentials(String username, String password) async {
     Response response = await http.post(
         Constants.getBaseApi() + '/user/retrieve-account',
         body: jsonEncode({'username': username, 'password': password}));
 
     if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
-      NewAccount newAccount = NewAccount.fromJson(data);
-      User user = User.fromNewAccount(newAccount);
-      return user;
+      LoginInfos infos = LoginInfos.fromJson(data);
+      // User user = User.fromLoginInfos(newAccount);
+      return infos;
     } else {
       return null;
     }

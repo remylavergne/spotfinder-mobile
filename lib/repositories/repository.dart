@@ -4,10 +4,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/models/comment.model.dart';
 import 'package:spotfinder/models/dto/create-spot.dto.dart';
+import 'package:spotfinder/models/dto/login-infos.dto.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
-import 'package:spotfinder/models/user.model.dart';
 import 'package:spotfinder/services/global-rest.service.dart';
 
 class Repository {
@@ -19,20 +19,16 @@ class Repository {
     return _instance;
   }
 
-  Future<bool> createAccount(String username) async {
-    User user = await RestService().createAccount(username);
-    SharedPrefsHelper.instance.saveUser(user);
-    if (user != null) {
-      return true;
-    } else {
-      return false;
-    }
+  Future<LoginInfos> createAccount(String username) async {
+    LoginInfos infos = await RestService().createAccount(username);
+    SharedPrefsHelper.instance.saveUserInfos(infos);
+    return Future.value(infos);
   }
 
   Future<bool> connectUserByCredentials(String username, String password) async {
-    User user = await RestService().connectUserByCredentials(username, password);
-    SharedPrefsHelper.instance.saveUser(user);
-    if (user != null) {
+    LoginInfos infos = await RestService().connectUserByCredentials(username, password);
+    SharedPrefsHelper.instance.saveUserInfos(infos);
+    if (infos != null) {
       return true;
     } else {
       return false;

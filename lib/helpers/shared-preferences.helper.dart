@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spotfinder/models/user.model.dart';
+import 'package:spotfinder/models/dto/login-infos.dto.dart';
 
 class SharedPrefsHelper {
   String _username = 'USERNAME';
@@ -12,11 +12,11 @@ class SharedPrefsHelper {
   static final SharedPrefsHelper instance =
       SharedPrefsHelper._privateConstructor();
 
-  void saveUser(User user) async {
+  void saveUserInfos(LoginInfos infos) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(this._idUser, user.id);
-    prefs.setString(this._username, user.username);
-    prefs.setString(this._token, user.token);
+    prefs.setString(this._idUser, infos.id);
+    prefs.setString(this._username, infos.username);
+    prefs.setString(this._token, infos.token);
   }
 
   Future<String> getUsername() async {

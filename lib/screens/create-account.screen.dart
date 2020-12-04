@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:spotfinder/models/dto/login-infos.dto.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/feed.screen.dart';
 import 'package:spotfinder/screens/retrieve-account.screen.dart';
@@ -119,11 +120,11 @@ class _CreateAccountState extends State<CreateAccountScreen> {
                 height: 56.0,
                 onPressed: () async {
                   if (_formKey.currentState.validate()) {
-                    bool success = await Repository()
+                    LoginInfos infos = await Repository()
                         .createAccount(usernameController.text.trim());
-                    if (success) {
+                    if (infos != null) {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => FeedScreen()));
+                          MaterialPageRoute(builder: (context) => FeedScreen())); // TODO: Change screen to show up password
                     } else {
                       creationError = true;
                       _formKey.currentState.validate();

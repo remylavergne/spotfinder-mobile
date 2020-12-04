@@ -5,6 +5,7 @@ import 'package:spotfinder/helpers/camera.helper.dart';
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/enums/take-picture-for.enum.dart';
 import 'package:spotfinder/helpers/geolocation.helper.dart';
+import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/helpers/throttling.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
@@ -56,7 +57,12 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
       actions: [
         IconButton(icon: Icon(Icons.chat), onPressed: () {}),
         IconButton(icon: Icon(Icons.mail), onPressed: () {}),
-        IconButton(icon: Icon(Icons.account_circle), onPressed: () {}),
+        IconButton(
+            icon: Icon(Icons.account_circle),
+            onPressed: () {
+              // TODO: For tests
+              SharedPrefsHelper.instance.logout();
+            }),
         IconButton(
             icon: Icon(Icons.search),
             onPressed: () {

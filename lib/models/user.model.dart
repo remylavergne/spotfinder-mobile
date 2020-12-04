@@ -1,6 +1,6 @@
 import 'dart:core';
 
-import 'package:spotfinder/models/dto/new-account.dto.dart';
+import 'package:spotfinder/models/dto/login-infos.dto.dart';
 
 class User {
   String id;
@@ -31,16 +31,16 @@ class User {
     this.token = token;
   }
 
-  static User fromNewAccount(NewAccount account) {
+  static User fromLoginInfos(LoginInfos infos) {
     return User(
-        account.id,
+        infos.id,
         DateTime.now().millisecondsSinceEpoch,
         DateTime.now().millisecondsSinceEpoch,
-        account.username,
+        infos.username,
         [],
         [],
         null,
-        account.token);
+        infos.token);
   }
 
   factory User.fromJson(Map<String, dynamic> json) {
