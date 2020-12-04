@@ -283,7 +283,16 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
               ),
               GestureDetector(
                 onTap: () {
-                  // TODO: Check all permissions before...
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => CommentsScreen(
+                        id: widget.spot.id,
+                        from: CommentType.SPOT,
+                        focusInput: true,
+                      ),
+                    ),
+                  );
                 },
                 child: Text('+ Ajouter',
                     style: TextStyle(fontSize: 14.0, color: Color(0xFF2196F3))),

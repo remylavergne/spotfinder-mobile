@@ -9,8 +9,13 @@ import 'package:spotfinder/widgets/comment.dart';
 class CommentsScreen extends StatefulWidget {
   final String id;
   final CommentType from;
+  final bool focusInput;
 
-  CommentsScreen({Key key, @required this.id, @required this.from})
+  CommentsScreen(
+      {Key key,
+      @required this.id,
+      @required this.from,
+      this.focusInput = false})
       : super(key: key);
 
   @override
@@ -28,6 +33,9 @@ class _CommentsScreenState extends State<CommentsScreen> {
     this.comments = Repository().getPaginatedSpotComments(1, 30, widget.id);
     this.messageCtrl = TextEditingController();
     this.focusNode = FocusNode();
+    if (widget.focusInput) {
+      this.focusNode.requestFocus();
+    }
     super.initState();
   }
 
