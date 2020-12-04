@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:spotfinder/helpers/camera.helper.dart';
@@ -96,7 +97,9 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                 spot.getSpotName(),
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
-              Text('FakeRunner', style: TextStyle(color: Colors.grey)),
+              Text('FakeRunner',
+                  style:
+                      TextStyle(color: Colors.grey)), // TODO: Open user profile
             ],
           ),
           Container(
@@ -120,6 +123,10 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                       color: Color(0xAAE5E5E5),
                       onPressed: () {
                         this._navigateToSpot(spot);
+                      },
+                      onLongPress: () {
+                        Clipboard.setData(new ClipboardData(
+                            text: '${spot.longitude} ${spot.latitude}'));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -217,9 +224,16 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
 
                 return this._getLastPicturesWidgets(pictures);
               } else if (snapshot.hasError) {
-                return CircularProgressIndicator();
+                return Padding(
+                  // TODO: Retry
+                  padding: const EdgeInsets.all(8.0),
+                  child: CircularProgressIndicator(),
+                );
               } else {
-                return CircularProgressIndicator();
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CircularProgressIndicator(),
+                );
               }
             },
           ),
@@ -292,9 +306,12 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
 
                 return this._getLastCommentsWidget(comments);
               } else if (snapshot.hasError) {
-                return CircularProgressIndicator();
+                return CircularProgressIndicator(); // TODO: retry
               } else {
-                return CircularProgressIndicator();
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CircularProgressIndicator(),
+                );
               }
             },
           ),
