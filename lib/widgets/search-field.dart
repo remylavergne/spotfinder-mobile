@@ -6,6 +6,9 @@ import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/spot-details.screen.dart';
 
 class Search extends SearchDelegate {
+  ResultWrapper<List<Spot>> lastResults;
+  String previousQuery = '';
+
   @override
   ThemeData appBarTheme(BuildContext context) {
     return ThemeData(
@@ -38,6 +41,8 @@ class Search extends SearchDelegate {
           icon: Icon(Icons.close),
           onPressed: () {
             this.query = '';
+            this.lastResults = null;
+            this.previousQuery = '';
           })
     ];
   }
@@ -53,13 +58,14 @@ class Search extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    if (this.query.length == 0) {
+    String currentQuery = this.query.trim();
+    if (currentQuery.length == 0) {
       return Container(
         child: Center(
           child: Text('Veuillez taper une recherche'),
         ),
       );
-    } else if (this.query.length <= 3) {
+    } else if (currentQuery.length <= 3) {
       return Container(
         child: Center(
           child: Text('Recherche trop courte'),
@@ -68,11 +74,18 @@ class Search extends SearchDelegate {
     }
 
     return FutureBuilder(
-      future: Repository().search(this.query),
+      future: currentQuery == this.previousQuery && this.lastResults != null
+          ? Future.value(this.lastResults)
+          : Repository().search(currentQuery),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
           ResultWrapper<List<Spot>> wrapper = snapshot.data;
+          this.lastResults = wrapper;
           List<Spot> spots = wrapper.result;
+
+          if (currentQuery != this.previousQuery) {
+            this.previousQuery = currentQuery;
+          }
 
           return GridView.builder(
             itemCount: spots.length,
