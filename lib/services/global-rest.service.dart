@@ -9,6 +9,7 @@ import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/models/comment.model.dart';
 import 'package:spotfinder/models/dto/create-spot.dto.dart';
 import 'package:spotfinder/models/dto/login-infos.dto.dart';
+import 'package:spotfinder/models/dto/new-comment.dto.dart';
 import 'package:spotfinder/models/dto/search-dto.dto.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
@@ -93,7 +94,8 @@ class RestService {
     }
   }
 
-  Future<LoginInfos> connectUserByCredentials(String username, String password) async {
+  Future<LoginInfos> connectUserByCredentials(
+      String username, String password) async {
     Response response = await http.post(
         Constants.getBaseApi() + '/user/retrieve-account',
         body: jsonEncode({'username': username, 'password': password}));
@@ -150,6 +152,18 @@ class RestService {
           as ResultWrapper<List<Comment>>;
     } else {
       throw Exception('Failed to get paginated spots');
+    }
+  }
+
+  Future<bool> addComment(NewCommentDto comment) async {
+    Response response = await http.post(
+        Constants.getBaseApi() + '/comment/create',
+        body: comment.toJson());
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return null;
     }
   }
 }

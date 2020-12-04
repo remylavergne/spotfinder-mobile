@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:geolocator/geolocator.dart';
+import 'package:spotfinder/enums/comments-type.enum.dart';
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/models/comment.model.dart';
 import 'package:spotfinder/models/dto/create-spot.dto.dart';
 import 'package:spotfinder/models/dto/login-infos.dto.dart';
+import 'package:spotfinder/models/dto/new-comment.dto.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
@@ -74,5 +76,28 @@ class Repository {
   Future<ResultWrapper<List<Comment>>> getPaginatedSpotComments(
       int page, int limit, String spotId) {
         return RestService().getPaginatedSpotComments(spotId, page, limit);
+  }
+
+  Future<bool> sendComment(String message, CommentType commentType, String id) async {
+    // Get user id
+    String currentUserId = await SharedPrefsHelper.instance.getId();
+    // Build Comment 
+     NewCommentDto comment;
+    switch (commentType) {
+      case CommentType.SPOT:
+        comment = NewCommentDto(message, currentUserId, id, null, null);
+        break;
+      case CommentType.PICTURE:
+        // TODO
+        break;
+      case CommentType.COMMENT:
+        // TODO
+        break;
+      default:
+    }
+    // Send it 
+    bool added = await RestService().addComment(comment);
+
+    return Future.value(added);
   }
 }

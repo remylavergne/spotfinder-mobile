@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:spotfinder/enums/comments-from.enum.dart';
+import 'package:spotfinder/enums/comments-type.enum.dart';
 import 'package:spotfinder/helpers/camera.helper.dart';
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/enums/take-picture-for.enum.dart';
@@ -271,7 +271,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (BuildContext context) => CommentsScreen(
-                              id: widget.spot.id, from: CommentsFrom.SPOT),
+                              id: widget.spot.id, from: CommentType.SPOT),
                         ),
                       );
                     },

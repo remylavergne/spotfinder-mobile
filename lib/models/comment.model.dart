@@ -1,3 +1,4 @@
+import 'package:spotfinder/models/dto/new-comment.dto.dart';
 import 'package:spotfinder/models/user.model.dart';
 
 class Comment {
@@ -53,5 +54,10 @@ class Comment {
     List<Comment> comments =
         List<Comment>.from(json.map((j) => Comment.fromJson(j)));
     return comments;
+  }
+
+  static NewCommentDto toNewCommentDto(String message, String userId,
+      String spotId, String pictureId, String commentId) {
+    return NewCommentDto(message, userId, spotId, pictureId, commentId);
   }
 }
