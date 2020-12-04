@@ -17,14 +17,18 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
   final _formKey = GlobalKey<FormState>();
 
   bool creationError = false;
-  TextEditingController idController = TextEditingController();
+  TextEditingController usernameCtrl = TextEditingController();
+  TextEditingController passwordCtrl = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
           this._viewPager(),
-          ApplicationTitle(title: 'SpotFinder', size: 130.0),
+          Container(
+              margin: EdgeInsets.only(top: 35.0),
+              alignment: Alignment.topCenter,
+              child: ApplicationTitle(title: 'SpotFinder', size: 130.0)),
           Positioned.fill(child: this._form(context)),
         ],
       ),
@@ -55,16 +59,17 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
+                // Username
                 Container(
                   margin: EdgeInsets.only(bottom: 16.0),
                   child: TextFormField(
-                    controller: this.idController,
+                    controller: this.usernameCtrl,
                     decoration: InputDecoration(
                       hintStyle: TextStyle(
                         color: Color(0xFF989898),
                         fontSize: 18.0,
                       ),
-                      hintText: 'Entres ton id',
+                      hintText: 'Username',
                       fillColor: Colors.white,
                       filled: true,
                       border: OutlineInputBorder(
@@ -77,11 +82,40 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
                         return 'Please enter your id';
                       } else if (creationError) {
                         creationError = false;
-                        return 'This id doesn\'t exist';
+                        return 'Please check your username / password';
                       } else {
                         return null;
                       }
                     },
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(bottom: 16.0),
+                  child: TextFormField(
+                    controller: this.passwordCtrl,
+                    decoration: InputDecoration(
+                      hintStyle: TextStyle(
+                        color: Color(0xFF989898),
+                        fontSize: 18.0,
+                      ),
+                      hintText: 'Password',
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4.0),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter your password';
+                      } else {
+                        return null;
+                      }
+                    },
+                    obscureText: true,
+                    enableSuggestions: false,
+                    autocorrect: false,
                   ),
                 ),
                 Container(
@@ -120,8 +154,9 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
                           height: 56.0,
                           onPressed: () async {
                             if (_formKey.currentState.validate()) {
-                              bool success = await Repository().connectUserById(
-                                  this.idController.text.trim());
+                              bool success = await Repository().connectUserByCredentials(
+                                  this.usernameCtrl.text.trim(),
+                                  this.passwordCtrl.text.trim());
                               if (success) {
                                 Navigator.push(
                                     context,

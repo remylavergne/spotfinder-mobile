@@ -29,8 +29,8 @@ class Repository {
     }
   }
 
-  Future<bool> connectUserById(String id) async {
-    User user = await RestService().connectUserById(id);
+  Future<bool> connectUserByCredentials(String username, String password) async {
+    User user = await RestService().connectUserByCredentials(username, password);
     SharedPrefsHelper.instance.saveUser(user);
     if (user != null) {
       return true;
