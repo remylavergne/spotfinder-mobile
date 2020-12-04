@@ -40,29 +40,9 @@ class _CreateAccountState extends State<CreateAccountScreen> {
       children: [
         Container(
           child: Image(
-              image: AssetImage('assets/onboarding/onboarding-2.jpg'),
+              image: AssetImage('assets/onboarding/onboarding-1.jpg'),
               fit: BoxFit.cover),
         ),
-        // Container(
-        //   child: Image(
-        //       image: AssetImage('assets/onboarding/onboarding-1.jpg'),
-        //       fit: BoxFit.cover),
-        // ),
-        // Container(
-        //   child: Image(
-        //       image: AssetImage('assets/onboarding/onboarding-2.jpg'),
-        //       fit: BoxFit.cover),
-        // ),
-        // Container(
-        //   child: Image(
-        //       image: AssetImage('assets/onboarding/onboarding-3.jpg'),
-        //       fit: BoxFit.cover),
-        // ),
-        // Container(
-        //   child: Image(
-        //       image: AssetImage('assets/onboarding/onboarding-4.jpg'),
-        //       fit: BoxFit.cover),
-        // ),
       ],
     );
   }

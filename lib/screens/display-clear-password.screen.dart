@@ -52,7 +52,7 @@ class _ClearPasswordScreenState extends State<ClearPasswordScreen> {
                       right: 16.0,
                     ),
                     child: Text(
-                      'Un mot de passe a été généré pour récupérer votre compte. Vous devez l\'avoir si vous voulez vous connecter sur un autre appareil, ou tout simplement récupérer votre compte.',
+                      'Un mot de passe a été généré pour récupérer votre compte. Vous devez l\'avoir si vous voulez vous connecter sur un autre appareil, ou tout simplement récupérer votre compte après une réinstallation.',
                       textAlign: TextAlign.center,
                     ),
                   ),
