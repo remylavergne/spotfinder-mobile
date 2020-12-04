@@ -87,6 +87,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                         child: Padding(
                       padding: const EdgeInsets.only(top: 16.0, left: 8.0),
                       child: TextFormField(
+                        textCapitalization: TextCapitalization.sentences,
                         keyboardType: TextInputType.multiline,
                         minLines: 1,
                         maxLines: 3,
@@ -121,7 +122,10 @@ class _CommentsScreenState extends State<CommentsScreen> {
                           });
                         }
                       },
-                      child: Text('Envoyer', style: TextStyle(fontWeight: FontWeight.bold),),
+                      child: Text(
+                        'Envoyer',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     )
                   ],
                 ),
