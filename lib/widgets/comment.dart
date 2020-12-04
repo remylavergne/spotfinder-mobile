@@ -16,6 +16,7 @@ class CommentWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ListTile(
+              tileColor: Colors.grey[200],
               onTap: () {
                 debugPrint('Open user profile => ${this.comment.user.id}');
               },
@@ -44,7 +45,7 @@ class CommentWidget extends StatelessWidget {
                     bottom: 16.0, left: 16.0, top: 12.0, right: 16.0),
                 child: Text(
                   this.comment.message,
-                  style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                  style: TextStyle(color: Colors.black),
                 ),
               ),
             ),
