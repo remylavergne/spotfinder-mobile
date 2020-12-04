@@ -21,11 +21,13 @@ class _CommentsScreenState extends State<CommentsScreen> {
   Future<ResultWrapper<List<Comment>>> comments;
   TextEditingController messageCtrl;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  FocusNode focusNode;
 
   @override
   void initState() {
     this.comments = Repository().getPaginatedSpotComments(1, 30, widget.id);
     this.messageCtrl = TextEditingController();
+    this.focusNode = FocusNode();
     super.initState();
   }
 
@@ -75,6 +77,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                 children: [
                   Expanded(
                       child: TextFormField(
+                    focusNode: this.focusNode,
                     controller: this.messageCtrl,
                   )),
                   FlatButton(
@@ -87,6 +90,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                             .then((bool added) {
                           if (added) {
                             setState(() {
+                              this.focusNode.unfocus();
                               this.messageCtrl.clear();
                               this.comments = Repository()
                                   .getPaginatedSpotComments(1, 30, widget.id);
