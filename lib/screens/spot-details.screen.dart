@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:spotfinder/enums/comments-from.enum.dart';
 import 'package:spotfinder/helpers/camera.helper.dart';
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/enums/take-picture-for.enum.dart';
@@ -13,6 +14,7 @@ import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
+import 'package:spotfinder/screens/comment-list.screen.dart';
 import 'package:spotfinder/screens/picture-full.screen.dart';
 import 'package:spotfinder/screens/pictures-list.screen.dart';
 import 'package:spotfinder/services/global-rest.service.dart';
@@ -265,16 +267,13 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                   Text(' - '),
                   GestureDetector(
                     onTap: () {
-                      // TODO
-                      debugPrint('TODO');
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (BuildContext context) =>
-                      //         PicturesDisplayScreen(
-                      //             id: widget.spot.id, type: PicturesFrom.SPOT),
-                      //   ),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => CommentsScreen(
+                              id: widget.spot.id, from: CommentsFrom.SPOT),
+                        ),
+                      );
                     },
                     child: Text('Afficher tout',
                         style: TextStyle(
@@ -284,8 +283,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
               ),
               GestureDetector(
                 onTap: () {
-                  //todo: Check all permissions before...
-                  // TODO
+                  // TODO: Check all permissions before...
                 },
                 child: Text('+ Ajouter',
                     style: TextStyle(fontSize: 14.0, color: Color(0xFF2196F3))),
