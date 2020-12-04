@@ -32,7 +32,7 @@ class ApplicationTitle extends StatelessWidget {
         this.title,
         style: TextStyle(
           foreground: paint,
-          fontFamily: this.fontFamily != null ? this.fontFamily : 'NorthCoast',
+          fontFamily: this.fontFamily != null ? this.fontFamily : 'NorthCoast', // TODO: Export family
           fontSize: this.size,
         ),
       ),
