@@ -26,7 +26,12 @@ class CommentWidget extends StatelessWidget {
                         '${Constants.getBaseApi()}/picture/id/${this.comment.user.pictureId}')
                     : null,
               ),
-              title: Text(this.comment.user.username),
+              title: Text(
+                this.comment.user.username,
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               // subtitle: Text(
               //   'Secondary Text',
               //   style: TextStyle(color: Colors.black.withOpacity(0.6)),

@@ -40,73 +40,96 @@ class _CommentsScreenState extends State<CommentsScreen> {
         title: Text('Commentaires'),
         backgroundColor: Color(0xFF011627),
       ),
-      body: Stack(children: [
-        FutureBuilder<ResultWrapper<List<Comment>>>(
-          future: this.comments,
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData) {
-              ResultWrapper<List<Comment>> wrapper = snapshot.data;
-              List<Comment> comments = wrapper.result;
+      body: Container(
+        child: Stack(children: [
+          FutureBuilder<ResultWrapper<List<Comment>>>(
+            future: this.comments,
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                ResultWrapper<List<Comment>> wrapper = snapshot.data;
+                List<Comment> comments = wrapper.result;
 
-              return this._getLastCommentsWidget(comments);
-            } else if (snapshot.hasError) {
-              return Container(
-                  child: Center(
-                      child: CircularProgressIndicator())); // TODO: retry
-            } else {
-              return Container(
-                // padding: const EdgeInsets.all(8.0),
-                child: Center(child: CircularProgressIndicator()),
-              );
-            }
-          },
-        ),
-        // Writing zone
-        Positioned(
-          bottom: 0,
-          left: 0,
-          right: 0,
-          child: Container(
-            color: Colors.white,
-            padding: EdgeInsets.only(
-                left: 4.0, bottom: mediaQueryData.padding.bottom),
-            child: Form(
-              key: this._formKey,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Expanded(
-                      child: TextFormField(
-                    focusNode: this.focusNode,
-                    controller: this.messageCtrl,
+                return this._getLastCommentsWidget(comments);
+              } else if (snapshot.hasError) {
+                return Container(
+                    child: Center(
+                        child: CircularProgressIndicator())); // TODO: retry
+              } else {
+                return Container(
+                  // padding: const EdgeInsets.all(8.0),
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+            },
+          ),
+          // Writing zone
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border(
+                    top: BorderSide(
+                      color: Color(0xFF011627),
+                      width: 2.0,
+                    ),
                   )),
-                  FlatButton(
-                    onPressed: () async {
-                      debugPrint('Send comment');
-                      if (this._formKey.currentState.validate()) {
-                        await Repository()
-                            .sendComment(this.messageCtrl.text.trim(),
-                                CommentType.SPOT, widget.id)
-                            .then((bool added) {
-                          if (added) {
-                            setState(() {
-                              this.focusNode.unfocus();
-                              this.messageCtrl.clear();
-                              this.comments = Repository()
-                                  .getPaginatedSpotComments(1, 30, widget.id);
-                            });
-                          }
-                        });
-                      }
-                    },
-                    child: Text('Envoyer'),
-                  )
-                ],
+              padding: EdgeInsets.only(
+                  left: 4.0, bottom: mediaQueryData.padding.bottom + 16.0),
+              child: Form(
+                key: this._formKey,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Expanded(
+                        child: Padding(
+                      padding: const EdgeInsets.only(top: 16.0, left: 8.0),
+                      child: TextFormField(
+                        keyboardType: TextInputType.multiline,
+                        minLines: 1,
+                        maxLines: 3,
+                        focusNode: this.focusNode,
+                        controller: this.messageCtrl,
+                        decoration: InputDecoration(
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          filled: true,
+                          hintText: 'Tapez votre commentaire ici',
+                          fillColor: Colors.grey[100],
+                        ),
+                      ),
+                    )),
+                    FlatButton(
+                      onPressed: () async {
+                        debugPrint('Send comment');
+                        if (this._formKey.currentState.validate() &&
+                            this.messageCtrl.text.trim().length > 5) {
+                          await Repository()
+                              .sendComment(this.messageCtrl.text.trim(),
+                                  CommentType.SPOT, widget.id)
+                              .then((bool added) {
+                            if (added) {
+                              setState(() {
+                                this.focusNode.unfocus();
+                                this.messageCtrl.clear();
+                                this.comments = Repository()
+                                    .getPaginatedSpotComments(1, 30, widget.id);
+                              });
+                            }
+                          });
+                        }
+                      },
+                      child: Text('Envoyer', style: TextStyle(fontWeight: FontWeight.bold),),
+                    )
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      ]),
+        ]),
+      ),
     );
   }
 
@@ -120,10 +143,17 @@ class _CommentsScreenState extends State<CommentsScreen> {
       );
     }
 
-    return ListView.builder(
-        itemCount: comments.length,
-        itemBuilder: (BuildContext context, int index) {
-          return CommentWidget(comment: comments[index]);
-        });
+    return Container(
+      padding: EdgeInsets.only(
+        left: 16.0,
+        right: 16.0,
+        bottom: 100.0,
+      ),
+      child: ListView.builder(
+          itemCount: comments.length,
+          itemBuilder: (BuildContext context, int index) {
+            return CommentWidget(comment: comments[index]);
+          }),
+    );
   }
 }
