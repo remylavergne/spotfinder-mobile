@@ -152,7 +152,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
       return Container(
         margin: const EdgeInsets.only(top: 8.0),
         child: Center(
-          child: Text(S.current.anyComment),
+          child: Text(S.current.noComment),
         ),
       );
     }
