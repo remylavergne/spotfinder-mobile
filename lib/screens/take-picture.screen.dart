@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:spotfinder/enums/take-picture-for.enum.dart';
+import 'package:spotfinder/generated/l10n.dart';
 import 'package:spotfinder/screens/display-picture-to-create.screen.dart';
 
 class TakePictureScreen extends StatefulWidget {
@@ -86,7 +87,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                 Navigator.pop(context);
               },
               child: Text(
-                'Retour',
+                S.current.back,
                 style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
               ),
             ),
@@ -104,7 +105,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                 this._takePicture(context);
               },
               child: Text(
-                'Capturer',
+                S.current.takePictureAction,
                 style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
               ),
             ),

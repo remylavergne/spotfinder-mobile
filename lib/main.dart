@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:spotfinder/helpers/camera.helper.dart';
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/screens/create-account.screen.dart';
@@ -34,6 +35,7 @@ class SpotFinderApp extends StatelessWidget {
           RetrieveAccountScreen.route: (BuildContext context) =>
               RetrieveAccountScreen(),
           ClearPasswordScreen.route: (BuildContext context) =>
+              // ignore: missing_required_param
               ClearPasswordScreen(),
           TakePictureScreen.route: (BuildContext context) =>
               // ignore: missing_required_param

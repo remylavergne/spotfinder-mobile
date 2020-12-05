@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:spotfinder/enums/comments-type.enum.dart';
+import 'package:spotfinder/generated/l10n.dart';
 import 'package:spotfinder/helpers/camera.helper.dart';
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/enums/take-picture-for.enum.dart';
@@ -99,9 +100,10 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                 spot.getSpotName(),
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
-              Text('FakeRunner',
-                  style:
-                      TextStyle(color: Colors.grey)), // TODO: Open user profile
+              Text(
+                'FakeRunner',
+                style: TextStyle(color: Colors.grey),
+              ), // TODO: Open user profile
             ],
           ),
           Container(
@@ -134,7 +136,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Icon(Icons.directions_run),
-                          Text('Distance : '),
+                          Text(S.current.distance),
                           Text(realDistance),
                         ],
                       ),
@@ -152,7 +154,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Icon(Icons.directions_run),
-                          Text('Voir itinéraire')
+                          Text(S.current.routeCalculation)
                         ],
                       ),
                     ),
@@ -181,7 +183,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 children: [
-                  Text('Dernières photos',
+                  Text(S.current.latestPhotos,
                       style: TextStyle(
                           fontSize: 16.0, fontWeight: FontWeight.w500)),
                   Text(' - '),
@@ -196,7 +198,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                         ),
                       );
                     },
-                    child: Text('Afficher tout',
+                    child: Text(S.current.displayAll,
                         style: TextStyle(
                             fontSize: 14.0, color: Color(0xFF2196F3))),
                   )
@@ -207,7 +209,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                   //todo: Check all permissions before...
                   this._takeAndAddPicture(context, widget.spot);
                 },
-                child: Text('+ Ajouter',
+                child: Text(S.current.addAction,
                     style: TextStyle(fontSize: 14.0, color: Color(0xFF2196F3))),
               ),
             ],
@@ -261,7 +263,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 children: [
-                  Text('Derniers commentaires',
+                  Text(S.current.latestComments,
                       style: TextStyle(
                           fontSize: 16.0, fontWeight: FontWeight.w500)),
                   Text(' - '),
@@ -275,7 +277,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                         ),
                       );
                     },
-                    child: Text('Afficher tout',
+                    child: Text(S.current.displayAll,
                         style: TextStyle(
                             fontSize: 14.0, color: Color(0xFF2196F3))),
                   )
@@ -294,7 +296,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                     ),
                   );
                 },
-                child: Text('+ Ajouter',
+                child: Text(S.current.addAction,
                     style: TextStyle(fontSize: 14.0, color: Color(0xFF2196F3))),
               ),
             ],
@@ -345,7 +347,9 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
           width: 120.0,
           height: 120.0,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(6.0)),
+            borderRadius: BorderRadius.all(
+              Radius.circular(6.0),
+            ),
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8.0),
@@ -376,7 +380,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
       return Container(
         margin: const EdgeInsets.only(top: 8.0),
         child: Center(
-          child: Text('Aucun commentaire disponible'),
+          child: Text(S.current.noComment),
         ),
       );
     }
@@ -408,7 +412,6 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                 )));
   }
 
-  // TODO: Extract into object
   void _navigateToSpot(Spot spot) async {
     String url;
     if (Platform.isIOS) {

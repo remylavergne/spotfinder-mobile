@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spotfinder/constants.dart';
+import 'package:spotfinder/generated/l10n.dart';
 import 'package:spotfinder/models/picture.model.dart';
 
 class PictureFullScreen extends StatelessWidget {
@@ -12,7 +13,7 @@ class PictureFullScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Photo'),
+        title: Text(S.current.photoTitle),
         backgroundColor: Color(0xFF011627),
       ),
       body: Container(

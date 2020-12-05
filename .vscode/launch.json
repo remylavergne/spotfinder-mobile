@@ -8,6 +8,12 @@
             "name": "spotfinder-mobile",
             "request": "launch",
             "type": "dart"
-        }
+        },
+        {
+            "name": "spotfinder-mobile profile",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
     ]
 }

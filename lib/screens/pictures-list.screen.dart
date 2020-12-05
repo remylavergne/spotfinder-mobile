@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spotfinder/constants.dart';
+import 'package:spotfinder/generated/l10n.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
@@ -42,7 +43,7 @@ class _PicturesDisplayScreenState extends State<PicturesDisplayScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Photos'),
+        title: Text(S.current.photosTitle),
         backgroundColor: Color(0xFF011627),
       ),
       body: FutureBuilder<ResultWrapper<List<Picture>>>(
@@ -55,7 +56,8 @@ class _PicturesDisplayScreenState extends State<PicturesDisplayScreen> {
 
             return this._gridView(pictures);
           } else if (snapshot.hasError) {
-            return Center(child: Text('An error occured... Please go back.'));
+            return Center(
+                child: Text(S.current.errorAndRetry)); // TODO: Retry button
           } else {
             return Container(child: Center(child: CircularProgressIndicator()));
           }
@@ -64,7 +66,7 @@ class _PicturesDisplayScreenState extends State<PicturesDisplayScreen> {
     );
   }
 
-  GridView _gridView(List<Picture> pictures) { // TODO: Export into component
+  GridView _gridView(List<Picture> pictures) {
     return GridView.builder(
       itemCount: pictures.length,
       padding: EdgeInsets.only(top: 0),
@@ -88,8 +90,9 @@ class _PicturesDisplayScreenState extends State<PicturesDisplayScreen> {
   GridTile _getItemView(Picture picture) {
     return GridTile(
       child: Container(
-        decoration:
-            BoxDecoration(border: Border.all(color: Colors.white, width: 0.5)),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.white, width: 0.5),
+        ),
         child: Image.network(
             '${Constants.getBaseApi()}/picture/id/${picture.id}',
             fit: BoxFit.cover),

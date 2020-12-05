@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:spotfinder/generated/l10n.dart';
 import 'package:spotfinder/screens/feed.screen.dart';
 import 'package:spotfinder/widgets/application-title.dart';
 
@@ -30,13 +31,17 @@ class _ClearPasswordScreenState extends State<ClearPasswordScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Container(
-                alignment: Alignment.topCenter,
-                child: ApplicationTitle(title: 'SpotFinder', size: 130.0)),
+              alignment: Alignment.topCenter,
+              child: ApplicationTitle(
+                title: S.current.spotfinder,
+                size: 130.0,
+              ),
+            ),
             Container(
               child: Column(
                 children: [
                   Text(
-                    'Compte créé avec succès !',
+                    S.current.accountCreatedTitle,
                     style: TextStyle(
                       fontWeight: FontWeight.w800,
                       fontSize: 24.0,
@@ -52,7 +57,7 @@ class _ClearPasswordScreenState extends State<ClearPasswordScreen> {
                       right: 16.0,
                     ),
                     child: Text(
-                      'Un mot de passe a été généré pour récupérer votre compte. Vous devez l\'avoir si vous voulez vous connecter sur un autre appareil, ou tout simplement récupérer votre compte après une réinstallation.',
+                      S.current.clearPasswordExplanation,
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -87,14 +92,14 @@ class _ClearPasswordScreenState extends State<ClearPasswordScreen> {
                     Visibility(
                       visible: !this.copied,
                       child: Text(
-                        'Cliquer pour copier',
+                        S.current.clickToCopy,
                         style: TextStyle(fontWeight: FontWeight.w300),
                       ),
                     ),
                     Visibility(
                       visible: this.copied,
                       child: Text(
-                        'Copié',
+                        S.current.copy,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.greenAccent),
@@ -116,7 +121,7 @@ class _ClearPasswordScreenState extends State<ClearPasswordScreen> {
                     MaterialPageRoute(builder: (context) => FeedScreen()));
               },
               child: Text(
-                'Continuer',
+                S.current.next,
                 style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
               ),
             ),

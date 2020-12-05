@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:spotfinder/generated/l10n.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/feed.screen.dart';
 import 'package:spotfinder/widgets/application-title.dart';
@@ -26,9 +27,10 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
         children: [
           this._viewPager(),
           Container(
-              margin: EdgeInsets.only(top: 35.0),
-              alignment: Alignment.topCenter,
-              child: ApplicationTitle(title: 'SpotFinder', size: 130.0)),
+            margin: EdgeInsets.only(top: 35.0),
+            alignment: Alignment.topCenter,
+            child: ApplicationTitle(title: S.current.spotfinder, size: 130.0),
+          ),
           Positioned.fill(child: this._form(context)),
         ],
       ),
@@ -69,7 +71,7 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
                         color: Color(0xFF989898),
                         fontSize: 18.0,
                       ),
-                      hintText: 'Username',
+                      hintText: S.current.usernameHint,
                       fillColor: Colors.white,
                       filled: true,
                       border: OutlineInputBorder(
@@ -79,10 +81,10 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
                     ),
                     validator: (value) {
                       if (value.isEmpty) {
-                        return 'Please enter your id';
+                        return S.current.pleaseEnterUsername;
                       } else if (creationError) {
                         creationError = false;
-                        return 'Please check your username / password';
+                        return S.current.loginError;
                       } else {
                         return null;
                       }
@@ -98,7 +100,7 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
                         color: Color(0xFF989898),
                         fontSize: 18.0,
                       ),
-                      hintText: 'Password',
+                      hintText: S.current.passwordHint,
                       fillColor: Colors.white,
                       filled: true,
                       border: OutlineInputBorder(
@@ -108,7 +110,7 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
                     ),
                     validator: (value) {
                       if (value.isEmpty) {
-                        return 'Please enter your password';
+                        return S.current.passwordError;
                       } else {
                         return null;
                       }
@@ -137,7 +139,7 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
                             Navigator.pop(context);
                           },
                           child: Text(
-                            'Retour',
+                            S.current.back,
                             style: TextStyle(
                                 fontSize: 26.0, fontWeight: FontWeight.bold),
                           ),
@@ -154,9 +156,10 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
                           height: 56.0,
                           onPressed: () async {
                             if (_formKey.currentState.validate()) {
-                              bool success = await Repository().connectUserByCredentials(
-                                  this.usernameCtrl.text.trim(),
-                                  this.passwordCtrl.text.trim());
+                              bool success = await Repository()
+                                  .connectUserByCredentials(
+                                      this.usernameCtrl.text.trim(),
+                                      this.passwordCtrl.text.trim());
                               if (success) {
                                 Navigator.push(
                                     context,
@@ -169,7 +172,7 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
                             }
                           },
                           child: Text(
-                            'Continuer',
+                            S.current.next,
                             style: TextStyle(
                                 fontSize: 26.0, fontWeight: FontWeight.bold),
                           ),

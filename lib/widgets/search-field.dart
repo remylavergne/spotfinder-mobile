@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spotfinder/constants.dart';
+import 'package:spotfinder/generated/l10n.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
@@ -62,13 +63,13 @@ class Search extends SearchDelegate {
     if (currentQuery.length == 0) {
       return Container(
         child: Center(
-          child: Text('Veuillez taper une recherche'),
+          child: Text(S.current.searchFieldEmptyError),
         ),
       );
     } else if (currentQuery.length <= 3) {
       return Container(
         child: Center(
-          child: Text('Recherche trop courte'),
+          child: Text(S.current.queryTooShortError),
         ),
       );
     }
@@ -104,7 +105,7 @@ class Search extends SearchDelegate {
             ),
           );
         } else if (snapshot.hasError) {
-          return Text('Error...');
+          return Text(S.current.errorAndRetry); // TODO: Retry
         } else {
           return Container(
             child: Center(child: CircularProgressIndicator()),

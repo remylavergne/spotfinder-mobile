@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:spotfinder/enums/take-picture-for.enum.dart';
+import 'package:spotfinder/generated/l10n.dart';
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/repositories/repository.dart';
 
@@ -30,7 +31,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   TextEditingController spotNameController;
   GlobalKey<FormState> _formKey;
   MediaQueryData mediaQueryData;
-  String alertDialogContent = 'Synchronisation du Spot';
+  String alertDialogContent = S.current.synchroInProgress;
   String idUser;
   void Function(void Function()) dialogState;
 
@@ -50,8 +51,8 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     this.mediaQueryData = MediaQuery.of(context);
     AppBar appBar = AppBar(
       title: Text(widget.takePictureFor == TakePictureFor.creation
-          ? 'Création d\'un nouveau spot'
-          : 'Ajouter une photo'),
+          ? S.current.createSpotTitle
+          : S.current.addPictureTitle),
       backgroundColor: Color(0xFF011627),
     );
 
@@ -94,7 +95,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                     color: Color(0xFF989898),
                     fontSize: 18.0,
                   ),
-                  hintText: 'Nom du spot (facultatif)',
+                  hintText: S.current.spotNameHint,
                   fillColor: Colors.white,
                   filled: true,
                   border: OutlineInputBorder(
@@ -131,8 +132,8 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 },
                 child: Text(
                   widget.takePictureFor == TakePictureFor.creation
-                      ? 'Créer'
-                      : 'Ajouter', // todo: update texte
+                      ? S.current.create
+                      : S.current.add, // todo: update texte
                   style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -153,7 +154,9 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
             StatefulBuilder(builder: (dialogContext, setState) {
               this.dialogState = setState;
               return AlertDialog(
-                title: Center(child: Text('Création')), // todo: update text
+                title: Center(
+                  child: Text(S.current.creation),
+                ), // todo: update text
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -172,27 +175,25 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
         .then((String idSpot) {
       if (idSpot != null) {
         dialogState(() {
-          alertDialogContent = 'Synchronisation de la photo du Spot';
+          alertDialogContent = S.current.pictureIsBeingSynchronized;
         });
         return Repository()
             .uploadPicture(idSpot, idUser, File(widget.imagePath));
       } else {
         dialogState(() {
-          alertDialogContent =
-              'Erreur pendant la création. Retour à l\'accueil.';
+          alertDialogContent = S.current.errorSpotCreation;
         });
         this._returnToHome(context);
       }
     }).then((bool imageUploaded) async {
       if (imageUploaded) {
         dialogState(() {
-          alertDialogContent = 'Création validée';
+          alertDialogContent = S.current.spotCreationSuccess;
         });
         this._returnToHome(context);
       } else {
         dialogState(() {
-          alertDialogContent =
-              'Erreur pendant la création. Retour à l\'accueil.';
+          alertDialogContent = S.current.errorSpotCreation;
         });
         this._returnToHome(context);
       }
@@ -206,9 +207,9 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
         builder: (BuildContext dialogContext) =>
             StatefulBuilder(builder: (dialogContext, setState) {
               this.dialogState = setState;
-              this.alertDialogContent = 'Envoi de l\'image en cours...';
+              this.alertDialogContent = S.current.pictureIsBeingSynchronized;
               return AlertDialog(
-                title: Center(child: Text('Ajout d\'une photo')),
+                title: Center(child: Text(S.current.addPhoto)),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -227,13 +228,12 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
         .then((bool uploadSuccess) {
       if (uploadSuccess) {
         this.dialogState(() {
-          this.alertDialogContent = 'La photo a bien été ajoutée au Spot.';
+          this.alertDialogContent = S.current.addPhotoSuccess;
         });
         this._returnToTakePictureScreen(context);
       } else {
         this.dialogState(() {
-          this.alertDialogContent =
-              'Erreur à l\'ajout de la photo. Réessayez plus tard.';
+          this.alertDialogContent = S.current.errorPhotoUpload;
         });
         this._returnToTakePictureScreen(context);
       }

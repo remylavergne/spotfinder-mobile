@@ -1,5 +1,7 @@
 import 'dart:core';
 
+import 'package:spotfinder/generated/l10n.dart';
+
 class Spot {
   String id;
   String name;
@@ -68,12 +70,12 @@ class Spot {
   String getSpotName() {
     return this.name != null && this.name.isNotEmpty
         ? this.name
-        : 'Spot sans nom';
+        : S.current.spotWithoutName;
   }
 
   String getSpotAddress() {
     return this.address != null && this.address.isNotEmpty
         ? this.address
-        : 'L\'adresse n\'a pas encore été calculée par le système...';
+        : S.current.addressBeingCalculated;
   }
 }

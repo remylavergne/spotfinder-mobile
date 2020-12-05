@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:spotfinder/generated/l10n.dart';
 import 'package:spotfinder/helpers/camera.helper.dart';
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/enums/take-picture-for.enum.dart';
@@ -39,7 +40,7 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
 
     AppBar _appBar = AppBar(
       title: ApplicationTitle(
-        title: 'SpotFinder',
+        title: S.current.spotfinder,
         size: 56.0,
         strokeSize: 2.0,
         backgroundColor: Color(0xFF011627),
@@ -49,8 +50,8 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
         indicatorColor: Color(0xFFD4D4D4),
         // labelPadding: EdgeInsets.only(bottom: 10.0),
         tabs: [
-          Tab(icon: Text('Récents')),
-          Tab(icon: Text('Proches')),
+          Tab(icon: Text(S.current.newestTabTitle)),
+          Tab(icon: Text(S.current.closestTabTitle)),
         ],
         controller: this.tabController,
       ),
@@ -60,7 +61,7 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
         IconButton(
             icon: Icon(Icons.account_circle),
             onPressed: () {
-              // TODO: For tests
+              // TODO: For tests // to delete
               SharedPrefsHelper.instance.logout();
             }),
         IconButton(
@@ -128,14 +129,16 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
               content: message,
               actions: [
                 FlatButton(
-                    onPressed: () async {
-                      await Geolocator.openAppSettings();
-                    },
-                    child: Text('Open settings')),
+                  onPressed: () async {
+                    await Geolocator.openAppSettings();
+                  },
+                  child: Text(S.current.openSettings),
+                ),
                 FlatButton(
-                    onPressed: () =>
-                        Navigator.of(context, rootNavigator: true).pop(),
-                    child: Text('Ok')),
+                  onPressed: () =>
+                      Navigator.of(context, rootNavigator: true).pop(),
+                  child: Text(S.current.okay),
+                ),
               ],
             ),
         barrierDismissible: false,
@@ -219,8 +222,6 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
                 itemBuilder: (BuildContext context, int index) =>
                     GestureDetector(
                   onTap: () {
-                    // Navigator.pushNamed(context, SpotDetailsScreen.route,
-                    //     arguments: spots[index]);
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -250,7 +251,7 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text('Erreur pendant la récupération des Spots...'),
+          Text(S.current.errorGetSpots),
           const SizedBox(
             height: 16.0,
           ),
@@ -321,12 +322,16 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
 
   GridTile _getSpotWidget(Spot spot) {
     return GridTile(
-        child: Container(
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.white, width: 0.5)),
-            child: Image.network(
-                '${Constants.getBaseApi()}/picture/id/${spot.pictureId}',
-                fit: BoxFit.cover)));
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.white, width: 0.5),
+        ),
+        child: Image.network(
+            '${Constants.getBaseApi()}/picture/id/${spot.pictureId}',
+            headers: <String, String>{'Connection': 'keep-alive'},
+            fit: BoxFit.cover),
+      ),
+    );
   }
 
   Container _createButton(MediaQueryData mediaQueryData) {
@@ -347,7 +352,7 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
           });
         },
         child: Text(
-          'Créer',
+          S.current.create,
           style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
         ),
       ),

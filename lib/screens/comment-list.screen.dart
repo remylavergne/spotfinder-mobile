@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spotfinder/enums/comments-type.enum.dart';
+import 'package:spotfinder/generated/l10n.dart';
 import 'package:spotfinder/models/comment.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
@@ -45,7 +46,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Commentaires'),
+        title: Text(S.current.comments),
         backgroundColor: Color(0xFF011627),
       ),
       body: Container(
@@ -105,14 +106,13 @@ class _CommentsScreenState extends State<CommentsScreen> {
                           enabledBorder: InputBorder.none,
                           focusedBorder: InputBorder.none,
                           filled: true,
-                          hintText: 'Tapez votre commentaire ici',
+                          hintText: S.current.typeCommentHint,
                           fillColor: Colors.grey[100],
                         ),
                       ),
                     )),
                     FlatButton(
                       onPressed: () async {
-                        debugPrint('Send comment');
                         if (this._formKey.currentState.validate() &&
                             this.messageCtrl.text.trim().length > 5) {
                           await Repository()
@@ -128,10 +128,12 @@ class _CommentsScreenState extends State<CommentsScreen> {
                               });
                             }
                           });
+                        } else {
+                          // TODO: Snackbar or dialog
                         }
                       },
                       child: Text(
-                        'Envoyer',
+                        S.current.send,
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     )
@@ -150,7 +152,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
       return Container(
         margin: const EdgeInsets.only(top: 8.0),
         child: Center(
-          child: Text('Aucun commentaire disponible'),
+          child: Text(S.current.anyComment),
         ),
       );
     }

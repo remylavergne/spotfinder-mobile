@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:spotfinder/generated/l10n.dart';
 import 'package:spotfinder/models/dto/login-infos.dto.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/display-clear-password.screen.dart';
@@ -27,7 +28,7 @@ class _CreateAccountState extends State<CreateAccountScreen> {
           Container(
               margin: EdgeInsets.only(top: 35.0),
               alignment: Alignment.topCenter,
-              child: ApplicationTitle(title: 'SpotFinder', size: 130.0)),
+              child: ApplicationTitle(title: S.current.spotfinder, size: 130.0)),
           Positioned.fill(child: this._form(context)),
         ],
       ),
@@ -69,7 +70,7 @@ class _CreateAccountState extends State<CreateAccountScreen> {
                         color: Color(0xFF989898),
                         fontSize: 18.0,
                       ),
-                      hintText: 'Choisis ton pseudo',
+                      hintText: S.current.chooseYourUsername,
                       fillColor: Colors.white,
                       filled: true,
                       border: OutlineInputBorder(
@@ -79,10 +80,10 @@ class _CreateAccountState extends State<CreateAccountScreen> {
                     ),
                     validator: (value) {
                       if (value.isEmpty) {
-                        return 'Please enter your username';
+                        return S.current.pleaseEnterUsername;
                       } else if (creationError) {
                         creationError = false;
-                        return 'This username already exist. Please choose another one.';
+                        return S.current.usernameAlreadyExists;
                       } else {
                         return null;
                       }
@@ -117,7 +118,7 @@ class _CreateAccountState extends State<CreateAccountScreen> {
                       }
                     },
                     child: Text(
-                      'Continuer',
+                      S.current.next,
                       style: TextStyle(
                           fontSize: 26.0, fontWeight: FontWeight.bold),
                     ),
@@ -134,7 +135,7 @@ class _CreateAccountState extends State<CreateAccountScreen> {
                       );
                     },
                     child: Text(
-                      'J\'ai déjà un ID',
+                      S.current.login,
                       style: TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.bold,
