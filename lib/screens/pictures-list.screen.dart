@@ -94,7 +94,7 @@ class _PicturesDisplayScreenState extends State<PicturesDisplayScreen> {
           border: Border.all(color: Colors.white, width: 0.5),
         ),
         child: Image.network(
-            '${Constants.getBaseApi()}/picture/id/${picture.id}',
+            '${Constants.getBaseApi()}/picture/id/${picture.getThumbnail()}',
             fit: BoxFit.cover),
       ),
     );

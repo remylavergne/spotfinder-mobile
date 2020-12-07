@@ -354,7 +354,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8.0),
             child: Image.network(
-              '${Constants.getBaseApi()}/picture/id/${picture.id}',
+              '${Constants.getBaseApi()}/picture/id/${picture.getThumbnail()}',
               height: 120.0,
               width: 120.0,
               fit: BoxFit.cover,

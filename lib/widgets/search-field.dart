@@ -121,7 +121,7 @@ class Search extends SearchDelegate {
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.white, width: 0.5)),
             child: Image.network(
-                '${Constants.getBaseApi()}/picture/id/${spot.pictureId}',
+                '${Constants.getBaseApi()}/picture/id/${spot.getThumbnail()}',
                 fit: BoxFit.cover)));
   }
 

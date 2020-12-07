@@ -327,8 +327,7 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
           border: Border.all(color: Colors.white, width: 0.5),
         ),
         child: Image.network(
-            '${Constants.getBaseApi()}/picture/id/${spot.pictureId}',
-            headers: <String, String>{'Connection': 'keep-alive'},
+            '${Constants.getBaseApi()}/picture/id/${spot.getThumbnail()}',
             fit: BoxFit.cover),
       ),
     );

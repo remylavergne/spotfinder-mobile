@@ -28,4 +28,8 @@ class Picture {
         List<Picture>.from(json.map((j) => Picture.fromJson(j)));
     return pictures;
   }
+
+  String getThumbnail() {
+    return 'thumbnail_${this.id}';
+  }
 }

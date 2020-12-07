@@ -78,4 +78,8 @@ class Spot {
         ? this.address
         : S.current.addressBeingCalculated;
   }
+
+  String getThumbnail() {
+    return 'thumbnail_${this.pictureId}';
+  }
 }
