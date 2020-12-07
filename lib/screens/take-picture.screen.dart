@@ -6,6 +6,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:spotfinder/enums/take-picture-for.enum.dart';
 import 'package:spotfinder/generated/l10n.dart';
+import 'package:spotfinder/helpers/camera.helper.dart';
 import 'package:spotfinder/screens/display-picture-to-create.screen.dart';
 
 class TakePictureScreen extends StatefulWidget {
@@ -50,6 +51,13 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Workaround for camera permission status
+    CameraHelper.instance.canUse().then((bool canUse) {
+      if (!canUse) {
+        Navigator.pop(context);
+      }
+    });
+
     return Scaffold(
       body: Container(
         child: Stack(
@@ -123,7 +131,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
         if (snapshot.connectionState == ConnectionState.done) {
           return CameraPreview(_controller);
         } else {
-          return Center(child: CircularProgressIndicator());
+          return Container(child: Center(child: CircularProgressIndicator()));
         }
       },
     );

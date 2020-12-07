@@ -56,8 +56,8 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
         controller: this.tabController,
       ),
       actions: [
-        IconButton(icon: Icon(Icons.chat), onPressed: () {}),
-        IconButton(icon: Icon(Icons.mail), onPressed: () {}),
+        // IconButton(icon: Icon(Icons.chat), onPressed: () {}),
+        // IconButton(icon: Icon(Icons.mail), onPressed: () {}),
         IconButton(
             icon: Icon(Icons.account_circle),
             onPressed: () {
@@ -102,7 +102,15 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
                                     mediaQueryData, position);
                               }
                               if (snapshot.hasError) {
-                                return this._displayNewestSpots(mediaQueryData);
+                                return this._retry(
+                                    () => GeolocationHelper.instance
+                                            .getCurrentPosition()
+                                            .then((Position position) {
+                                          if (position != null) {
+                                            this._refreshNearestSpots(position);
+                                          }
+                                        }),
+                                    S.current.errorGetSpots);
                               } else {
                                 return CircularProgressIndicator();
                               }
@@ -175,31 +183,37 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
   }
 
   void _startCreation(BuildContext context) {
-    this.getCurrentPositionAndNavigate(context);
-
-    // todo: rework check flow
-    // CameraHelper.instance.canUse().then((bool canUse) {
-    //   if (canUse) {
-    //     return GeolocationHelper.instance.isLocationServiceEnabled();
-    //   } else {
-    //     this.showDialogOpenSettings(context, Text('Problem...'),
-    //         Text('Vous devez donner accès à l\'appareil photo'));
-    //   }
-    // }).then((bool isLocationServiceEnable) {
-    //   if (isLocationServiceEnable) {
-    //     return GeolocationHelper.instance.hasPermission();
-    //   } else {
-    //     this.showDialogOpenSettings(
-    //         context, Text('Problem...'), Text('Le GPS n\'est pas allumé'));
-    //   }
-    // }).then((bool hasAccessToGeolocation) {
-    //   if (hasAccessToGeolocation) {
-    //     this.getCurrentPositionAndNavigate(context);
-    //   } else {
-    //     this.showDialogOpenSettings(context, Text('Problem...'),
-    //         Text('Vous devez donner accès à la géolocalisation'));
-    //   }
-    // });
+    CameraHelper.instance.canUse().then((bool canUse) {
+      if (canUse) {
+        return GeolocationHelper.instance.isLocationServiceEnabled();
+      } else {
+        this.showDialogOpenSettings(
+          context,
+          Text(S.current.permissionDialogTitle),
+          Text(S.current.cameraPermissionMandatory),
+        );
+      }
+    }).then((bool isLocationServiceEnable) {
+      if (isLocationServiceEnable) {
+        return GeolocationHelper.instance.hasPermission();
+      } else {
+        this.showDialogOpenSettings(
+          context,
+          Text(S.current.permissionDialogTitle),
+          Text(S.current.locationServiceOff),
+        );
+      }
+    }).then((bool hasAccessToGeolocation) {
+      if (hasAccessToGeolocation) {
+        this.getCurrentPositionAndNavigate(context);
+      } else {
+        this.showDialogOpenSettings(
+          context,
+          Text(S.current.permissionDialogTitle),
+          Text(S.current.gpsPermissionMandatory),
+        );
+      }
+    });
   }
 
   Widget _displayNewestSpots(MediaQueryData mediaQuery) {
@@ -212,8 +226,9 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
             List<Spot> spots = wrapper.result;
 
             return RefreshIndicator(
-              onRefresh: () =>
-                  this._newest = Repository().getPaginatedSpots(1, 20),
+              onRefresh: () async {
+                this._refreshNewestSpots();
+              },
               child: GridView.builder(
                 itemCount: spots.length,
                 padding: EdgeInsets.only(top: 0),
@@ -233,7 +248,8 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
               ),
             );
           } else if (snapshot.hasError) {
-            return this._networkProblem(() => this._refreshNewestSpots());
+            return this._retry(
+                () => this._refreshNewestSpots(), S.current.errorGetSpots);
           } else {
             return Container(
               child: Center(
@@ -244,14 +260,17 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
         });
   }
 
-  Container _networkProblem(Function() refresh) {
+  Container _retry(Function() refresh, String textDisplayed) {
     return Container(
       child: Column(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(S.current.errorGetSpots),
+          Text(
+            textDisplayed,
+            textAlign: TextAlign.center,
+          ),
           const SizedBox(
             height: 16.0,
           ),
@@ -287,8 +306,9 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
             List<Spot> spots = wrapper.result;
 
             return RefreshIndicator(
-              onRefresh: () => this._nearest =
-                  Repository().getNearestPaginatedSpots(position, 1, 20),
+              onRefresh: () async {
+                this._refreshNearestSpots(position);
+              },
               child: GridView.builder(
                 itemCount: spots.length,
                 padding: EdgeInsets.only(top: 0),
@@ -308,8 +328,8 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
               ),
             );
           } else if (snapshot.hasError) {
-            return this
-                ._networkProblem(() => this._refreshNearestSpots(position));
+            return this._retry(() => this._refreshNearestSpots(position),
+                S.current.errorPermissionNearestSpots);
           } else {
             return Container(
               child: Center(
