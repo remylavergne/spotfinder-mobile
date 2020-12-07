@@ -29,7 +29,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "addPictureTitle" : MessageLookupByLibrary.simpleMessage("Add a picture"),
     "addressBeingCalculated" : MessageLookupByLibrary.simpleMessage("Address is being calculated"),
     "back" : MessageLookupByLibrary.simpleMessage("Back"),
-    "chooseYourUsername" : MessageLookupByLibrary.simpleMessage("Choose an username"),
+    "chooseYourUsername" : MessageLookupByLibrary.simpleMessage("Choisissez un pseudo"),
     "clearPasswordExplanation" : MessageLookupByLibrary.simpleMessage("Un mot de passe a été généré pour récupérer votre compte. Vous devez l\'avoir si vous voulez vous connecter sur un autre appareil, ou tout simplement récupérer votre compte après une réinstallation."),
     "clickToCopy" : MessageLookupByLibrary.simpleMessage("Click to copy"),
     "closestTabTitle" : MessageLookupByLibrary.simpleMessage("Closest"),

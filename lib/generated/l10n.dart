@@ -45,10 +45,10 @@ class S {
     );
   }
 
-  /// `Choose an username`
+  /// `Choisissez un pseudo`
   String get chooseYourUsername {
     return Intl.message(
-      'Choose an username',
+      'Choisissez un pseudo',
       name: 'chooseYourUsername',
       desc: 'Hint for account creation',
       args: [],

@@ -3,7 +3,7 @@
     "@spotfinder": {
       "description": "Application name"
     },
-    "chooseYourUsername": "Choose an username",
+    "chooseYourUsername": "Choisissez un pseudo",
     "@chooseYourUsername": {
       "description": "Hint for account creation"
     },
