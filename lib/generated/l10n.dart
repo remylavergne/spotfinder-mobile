@@ -435,6 +435,16 @@ class S {
     );
   }
 
+  /// `Location permission is mandatory to display closest Spots around you. Please, activate it into application settings.`
+  String get errorPermissionNearestSpots {
+    return Intl.message(
+      'Location permission is mandatory to display closest Spots around you. Please, activate it into application settings.',
+      name: 'errorPermissionNearestSpots',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Photo`
   String get photoTitle {
     return Intl.message(
@@ -550,6 +560,46 @@ class S {
     return Intl.message(
       'Query too short!',
       name: 'queryTooShortError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Camera permission is mandatory during spot creation process.`
+  String get cameraPermissionMandatory {
+    return Intl.message(
+      'Camera permission is mandatory during spot creation process.',
+      name: 'cameraPermissionMandatory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Missing permission`
+  String get permissionDialogTitle {
+    return Intl.message(
+      'Missing permission',
+      name: 'permissionDialogTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location service seems to be off. Please, turn it on.`
+  String get locationServiceOff {
+    return Intl.message(
+      'Location service seems to be off. Please, turn it on.',
+      name: 'locationServiceOff',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Access to gps is mandatory during spot creation process.`
+  String get gpsPermissionMandatory {
+    return Intl.message(
+      'Access to gps is mandatory during spot creation process.',
+      name: 'gpsPermissionMandatory',
       desc: '',
       args: [],
     );

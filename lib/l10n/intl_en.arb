@@ -83,6 +83,9 @@
     "@okay": {},
     "errorGetSpots": "Error while retrieving Spots...",
     "@errorGetSpots": {},
+    "@okay": {},
+    "errorPermissionNearestSpots": "Location permission is mandatory to display closest Spots around you. Please, activate it into application settings.",
+    "@errorPermissionNearestSpots": {},
     "photoTitle": "Photo",
     "@photoTitle": {},
     "photosTitle": "Photos",
@@ -106,6 +109,14 @@
     "searchFieldEmptyError": "Please, type something to search",
     "@searchFieldEmptyError": {},
     "queryTooShortError": "Query too short!",
-    "@queryTooShortError": {}
+    "@queryTooShortError": {},
+    "cameraPermissionMandatory": "Camera permission is mandatory during spot creation process.",
+    "@cameraPermissionMandatory": {},
+    "permissionDialogTitle": "Missing permission",
+    "@permissionDialogTitle": {},
+    "locationServiceOff": "Location service seems to be off. Please, turn it on.",
+    "@locationServiceOff": {},
+    "gpsPermissionMandatory": "Access to gps is mandatory during spot creation process.",
+    "@gpsPermissionMandatory": {}
 
   }
