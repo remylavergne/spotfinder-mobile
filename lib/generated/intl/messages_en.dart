@@ -65,6 +65,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "photosTitle" : MessageLookupByLibrary.simpleMessage("Photos"),
     "pictureIsBeingSynchronized" : MessageLookupByLibrary.simpleMessage("Picture is being synchronized"),
     "pleaseEnterUsername" : MessageLookupByLibrary.simpleMessage("Please enter your username"),
+    "profileTitle" : MessageLookupByLibrary.simpleMessage("Profile"),
     "queryTooShortError" : MessageLookupByLibrary.simpleMessage("Query too short!"),
     "routeCalculation" : MessageLookupByLibrary.simpleMessage("Route calculation"),
     "searchFieldEmptyError" : MessageLookupByLibrary.simpleMessage("Please, type something to search"),

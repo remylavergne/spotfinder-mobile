@@ -14,10 +14,12 @@ import 'package:spotfinder/models/comment.model.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
+import 'package:spotfinder/models/user.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/comment-list.screen.dart';
 import 'package:spotfinder/screens/picture-full.screen.dart';
 import 'package:spotfinder/screens/pictures-list.screen.dart';
+import 'package:spotfinder/screens/user-profile.screen.dart';
 import 'package:spotfinder/services/global-rest.service.dart';
 import 'package:spotfinder/screens/take-picture.screen.dart';
 import 'package:spotfinder/widgets/comment.dart';
@@ -36,6 +38,8 @@ class SpotDetailsScreen extends StatefulWidget {
 class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
   Future<ResultWrapper<List<Picture>>> pictures;
   Future<ResultWrapper<List<Comment>>> comments;
+  User _user;
+  String _username = '';
 
   @override
   void initState() {
@@ -44,6 +48,13 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
     this.comments =
         Repository().getPaginatedSpotComments(1, 10, widget.spot.id);
     super.initState();
+    // Get user profile
+    Repository().getUserById(widget.spot.user).then((User user) {
+      setState(() {
+        this._user = user;
+        this._username = user.username;
+      });
+    });
   }
 
   @override
@@ -72,12 +83,12 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
 
   Widget _header(Spot spot, Size screenSize) {
     return Container(
-        height: screenSize.height / 4,
-        width: double.infinity,
-        // color: Colors.red,
-        child: Image.network(
-            '${Constants.getBaseApi()}/picture/id/${spot.pictureId}',
-            fit: BoxFit.cover));
+      height: screenSize.height / 4,
+      width: double.infinity,
+      child: Image.network(
+          '${Constants.getBaseApi()}/picture/id/${spot.pictureId}',
+          fit: BoxFit.cover),
+    );
   }
 
   Widget _generalInformations(Spot spot) {
@@ -100,10 +111,21 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                 spot.getSpotName(),
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
-              Text(
-                'FakeRunner',
-                style: TextStyle(color: Colors.grey),
-              ), // TODO: Open user profile
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          UserProfileScreen(userId: this._user.id),
+                    ),
+                  );
+                },
+                child: Text(
+                  this._username,
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
             ],
           ),
           Container(

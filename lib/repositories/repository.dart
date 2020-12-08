@@ -7,9 +7,11 @@ import 'package:spotfinder/models/comment.model.dart';
 import 'package:spotfinder/models/dto/create-spot.dto.dart';
 import 'package:spotfinder/models/dto/login-infos.dto.dart';
 import 'package:spotfinder/models/dto/new-comment.dto.dart';
+import 'package:spotfinder/models/dto/search-with-pagination.dto.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
+import 'package:spotfinder/models/user.model.dart';
 import 'package:spotfinder/services/global-rest.service.dart';
 
 class Repository {
@@ -27,8 +29,10 @@ class Repository {
     return Future.value(infos);
   }
 
-  Future<bool> connectUserByCredentials(String username, String password) async {
-    LoginInfos infos = await RestService().connectUserByCredentials(username, password);
+  Future<bool> connectUserByCredentials(
+      String username, String password) async {
+    LoginInfos infos =
+        await RestService().connectUserByCredentials(username, password);
     SharedPrefsHelper.instance.saveUserInfos(infos);
     if (infos != null) {
       return true;
@@ -75,14 +79,15 @@ class Repository {
 
   Future<ResultWrapper<List<Comment>>> getPaginatedSpotComments(
       int page, int limit, String spotId) {
-        return RestService().getPaginatedSpotComments(spotId, page, limit);
+    return RestService().getPaginatedSpotComments(spotId, page, limit);
   }
 
-  Future<bool> sendComment(String message, CommentType commentType, String id) async {
+  Future<bool> sendComment(
+      String message, CommentType commentType, String id) async {
     // Get user id
     String currentUserId = await SharedPrefsHelper.instance.getId();
-    // Build Comment 
-     NewCommentDto comment;
+    // Build Comment
+    NewCommentDto comment;
     switch (commentType) {
       case CommentType.SPOT:
         comment = NewCommentDto(message, currentUserId, id, null, null);
@@ -95,9 +100,18 @@ class Repository {
         break;
       default:
     }
-    // Send it 
+    // Send it
     bool added = await RestService().addComment(comment);
 
     return Future.value(added);
+  }
+
+  Future<User> getUserById(String id) {
+    return RestService().getUserById(id);
+  }
+
+  Future<ResultWrapper<List<Picture>>> getUserPictures(
+      SearchWithPagination query) {
+    return RestService().getUserPictures(query);
   }
 }

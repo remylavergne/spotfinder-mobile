@@ -12,6 +12,7 @@ import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/spot-details.screen.dart';
+import 'package:spotfinder/screens/user-profile.screen.dart';
 import 'package:spotfinder/widgets/application-title.dart';
 import 'package:spotfinder/widgets/search-field.dart';
 import 'package:spotfinder/screens/take-picture.screen.dart';
@@ -60,9 +61,15 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
         // IconButton(icon: Icon(Icons.mail), onPressed: () {}),
         IconButton(
             icon: Icon(Icons.account_circle),
-            onPressed: () {
-              // TODO: For tests // to delete
-              SharedPrefsHelper.instance.logout();
+            onPressed: () async {
+              String currentUserId = await SharedPrefsHelper.instance.getId();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      UserProfileScreen(userId: currentUserId),
+                ),
+              );
             }),
         IconButton(
             icon: Icon(Icons.search),

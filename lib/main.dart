@@ -12,6 +12,7 @@ import 'package:spotfinder/screens/pictures-list.screen.dart';
 import 'package:spotfinder/screens/retrieve-account.screen.dart';
 import 'package:spotfinder/screens/spot-details.screen.dart';
 import 'package:spotfinder/screens/take-picture.screen.dart';
+import 'package:spotfinder/screens/user-profile.screen.dart';
 
 import 'helpers/camera.helper.dart';
 
@@ -60,6 +61,9 @@ class SpotFinderApp extends StatelessWidget {
           PictureFullScreen.route: (BuildContext context) =>
               // ignore: missing_required_param
               PictureFullScreen(),
+          UserProfileScreen.route: (BuildContext context) =>
+              // ignore: missing_required_param
+              UserProfileScreen(),
         },
         theme: ThemeData(
           primarySwatch: Colors.blue,

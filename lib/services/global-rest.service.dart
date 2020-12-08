@@ -11,9 +11,11 @@ import 'package:spotfinder/models/dto/create-spot.dto.dart';
 import 'package:spotfinder/models/dto/login-infos.dto.dart';
 import 'package:spotfinder/models/dto/new-comment.dto.dart';
 import 'package:spotfinder/models/dto/search-dto.dto.dart';
+import 'package:spotfinder/models/dto/search-with-pagination.dto.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
+import 'package:spotfinder/models/user.model.dart';
 
 class RestService {
   RestService._privateConstructor();
@@ -164,6 +166,31 @@ class RestService {
       return true;
     } else {
       return null;
+    }
+  }
+
+  Future<User> getUserById(String id) async {
+    final response =
+        await http.post(Constants.getBaseApi() + '/user', body: id);
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> userMap = jsonDecode(response.body);
+      return Future.value(User.fromJson(userMap));
+    } else {
+      throw Exception('Failed to get user by id');
+    }
+  }
+
+  Future<ResultWrapper<List<Picture>>> getUserPictures(
+      SearchWithPagination query) async {
+    final response = await http.post(Constants.getBaseApi() + '/user/pictures',
+        body: query.toJson());
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> wrapperMap = jsonDecode(response.body);
+      return ResultWrapper.fromJsonMap<Picture>(wrapperMap);
+    } else {
+      throw Exception('Failed to get user pictures');
     }
   }
 }

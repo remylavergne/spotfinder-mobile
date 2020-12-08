@@ -117,6 +117,8 @@
     "locationServiceOff": "Location service seems to be off. Please, turn it on.",
     "@locationServiceOff": {},
     "gpsPermissionMandatory": "Access to gps is mandatory during spot creation process.",
-    "@gpsPermissionMandatory": {}
+    "@gpsPermissionMandatory": {},
+    "profileTitle": "Profile",
+    "@profileTitle": {}
 
   }
