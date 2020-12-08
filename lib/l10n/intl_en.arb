@@ -118,7 +118,9 @@
     "@locationServiceOff": {},
     "gpsPermissionMandatory": "Access to gps is mandatory during spot creation process.",
     "@gpsPermissionMandatory": {},
-    "profileTitle": "Profile",
-    "@profileTitle": {}
+    "profile": "profile",
+    "@profile": {},
+    "see": "See",
+    "@see": {}
 
   }

@@ -605,11 +605,21 @@ class S {
     );
   }
 
-  /// `Profile`
-  String get profileTitle {
+  /// `profile`
+  String get profile {
     return Intl.message(
-      'Profile',
-      name: 'profileTitle',
+      'profile',
+      name: 'profile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `See`
+  String get see {
+    return Intl.message(
+      'See',
+      name: 'see',
       desc: '',
       args: [],
     );
