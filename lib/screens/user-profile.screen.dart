@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/generated/l10n.dart';
 import 'package:spotfinder/models/dto/search-with-pagination.dto.dart';
 import 'package:spotfinder/models/picture.model.dart';
@@ -29,7 +30,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   void initState() {
     this._user = Repository().getUserById(widget.userId);
     this._pictures = Repository()
-        .getUserPictures(new SearchWithPagination(widget.userId, 1, 40));
+        .getUserPictures(new SearchWithPagination(widget.userId, 1, 9));
     super.initState();
   }
 
@@ -47,7 +48,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             User user = snapshot.data;
             this.user = user;
 
-            return this._content();
+            return this._content(user);
           } else if (snapshot.hasError) {
             return Container(
               child: Center(
@@ -66,17 +67,55 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
-  SingleChildScrollView _content() {
+  SingleChildScrollView _content(User user) {
     return SingleChildScrollView(
-      child: Column(
-        // crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text('Profil utilisateur'),
-          LastPictures(
-              displayAllAction: () => this._userPictures(),
-              secondAction: null,
-              fetchPicturesService: () => this._pictures)
-        ],
+      child: Container(
+        padding: EdgeInsets.only(
+          top: 16.0,
+          right: 16.0,
+          left: 16.0,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 100.0,
+                    height: 100.0,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.grey[100],
+                      backgroundImage: user.pictureId != null
+                          ? NetworkImage(
+                              '${Constants.getBaseApi()}/picture/id/${this.user.pictureId}')
+                          : null,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 16.0,
+                  ),
+                  Text(
+                    user.username,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 60.0,
+                      fontFamily: 'NorthCoast',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 32.0),
+              child: LastPictures(
+                  mediaQueryData: MediaQuery.of(context),
+                  displayAllAction: () => this._userPictures(),
+                  fetchPicturesService: () => this._pictures),
+            )
+          ],
+        ),
       ),
     );
   }

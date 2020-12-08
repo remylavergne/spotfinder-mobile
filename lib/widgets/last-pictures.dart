@@ -7,6 +7,7 @@ import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/screens/picture-full.screen.dart';
 
 class LastPictures extends StatelessWidget {
+  final MediaQueryData mediaQueryData;
   final Function() displayAllAction;
   final Function() secondAction;
   final Future<ResultWrapper<List<Picture>>> Function() fetchPicturesService;
@@ -14,9 +15,10 @@ class LastPictures extends StatelessWidget {
 
   LastPictures(
       {Key key,
+      @required this.mediaQueryData,
       @required this.displayAllAction,
-      @required this.secondAction,
       @required this.fetchPicturesService,
+      this.secondAction,
       this.secondActionAvailable = false})
       : super(key: key);
 
@@ -26,14 +28,9 @@ class LastPictures extends StatelessWidget {
       throw Exception('A getter is mandatory if action is available!');
     }
 
+    double pictureSize = (this.mediaQueryData.size.width - 48.0) / 3;
+
     return Container(
-      padding: EdgeInsets.only(
-        left: 16.0,
-        right: 16.0,
-        // top: 8.0,
-        bottom: 16.0,
-      ),
-      // color: Colors.red[200],
       child: Column(
         children: [
           Row(
@@ -90,7 +87,8 @@ class LastPictures extends StatelessWidget {
               if (snapshot.hasData) {
                 ResultWrapper<List<Picture>> picturesWrapper = snapshot.data;
                 List<Picture> pictures = picturesWrapper.result;
-                return this._generatePicturesWidgets(context, pictures);
+                return this
+                    ._generatePicturesWidgets(context, pictures, pictureSize);
               } else if (snapshot.hasError) {
                 return Padding(
                   // TODO: Retry
@@ -111,9 +109,8 @@ class LastPictures extends StatelessWidget {
   }
 
   Container _generatePicturesWidgets(
-      BuildContext context, List<Picture> pictures) {
+      BuildContext context, List<Picture> pictures, double size) {
     List<Widget> picturesWidgets = [];
-    // TODO: taille des images en fonction de la taille de l'écran ! => MediaQueryData
     pictures.forEach((Picture picture) {
       Widget w = GestureDetector(
         onTap: () {
@@ -126,8 +123,8 @@ class LastPictures extends StatelessWidget {
           );
         },
         child: Container(
-          width: 120.0,
-          height: 120.0,
+          width: size,
+          height: size,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(
               Radius.circular(6.0),
@@ -137,8 +134,8 @@ class LastPictures extends StatelessWidget {
             borderRadius: BorderRadius.circular(8.0),
             child: Image.network(
               '${Constants.getBaseApi()}/picture/id/${picture.getThumbnail()}',
-              height: 120.0,
-              width: 120.0,
+              height: size,
+              width: size,
               fit: BoxFit.cover,
             ),
           ),
@@ -150,8 +147,10 @@ class LastPictures extends StatelessWidget {
 
     return Container(
       margin: EdgeInsets.only(top: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      child: Wrap(
+        alignment: WrapAlignment.spaceEvenly,
+        spacing: 8.0,
+        runSpacing: 8.0,
         children: picturesWidgets,
       ),
     );
