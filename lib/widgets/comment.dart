@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/models/comment.model.dart';
+import 'package:spotfinder/screens/user-profile.screen.dart';
 
 class CommentWidget extends StatelessWidget {
   final Comment comment;
@@ -18,13 +19,19 @@ class CommentWidget extends StatelessWidget {
             ListTile(
               tileColor: Color(0xAAE5E5E5),
               onTap: () {
-                debugPrint('Open user profile => ${this.comment.user.id}');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        UserProfileScreen(userId: this.comment.userId),
+                  ),
+                );
               },
               leading: CircleAvatar(
                 backgroundColor: Colors.red[100],
                 backgroundImage: this.comment.user.pictureId != null
                     ? NetworkImage(
-                        '${Constants.getBaseApi()}/picture/id/${this.comment.user.pictureId}')
+                        '${Constants.getBaseApi()}/picture/id/${this.comment.user.getThumbnail()}')
                     : null,
               ),
               title: Text(

@@ -54,4 +54,8 @@ class User {
         json['pictureId'],
         null);
   }
+
+  String getThumbnail() {
+    return 'thumbnail_${this.pictureId}';
+  }
 }

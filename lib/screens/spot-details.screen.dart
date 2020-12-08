@@ -17,12 +17,12 @@ import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/models/user.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/comment-list.screen.dart';
-import 'package:spotfinder/screens/picture-full.screen.dart';
 import 'package:spotfinder/screens/pictures-list.screen.dart';
 import 'package:spotfinder/screens/user-profile.screen.dart';
 import 'package:spotfinder/services/global-rest.service.dart';
 import 'package:spotfinder/screens/take-picture.screen.dart';
 import 'package:spotfinder/widgets/comment.dart';
+import 'package:spotfinder/widgets/last-pictures.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SpotDetailsScreen extends StatefulWidget {
@@ -50,10 +50,12 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
     super.initState();
     // Get user profile
     Repository().getUserById(widget.spot.user).then((User user) {
-      setState(() {
-        this._user = user;
-        this._username = user.username;
-      });
+      if (user != null) {
+        setState(() {
+          this._user = user;
+          this._username = user.username;
+        });
+      }
     });
   }
 
@@ -67,12 +69,30 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          // color: Colors.green,
           child: Column(
             children: [
               this._header(widget.spot, mediaQueryData.size),
               this._generalInformations(widget.spot),
-              this._lastPictures(),
+              Padding(
+                padding: const EdgeInsets.only(
+                  right: 16.0,
+                  left: 16.0,
+                ),
+                child: LastPictures(
+                  mediaQueryData: MediaQuery.of(context),
+                  displayAllAction: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => PicturesDisplayScreen(
+                          id: widget.spot.id, type: PicturesFrom.SPOT),
+                    ),
+                  ),
+                  fetchPicturesService: () => this.pictures,
+                  secondActionAvailable: true,
+                  secondAction: () =>
+                      this._takeAndAddPicture(context, widget.spot),
+                ),
+              ),
               this._lastComments(),
             ],
           ),
@@ -99,7 +119,6 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
         top: 16.0,
         bottom: 16.0,
       ),
-      // color: Colors.blue,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,95 +207,14 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
     );
   }
 
-  Widget _lastPictures() {
-    return Container(
-      padding: EdgeInsets.only(
-        left: 16.0,
-        right: 16.0,
-        // top: 8.0,
-        bottom: 16.0,
-      ),
-      // color: Colors.red[200],
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                children: [
-                  Text(S.current.latestPhotos,
-                      style: TextStyle(
-                          fontSize: 16.0, fontWeight: FontWeight.w500)),
-                  Text(' - '),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              PicturesDisplayScreen(
-                                  id: widget.spot.id, type: PicturesFrom.SPOT),
-                        ),
-                      );
-                    },
-                    child: Text(S.current.displayAll,
-                        style: TextStyle(
-                            fontSize: 14.0, color: Color(0xFF2196F3))),
-                  )
-                ],
-              ),
-              GestureDetector(
-                onTap: () {
-                  //todo: Check all permissions before...
-                  this._takeAndAddPicture(context, widget.spot);
-                },
-                child: Text(S.current.addAction,
-                    style: TextStyle(fontSize: 14.0, color: Color(0xFF2196F3))),
-              ),
-            ],
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 4.0),
-            height: 1.0,
-            color: Colors.grey,
-          ),
-          FutureBuilder<ResultWrapper<List<Picture>>>(
-            future: this.pictures,
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData) {
-                ResultWrapper<List<Picture>> picturesWrapper = snapshot.data;
-                List<Picture> pictures = picturesWrapper.result;
-
-                return this._getLastPicturesWidgets(pictures);
-              } else if (snapshot.hasError) {
-                return Padding(
-                  // TODO: Retry
-                  padding: const EdgeInsets.all(8.0),
-                  child: CircularProgressIndicator(),
-                );
-              } else {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _lastComments() {
     return Container(
       padding: EdgeInsets.only(
         left: 16.0,
         right: 16.0,
-        // top: 8.0,
+        top: 16.0,
         bottom: 16.0,
       ),
-      // color: Colors.red[200],
       child: Column(
         children: [
           Row(
@@ -347,52 +285,6 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
             },
           ),
         ],
-      ),
-    );
-  }
-
-  Container _getLastPicturesWidgets(List<Picture> pictures) {
-    List<Widget> picturesWidgets = [];
-    // TODO: taille des images en fonction de la taille de l'écran ! => MediaQueryData
-    pictures.forEach((Picture picture) {
-      Widget w = GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) =>
-                  PictureFullScreen(picture: picture),
-            ),
-          );
-        },
-        child: Container(
-          width: 120.0,
-          height: 120.0,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(
-              Radius.circular(6.0),
-            ),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
-            child: Image.network(
-              '${Constants.getBaseApi()}/picture/id/${picture.getThumbnail()}',
-              height: 120.0,
-              width: 120.0,
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-      );
-
-      picturesWidgets.add(w);
-    });
-
-    return Container(
-      margin: EdgeInsets.only(top: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: picturesWidgets,
       ),
     );
   }

@@ -8,6 +8,7 @@ import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/user.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/pictures-list.screen.dart';
+import 'package:spotfinder/string-methods.dart';
 import 'package:spotfinder/widgets/last-pictures.dart';
 
 class UserProfileScreen extends StatefulWidget {
@@ -38,7 +39,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).profileTitle),
+        title: Text(capitalize(S.of(context).profile)),
         backgroundColor: Color(0xFF011627),
       ),
       body: FutureBuilder(
@@ -83,8 +84,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               child: Row(
                 children: [
                   Container(
-                    width: 100.0,
-                    height: 100.0,
+                    width: 80.0,
+                    height: 80.0,
                     child: CircleAvatar(
                       backgroundColor: Colors.grey[100],
                       backgroundImage: user.pictureId != null
@@ -108,7 +109,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 32.0),
+              padding: const EdgeInsets.only(top: 24.0),
               child: LastPictures(
                   mediaQueryData: MediaQuery.of(context),
                   displayAllAction: () => this._userPictures(),
