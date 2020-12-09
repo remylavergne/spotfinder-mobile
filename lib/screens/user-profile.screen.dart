@@ -9,9 +9,11 @@ import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/models/user.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
+import 'package:spotfinder/screens/picture-full.screen.dart';
 import 'package:spotfinder/screens/pictures-list.screen.dart';
 import 'package:spotfinder/string-methods.dart';
 import 'package:spotfinder/widgets/last-pictures.dart';
+import 'package:spotfinder/widgets/last-spots.dart';
 
 class UserProfileScreen extends StatefulWidget {
   static String route = '/user-profile';
@@ -91,12 +93,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   Container(
                     width: 80.0,
                     height: 80.0,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.grey[100],
-                      backgroundImage: user.pictureId != null
-                          ? NetworkImage(
-                              '${Constants.getBaseApi()}/picture/id/${this.user.pictureId}')
-                          : null,
+                    child: GestureDetector(
+                      onTap: () {
+                        this._displayUserProfilePicture(user);
+                      },
+                      child: CircleAvatar(
+                        backgroundColor: Colors.grey[100],
+                        backgroundImage: user.pictureId != null
+                            ? NetworkImage(
+                                '${Constants.getBaseApi()}/picture/id/${this.user.pictureId}')
+                            : null,
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -120,13 +127,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   displayAllAction: () => this._userPictures(),
                   fetchPicturesService: () => this._pictures),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.only(top: 24.0),
-            //   child: LastPictures(
-            //       mediaQueryData: MediaQuery.of(context),
-            //       displayAllAction: () => this._userSpots(),
-            //       fetchPicturesService: () => this._spots),
-            // ),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 24.0,
+                bottom: 60.0,
+              ),
+              child: LastSpots(
+                  mediaQueryData: MediaQuery.of(context),
+                  displayAllAction: () => this._userSpots(),
+                  fetchSpotsService: () => this._spots),
+            ),
           ],
         ),
       ),
@@ -139,6 +149,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       MaterialPageRoute(
         builder: (BuildContext context) =>
             PicturesDisplayScreen(id: widget.userId, type: PicturesFrom.USER),
+      ),
+    );
+  }
+
+  Future<PicturesDisplayScreen> _displayUserProfilePicture(User user) {
+    return Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => PictureFullScreen(
+          picture: Picture.fromUser(user),
+        ),
       ),
     );
   }

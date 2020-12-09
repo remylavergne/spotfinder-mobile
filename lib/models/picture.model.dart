@@ -1,5 +1,7 @@
 import 'dart:core';
 
+import 'package:spotfinder/models/user.model.dart';
+
 class Picture {
   String id;
   int createdAt;
@@ -27,6 +29,11 @@ class Picture {
     List<Picture> pictures =
         List<Picture>.from(json.map((j) => Picture.fromJson(j)));
     return pictures;
+  }
+
+  static Picture fromUser(User user) {
+    return new Picture(user.pictureId, DateTime.now().millisecondsSinceEpoch,
+        null, null, user.id, true);
   }
 
   String getThumbnail() {

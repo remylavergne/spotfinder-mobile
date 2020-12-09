@@ -121,6 +121,8 @@
     "profile": "profile",
     "@profile": {},
     "see": "See",
-    "@see": {}
+    "@see": {},
+    "latestSpots": "Lastest spots",
+    "@latestSpots": {}
 
   }

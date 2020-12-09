@@ -624,6 +624,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Lastest spots`
+  String get latestSpots {
+    return Intl.message(
+      'Lastest spots',
+      name: 'latestSpots',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

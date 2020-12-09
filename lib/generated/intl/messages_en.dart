@@ -50,6 +50,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "gpsPermissionMandatory" : MessageLookupByLibrary.simpleMessage("Access to gps is mandatory during spot creation process."),
     "latestComments" : MessageLookupByLibrary.simpleMessage("Latest comments"),
     "latestPhotos" : MessageLookupByLibrary.simpleMessage("Latest photos"),
+    "latestSpots" : MessageLookupByLibrary.simpleMessage("Lastest spots"),
     "locationServiceOff" : MessageLookupByLibrary.simpleMessage("Location service seems to be off. Please, turn it on."),
     "login" : MessageLookupByLibrary.simpleMessage("I have an account"),
     "loginError" : MessageLookupByLibrary.simpleMessage("Please check your username / password"),
