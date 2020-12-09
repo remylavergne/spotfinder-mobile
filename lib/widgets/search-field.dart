@@ -5,6 +5,7 @@ import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/spot-details.screen.dart';
+import 'package:spotfinder/widgets/square-photo-item.dart';
 
 class Search extends SearchDelegate {
   ResultWrapper<List<Spot>> lastResults;
@@ -117,12 +118,15 @@ class Search extends SearchDelegate {
 
   GridTile _getSpotWidget(Spot spot) {
     return GridTile(
-        child: Container(
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.white, width: 0.5)),
-            child: Image.network(
-                '${Constants.getBaseApi()}/picture/id/${spot.getThumbnail()}',
-                fit: BoxFit.cover)));
+      child: Container(
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.transparent, width: 4.0)),
+        child: SquarePhotoItem(
+          url: '${Constants.getBaseApi()}/picture/id/${spot.getThumbnail()}',
+          size: 120.0,
+        ),
+      ),
+    );
   }
 
   @override

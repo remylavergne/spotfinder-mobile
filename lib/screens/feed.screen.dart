@@ -352,7 +352,7 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
     return GridTile(
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.white, width: 4.0),
+          border: Border.all(color: Colors.transparent, width: 4.0),
         ),
         child: SquarePhotoItem(
           url: '${Constants.getBaseApi()}/picture/id/${spot.getThumbnail()}',
