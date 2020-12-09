@@ -123,6 +123,8 @@
     "see": "See",
     "@see": {},
     "latestSpots": "Lastest spots",
-    "@latestSpots": {}
+    "@latestSpots": {},
+    "userSpotsTitle": "User's spots",
+    "@userSpotsTitle": {}
 
   }

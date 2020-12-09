@@ -634,6 +634,16 @@ class S {
       args: [],
     );
   }
+
+  /// `User's spots`
+  String get userSpotsTitle {
+    return Intl.message(
+      'User\'s spots',
+      name: 'userSpotsTitle',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

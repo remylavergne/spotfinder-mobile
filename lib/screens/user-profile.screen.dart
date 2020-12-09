@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/generated/l10n.dart';
-import 'package:spotfinder/models/comment.model.dart';
 import 'package:spotfinder/models/dto/search-with-pagination.dto.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
@@ -11,6 +10,7 @@ import 'package:spotfinder/models/user.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/picture-full.screen.dart';
 import 'package:spotfinder/screens/pictures-list.screen.dart';
+import 'package:spotfinder/screens/spots-list.screen.dart';
 import 'package:spotfinder/string-methods.dart';
 import 'package:spotfinder/widgets/last-pictures.dart';
 import 'package:spotfinder/widgets/last-spots.dart';
@@ -134,7 +134,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               ),
               child: LastSpots(
                   mediaQueryData: MediaQuery.of(context),
-                  displayAllAction: () => this._userSpots(),
+                  displayAllAction: () => this._userSpots(user),
                   fetchSpotsService: () => this._spots),
             ),
           ],
@@ -164,8 +164,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
-  Future<PicturesDisplayScreen> _userSpots() {
-    // TODO: Screen to display spots
-    return null;
+  Future<PicturesDisplayScreen> _userSpots(User user) {
+    return Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => SpotsListScreen(
+          userId: user.id,
+        ),
+      ),
+    );
   }
 }

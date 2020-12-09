@@ -79,6 +79,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "synchroInProgress" : MessageLookupByLibrary.simpleMessage("Synchronization in progress..."),
     "takePictureAction" : MessageLookupByLibrary.simpleMessage("Take"),
     "typeCommentHint" : MessageLookupByLibrary.simpleMessage("Type comment here"),
+    "userSpotsTitle" : MessageLookupByLibrary.simpleMessage("User\'s spots"),
     "usernameAlreadyExists" : MessageLookupByLibrary.simpleMessage("This username already exist. Please choose another one."),
     "usernameHint" : MessageLookupByLibrary.simpleMessage("Username")
   };
