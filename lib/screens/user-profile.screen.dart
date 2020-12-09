@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/generated/l10n.dart';
+import 'package:spotfinder/models/comment.model.dart';
 import 'package:spotfinder/models/dto/search-with-pagination.dto.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
+import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/models/user.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/pictures-list.screen.dart';
@@ -26,12 +28,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   Future<User> _user;
   User user;
   Future<ResultWrapper<List<Picture>>> _pictures;
+  Future<ResultWrapper<List<Spot>>> _spots;
 
   @override
   void initState() {
     this._user = Repository().getUserById(widget.userId);
     this._pictures = Repository()
         .getUserPictures(new SearchWithPagination(widget.userId, 1, 9));
+    this._spots = Repository()
+        .getUserSpots(new SearchWithPagination(widget.userId, 1, 9));
     super.initState();
   }
 
@@ -114,7 +119,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   mediaQueryData: MediaQuery.of(context),
                   displayAllAction: () => this._userPictures(),
                   fetchPicturesService: () => this._pictures),
-            )
+            ),
+            // Padding(
+            //   padding: const EdgeInsets.only(top: 24.0),
+            //   child: LastPictures(
+            //       mediaQueryData: MediaQuery.of(context),
+            //       displayAllAction: () => this._userSpots(),
+            //       fetchPicturesService: () => this._spots),
+            // ),
           ],
         ),
       ),
@@ -129,5 +141,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             PicturesDisplayScreen(id: widget.userId, type: PicturesFrom.USER),
       ),
     );
+  }
+
+  Future<PicturesDisplayScreen> _userSpots() {
+    // TODO: Screen to display spots
+    return null;
   }
 }

@@ -5,6 +5,7 @@ import 'package:spotfinder/generated/l10n.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/screens/picture-full.screen.dart';
+import 'package:spotfinder/widgets/square-photo-item.dart';
 
 class LastPictures extends StatelessWidget {
   final MediaQueryData mediaQueryData;
@@ -122,23 +123,9 @@ class LastPictures extends StatelessWidget {
             ),
           );
         },
-        child: Container(
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(
-              Radius.circular(6.0),
-            ),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
-            child: Image.network(
-              '${Constants.getBaseApi()}/picture/id/${picture.getThumbnail()}',
-              height: size,
-              width: size,
-              fit: BoxFit.cover,
-            ),
-          ),
+        child: SquarePhotoItem(
+          url: '${Constants.getBaseApi()}/picture/id/${picture.getThumbnail()}',
+          size: size,
         ),
       );
 

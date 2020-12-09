@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/generated/l10n.dart';
-import 'package:spotfinder/models/comment.model.dart';
 import 'package:spotfinder/models/dto/search-with-pagination.dto.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/picture-full.screen.dart';
+import 'package:spotfinder/widgets/square-photo-item.dart';
 
 enum PicturesFrom { SPOT, USER }
 
@@ -94,11 +94,12 @@ class _PicturesDisplayScreenState extends State<PicturesDisplayScreen> {
     return GridTile(
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.white, width: 0.5),
+          border: Border.all(color: Colors.white, width: 4.0),
         ),
-        child: Image.network(
-            '${Constants.getBaseApi()}/picture/id/${picture.getThumbnail()}',
-            fit: BoxFit.cover),
+        child: SquarePhotoItem(
+          url: '${Constants.getBaseApi()}/picture/id/${picture.getThumbnail()}',
+          size: 120.0,
+        ),
       ),
     );
   }

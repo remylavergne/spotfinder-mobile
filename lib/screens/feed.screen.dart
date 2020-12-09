@@ -16,6 +16,7 @@ import 'package:spotfinder/screens/user-profile.screen.dart';
 import 'package:spotfinder/widgets/application-title.dart';
 import 'package:spotfinder/widgets/search-field.dart';
 import 'package:spotfinder/screens/take-picture.screen.dart';
+import 'package:spotfinder/widgets/square-photo-item.dart';
 
 class FeedScreen extends StatefulWidget {
   @override
@@ -351,11 +352,12 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
     return GridTile(
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.white, width: 0.5),
+          border: Border.all(color: Colors.white, width: 4.0),
         ),
-        child: Image.network(
-            '${Constants.getBaseApi()}/picture/id/${spot.getThumbnail()}',
-            fit: BoxFit.cover),
+        child: SquarePhotoItem(
+          url: '${Constants.getBaseApi()}/picture/id/${spot.getThumbnail()}',
+          size: 120.0,
+        ),
       ),
     );
   }
