@@ -114,4 +114,14 @@ class Repository {
       SearchWithPagination query) {
     return RestService().getUserPictures(query);
   }
+
+  Future<ResultWrapper<List<Comment>>> getUserComments(
+      SearchWithPagination query) {
+    return RestService().getUserComments(query);
+  }
+
+  Future<ResultWrapper<List<Spot>>> getUserSpots(
+      SearchWithPagination searchWithPagination) {
+    return RestService().getUserSpots(searchWithPagination);
+  }
 }

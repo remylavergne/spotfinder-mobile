@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/generated/l10n.dart';
+import 'package:spotfinder/models/comment.model.dart';
+import 'package:spotfinder/models/dto/search-with-pagination.dto.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
@@ -32,7 +34,8 @@ class _PicturesDisplayScreenState extends State<PicturesDisplayScreen> {
             Repository().getPaginatedSpotPictures(1, 20, widget.id);
         break;
       case PicturesFrom.USER:
-        // TODO:
+        this._pictures = Repository()
+            .getUserPictures(new SearchWithPagination(widget.id, 1, 40));
         break;
       default:
     }

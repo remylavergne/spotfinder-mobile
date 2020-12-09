@@ -193,4 +193,30 @@ class RestService {
       throw Exception('Failed to get user pictures');
     }
   }
+
+  Future<ResultWrapper<List<Comment>>> getUserComments(
+      SearchWithPagination query) async {
+    final response = await http.post(Constants.getBaseApi() + '/user/comments',
+        body: query.toJson());
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> wrapperMap = jsonDecode(response.body);
+      return ResultWrapper.fromJsonMap<Comment>(wrapperMap);
+    } else {
+      throw Exception('Failed to get user pictures');
+    }
+  }
+
+  Future<ResultWrapper<List<Spot>>> getUserSpots(
+      SearchWithPagination searchWithPagination) async {
+    final response = await http.post(Constants.getBaseApi() + '/user/spots',
+        body: searchWithPagination.toJson());
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> wrapperMap = jsonDecode(response.body);
+      return ResultWrapper.fromJsonMap<Spot>(wrapperMap);
+    } else {
+      throw Exception('Failed to get user pictures');
+    }
+  }
 }
