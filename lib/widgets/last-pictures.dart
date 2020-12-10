@@ -114,7 +114,10 @@ class LastPictures extends StatelessWidget {
     if (pictures.isEmpty) {
       return Container(
         child: Center(
-          child: Text('No picture yet'), // TODO: Translate
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text('No picture yet'),
+          ), // TODO: Translate
         ),
       );
     }

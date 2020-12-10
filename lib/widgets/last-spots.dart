@@ -110,6 +110,17 @@ class LastSpots extends StatelessWidget {
 
   Container _generateSpotsWidgets(
       BuildContext context, List<Spot> spots, double size) {
+    if (spots.isEmpty) {
+      return Container(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text('No spot yet'),
+          ), // TODO: Translate
+        ),
+      );
+    }
+
     List<Widget> picturesWidgets = [];
     spots.forEach((Spot spot) {
       Widget w = GestureDetector(
