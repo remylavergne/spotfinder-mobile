@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 
 class UserProfileSettingsScreen extends StatelessWidget {
   @override
@@ -25,6 +26,7 @@ class UserProfileSettingsScreen extends StatelessWidget {
             FlatButton(
               onPressed: () {
                 // TODO
+                SharedPrefsHelper.instance.logout();
               },
               child: Text(
                 'Disconnect',
