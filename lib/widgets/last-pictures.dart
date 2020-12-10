@@ -29,7 +29,7 @@ class LastPictures extends StatelessWidget {
       throw Exception('A getter is mandatory if action is available!');
     }
 
-    double pictureSize = (this.mediaQueryData.size.width - 48.0) / 3;
+    double pictureSize = (this.mediaQueryData.size.width - 58.0) / 3;
 
     return Container(
       child: Column(
@@ -111,6 +111,14 @@ class LastPictures extends StatelessWidget {
 
   Container _generatePicturesWidgets(
       BuildContext context, List<Picture> pictures, double size) {
+    if (pictures.isEmpty) {
+      return Container(
+        child: Center(
+          child: Text('No picture yet'), // TODO: Translate
+        ),
+      );
+    }
+
     List<Widget> picturesWidgets = [];
     pictures.forEach((Picture picture) {
       Widget w = GestureDetector(
