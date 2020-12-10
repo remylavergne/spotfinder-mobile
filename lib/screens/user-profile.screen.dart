@@ -11,6 +11,7 @@ import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/picture-full.screen.dart';
 import 'package:spotfinder/screens/pictures-list.screen.dart';
 import 'package:spotfinder/screens/spots-list.screen.dart';
+import 'package:spotfinder/screens/user-profile-settings.screen.dart';
 import 'package:spotfinder/string-methods.dart';
 import 'package:spotfinder/widgets/last-pictures.dart';
 import 'package:spotfinder/widgets/last-spots.dart';
@@ -48,6 +49,19 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       appBar: AppBar(
         title: Text(capitalize(S.of(context).profile)),
         backgroundColor: Color(0xFF011627),
+        actions: [
+          IconButton(
+              icon: Icon(Icons.settings),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        UserProfileSettingsScreen(),
+                  ),
+                );
+              }),
+        ],
       ),
       body: FutureBuilder(
         future: this._user,
@@ -95,7 +109,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     height: 80.0,
                     child: GestureDetector(
                       onTap: () {
-                        this._displayUserProfilePicture(user);
+                        if (user.pictureId != null) {
+                          this._displayUserProfilePicture(user);
+                        }
                       },
                       child: CircleAvatar(
                         backgroundColor: Colors.grey[100],
