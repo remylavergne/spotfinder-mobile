@@ -7,6 +7,8 @@ import 'package:spotfinder/enums/take-picture-for.enum.dart';
 import 'package:spotfinder/generated/l10n.dart';
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/repositories/repository.dart';
+import 'package:spotfinder/screens/feed.screen.dart';
+import 'package:spotfinder/screens/take-picture.screen.dart';
 
 class DisplayPictureScreen extends StatefulWidget {
   static String route = '/display-picture';
@@ -242,12 +244,12 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   void _returnToHome(BuildContext context) async {
     await Future.delayed(Duration(seconds: 2));
-    Navigator.popUntil(context, ModalRoute.withName('/'));
+    Navigator.pushNamedAndRemoveUntil(context, FeedScreen.route, (r) => false);
   }
 
   void _returnToTakePictureScreen(BuildContext context) async {
     await Future.delayed(Duration(seconds: 2));
-    Navigator.pop(context);
-    Navigator.pop(context);
+    Navigator.pushNamedAndRemoveUntil(
+        context, TakePictureScreen.route, (r) => false);
   }
 }

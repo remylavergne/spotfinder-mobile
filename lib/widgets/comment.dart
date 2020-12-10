@@ -28,7 +28,7 @@ class CommentWidget extends StatelessWidget {
                 );
               },
               leading: CircleAvatar(
-                backgroundColor: Colors.red[100],
+                backgroundColor: Colors.grey[300],
                 backgroundImage: this.comment.user.pictureId != null
                     ? NetworkImage(
                         '${Constants.getBaseApi()}/picture/id/${this.comment.user.getThumbnail()}')

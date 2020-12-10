@@ -47,6 +47,7 @@ class SpotFinderApp extends StatelessWidget {
           ClearPasswordScreen.route: (BuildContext context) =>
               // ignore: missing_required_param
               ClearPasswordScreen(),
+          FeedScreen.route: (BuildContext context) => FeedScreen(),
           TakePictureScreen.route: (BuildContext context) =>
               // ignore: missing_required_param
               TakePictureScreen(),

@@ -19,6 +19,8 @@ import 'package:spotfinder/screens/take-picture.screen.dart';
 import 'package:spotfinder/widgets/square-photo-item.dart';
 
 class FeedScreen extends StatefulWidget {
+  static String route = '/feed';
+  
   @override
   _FeedState createState() => _FeedState();
 }
