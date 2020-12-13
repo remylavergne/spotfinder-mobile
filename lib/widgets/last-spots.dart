@@ -29,7 +29,7 @@ class LastSpots extends StatelessWidget {
       throw Exception('A getter is mandatory if action is available!');
     }
 
-    double pictureSize = (this.mediaQueryData.size.width - 48.0) / 3;
+    double pictureSize = (this.mediaQueryData.size.width - 58.0) / 3;
 
     return Container(
       child: Column(
