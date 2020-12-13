@@ -8,6 +8,7 @@ import 'package:spotfinder/models/dto/create-spot.dto.dart';
 import 'package:spotfinder/models/dto/login-infos.dto.dart';
 import 'package:spotfinder/models/dto/new-comment.dto.dart';
 import 'package:spotfinder/models/dto/search-with-pagination.dto.dart';
+import 'package:spotfinder/models/dto/update-user-profile.dto.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
@@ -59,7 +60,7 @@ class Repository {
     return idSpot;
   }
 
-  Future<bool> uploadPicture(String idSpot, String idUser, File file) async {
+  Future<Picture> uploadPicture(String idSpot, String idUser, File file) async {
     return await RestService().uploadPicture(idSpot, idUser, file);
   }
 
@@ -123,5 +124,9 @@ class Repository {
   Future<ResultWrapper<List<Spot>>> getUserSpots(
       SearchWithPagination searchWithPagination) {
     return RestService().getUserSpots(searchWithPagination);
+  }
+
+  Future<User> updateUserProfile(UpdateUserProfile data) {
+    return RestService().updateUserProfile(data);
   }
 }

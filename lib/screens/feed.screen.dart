@@ -169,7 +169,7 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
           TakePictureScreen(
         position: position,
         camera: CameraHelper.instance.getCamera(),
-        takePictureFor: TakePictureFor.creation,
+        takePictureFor: TakePictureFor.CREATION,
       ),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         var begin = Offset(0.0, 1.0);
@@ -277,9 +277,12 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            textDisplayed,
-            textAlign: TextAlign.center,
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              textDisplayed,
+              textAlign: TextAlign.center,
+            ),
           ),
           const SizedBox(
             height: 16.0,
