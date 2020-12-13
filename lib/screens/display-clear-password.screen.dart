@@ -117,8 +117,8 @@ class _ClearPasswordScreenState extends State<ClearPasswordScreen> {
               textColor: Colors.white,
               height: 56.0,
               onPressed: () async {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => FeedScreen()));
+                Navigator.pushNamedAndRemoveUntil(
+                    context, FeedScreen.route, (route) => false);
               },
               child: Text(
                 S.current.next,
