@@ -125,6 +125,10 @@
     "latestSpots": "Lastest spots",
     "@latestSpots": {},
     "userSpotsTitle": "User's spots",
-    "@userSpotsTitle": {}
+    "@userSpotsTitle": {},
+    "profilePictureUploaded": "Profile picture uploaded",
+    "@profilePictureUploaded": {},
+    "errorUpdateProfilePicture": "Error during profile picture update... Please retry.",
+    "@errorUpdateProfilePicture": {}
 
   }

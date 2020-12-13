@@ -12,6 +12,7 @@ import 'package:spotfinder/models/dto/login-infos.dto.dart';
 import 'package:spotfinder/models/dto/new-comment.dto.dart';
 import 'package:spotfinder/models/dto/search-dto.dto.dart';
 import 'package:spotfinder/models/dto/search-with-pagination.dto.dart';
+import 'package:spotfinder/models/dto/update-user-profile.dto.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
@@ -89,7 +90,6 @@ class RestService {
     if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
       LoginInfos infos = LoginInfos.fromJson(data);
-      // User user = User.fromLoginInfos(infos);
       return infos;
     } else {
       return null;
@@ -105,14 +105,13 @@ class RestService {
     if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
       LoginInfos infos = LoginInfos.fromJson(data);
-      // User user = User.fromLoginInfos(newAccount);
       return infos;
     } else {
       return null;
     }
   }
 
-  Future<bool> uploadPicture(String idSpot, String idUser, File file) async {
+  Future<Picture> uploadPicture(String idSpot, String idUser, File file) async {
     MultipartRequest request = http.MultipartRequest(
         'POST', Uri.parse(Constants.getBaseApi() + '/upload/picture'));
     // Add MultiPart data
@@ -120,12 +119,15 @@ class RestService {
     request.fields['spotId'] = idSpot;
     request.fields['userId'] = idUser;
 
-    var response = await request.send();
+    var responseStream = await request.send();
+    var response = await http.Response.fromStream(responseStream);
 
     if (response.statusCode == 200) {
-      return Future.value(true);
+      Map<String, dynamic> pictureMap = jsonDecode(response.body);
+      Picture picture = Picture.fromJson(pictureMap);
+      return Future.value(picture);
     } else {
-      return Future.value(false);
+      return Future.value(null);
     }
   }
 
@@ -215,6 +217,19 @@ class RestService {
     if (response.statusCode == 200) {
       Map<String, dynamic> wrapperMap = jsonDecode(response.body);
       return ResultWrapper.fromJsonMap<Spot>(wrapperMap);
+    } else {
+      throw Exception('Failed to get user pictures');
+    }
+  }
+
+  Future<User> updateUserProfile(UpdateUserProfile data) async {
+    final response = await http.put(
+        Constants.getBaseApi() + '/user/update-profile',
+        body: data.toJson());
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> userMap = jsonDecode(response.body);
+      return User.fromJson(userMap);
     } else {
       throw Exception('Failed to get user pictures');
     }

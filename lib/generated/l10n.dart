@@ -644,6 +644,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Profile picture uploaded`
+  String get profilePictureUploaded {
+    return Intl.message(
+      'Profile picture uploaded',
+      name: 'profilePictureUploaded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error during profile picture update... Please retry.`
+  String get errorUpdateProfilePicture {
+    return Intl.message(
+      'Error during profile picture update... Please retry.',
+      name: 'errorUpdateProfilePicture',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
