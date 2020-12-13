@@ -664,6 +664,26 @@ class S {
       args: [],
     );
   }
+
+  /// `No picture yet`
+  String get noPictureItem {
+    return Intl.message(
+      'No picture yet',
+      name: 'noPictureItem',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No spot yet`
+  String get noSpotYet {
+    return Intl.message(
+      'No spot yet',
+      name: 'noSpotYet',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

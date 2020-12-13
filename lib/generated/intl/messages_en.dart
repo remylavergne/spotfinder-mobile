@@ -58,6 +58,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "newestTabTitle" : MessageLookupByLibrary.simpleMessage("Newest"),
     "next" : MessageLookupByLibrary.simpleMessage("Next"),
     "noComment" : MessageLookupByLibrary.simpleMessage("No comment yet"),
+    "noPictureItem" : MessageLookupByLibrary.simpleMessage("No picture yet"),
+    "noSpotYet" : MessageLookupByLibrary.simpleMessage("No spot yet"),
     "okay" : MessageLookupByLibrary.simpleMessage("Okay"),
     "openSettings" : MessageLookupByLibrary.simpleMessage("Open settings"),
     "passwordError" : MessageLookupByLibrary.simpleMessage("Please enter your password"),

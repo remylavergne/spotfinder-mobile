@@ -129,6 +129,10 @@
     "profilePictureUploaded": "Profile picture uploaded",
     "@profilePictureUploaded": {},
     "errorUpdateProfilePicture": "Error during profile picture update... Please retry.",
-    "@errorUpdateProfilePicture": {}
+    "@errorUpdateProfilePicture": {},
+    "noPictureItem": "No picture yet",
+    "@noPictureItem": {},
+    "noSpotYet": "No spot yet",
+    "@noSpotYet": {}
 
   }
