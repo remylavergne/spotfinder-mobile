@@ -20,7 +20,7 @@ import 'package:spotfinder/widgets/square-photo-item.dart';
 
 class FeedScreen extends StatefulWidget {
   static String route = '/feed';
-  
+
   @override
   _FeedState createState() => _FeedState();
 }
@@ -69,8 +69,10 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                      UserProfileScreen(userId: currentUserId),
+                  builder: (BuildContext context) => UserProfileScreen(
+                    userId: currentUserId,
+                    isCurrentUser: true,
+                  ),
                 ),
               );
             }),

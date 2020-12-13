@@ -20,8 +20,11 @@ class UserProfileScreen extends StatefulWidget {
   static String route = '/user-profile';
 
   final String userId;
+  final bool isCurrentUser;
 
-  UserProfileScreen({Key key, @required this.userId}) : super(key: key);
+  UserProfileScreen(
+      {Key key, @required this.userId, @required this.isCurrentUser})
+      : super(key: key);
 
   @override
   _UserProfileScreenState createState() => _UserProfileScreenState();
@@ -50,9 +53,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         title: Text(capitalize(S.of(context).profile)),
         backgroundColor: Color(0xFF011627),
         actions: [
-          IconButton(
-            icon: Icon(Icons.settings),
-            onPressed: () => this._openSettingsScreen(),
+          Visibility(
+            visible: widget.isCurrentUser,
+            child: IconButton(
+              icon: Icon(Icons.settings),
+              onPressed: () => this._openSettingsScreen(),
+            ),
           ),
         ],
       ),

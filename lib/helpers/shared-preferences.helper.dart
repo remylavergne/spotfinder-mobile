@@ -77,4 +77,9 @@ class SharedPrefsHelper {
     }
     return Future.value(isCleared);
   }
+
+  Future<bool> isCurrentUser(String userId) async {
+    String currentUserId = await this.getId();
+    return currentUserId == userId;
+  }
 }

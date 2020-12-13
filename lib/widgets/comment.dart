@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spotfinder/constants.dart';
+import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/models/comment.model.dart';
 import 'package:spotfinder/screens/user-profile.screen.dart';
 
@@ -18,12 +19,16 @@ class CommentWidget extends StatelessWidget {
           children: [
             ListTile(
               tileColor: Color(0xAAE5E5E5),
-              onTap: () {
+              onTap: () async {
+                bool isCurrentUser = await SharedPrefsHelper.instance
+                    .isCurrentUser(this.comment.userId);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        UserProfileScreen(userId: this.comment.userId),
+                    builder: (BuildContext context) => UserProfileScreen(
+                      userId: this.comment.userId,
+                      isCurrentUser: isCurrentUser,
+                    ),
                   ),
                 );
               },

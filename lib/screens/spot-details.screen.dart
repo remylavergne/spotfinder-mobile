@@ -10,6 +10,7 @@ import 'package:spotfinder/helpers/camera.helper.dart';
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/enums/take-picture-for.enum.dart';
 import 'package:spotfinder/helpers/geolocation.helper.dart';
+import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/models/comment.model.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
@@ -44,7 +45,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
   @override
   void initState() {
     this.pictures =
-        RestService().getPaginatedSpotPictures(1, 3, widget.spot.id);
+        RestService().getPaginatedSpotPictures(1, 6, widget.spot.id);
     this.comments =
         Repository().getPaginatedSpotComments(1, 10, widget.spot.id);
     super.initState();
@@ -131,12 +132,16 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
               GestureDetector(
-                onTap: () {
+                onTap: () async {
+                  bool isCurrentUser = await SharedPrefsHelper.instance
+                      .isCurrentUser(this._user.id);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          UserProfileScreen(userId: this._user.id),
+                      builder: (BuildContext context) => UserProfileScreen(
+                        userId: this._user.id,
+                        isCurrentUser: isCurrentUser,
+                      ),
                     ),
                   );
                 },
