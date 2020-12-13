@@ -321,8 +321,8 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                   camera: CameraHelper.instance.getCamera(),
                   position:
                       GeolocationHelper.instance.getPositionFromSpot(spot),
-                  takePictureFor: TakePictureFor.spot,
-                  spotID: spot.id,
+                  takePictureFor: TakePictureFor.SPOT,
+                  id: spot.id,
                 )));
   }
 

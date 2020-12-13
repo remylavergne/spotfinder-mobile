@@ -5,24 +5,28 @@ import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:spotfinder/enums/take-picture-for.enum.dart';
 import 'package:spotfinder/generated/l10n.dart';
+import 'package:spotfinder/helpers/navigator.helper.dart';
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
+import 'package:spotfinder/models/dto/update-user-profile.dto.dart';
+import 'package:spotfinder/models/picture.model.dart';
+import 'package:spotfinder/models/user.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/feed.screen.dart';
-import 'package:spotfinder/screens/take-picture.screen.dart';
+import 'package:spotfinder/widgets/upload-dialog.dart';
 
 class DisplayPictureScreen extends StatefulWidget {
-  static String route = '/display-picture';
+  static final String route = '/display-picture';
   final String imagePath;
   final Position position;
   final TakePictureFor takePictureFor;
-  final String spotID;
+  final String id;
 
   DisplayPictureScreen(
       {Key key,
       @required this.imagePath,
       @required this.position,
       @required this.takePictureFor,
-      this.spotID})
+      this.id})
       : super(key: key);
 
   @override
@@ -33,9 +37,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   TextEditingController spotNameController;
   GlobalKey<FormState> _formKey;
   MediaQueryData mediaQueryData;
-  String alertDialogContent = S.current.synchroInProgress;
   String idUser;
-  void Function(void Function()) dialogState;
 
   @override
   void initState() {
@@ -52,7 +54,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   Widget build(BuildContext context) {
     this.mediaQueryData = MediaQuery.of(context);
     AppBar appBar = AppBar(
-      title: Text(widget.takePictureFor == TakePictureFor.creation
+      title: Text(widget.takePictureFor == TakePictureFor.CREATION
           ? S.current.createSpotTitle
           : S.current.addPictureTitle),
       backgroundColor: Color(0xFF011627),
@@ -89,7 +91,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Visibility(
-              visible: widget.takePictureFor == TakePictureFor.creation,
+              visible: widget.takePictureFor == TakePictureFor.CREATION,
               child: TextFormField(
                 controller: this.spotNameController,
                 decoration: InputDecoration(
@@ -121,11 +123,14 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 onPressed: () {
                   if (this._formKey.currentState.validate()) {
                     switch (widget.takePictureFor) {
-                      case TakePictureFor.creation:
+                      case TakePictureFor.CREATION:
                         this._spotCreationFlow(context);
                         break;
-                      case TakePictureFor.spot:
+                      case TakePictureFor.SPOT:
                         this._addPictureFlow(context);
+                        break;
+                      case TakePictureFor.USER_PROFILE:
+                        this._addProfilePictureFlow(context);
                         break;
                       default:
                         throw Exception('Unknown flow picture');
@@ -133,7 +138,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   }
                 },
                 child: Text(
-                  widget.takePictureFor == TakePictureFor.creation
+                  widget.takePictureFor == TakePictureFor.CREATION
                       ? S.current.create
                       : S.current.add, // todo: update texte
                   style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
@@ -147,98 +152,71 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   /// Business
-
   void _spotCreationFlow(BuildContext context) {
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext dialogContext) =>
-            StatefulBuilder(builder: (dialogContext, setState) {
-              this.dialogState = setState;
-              return AlertDialog(
-                title: Center(
-                  child: Text(S.current.creation),
-                ), // todo: update text
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CircularProgressIndicator(),
-                    SizedBox(
-                      height: 16.0,
-                    ),
-                    Text(alertDialogContent),
-                  ],
-                ),
-              );
-            }));
+    UploadDialog uploadDialog =
+        new UploadDialog(context, S.of(context).synchroInProgress).show();
 
     Repository()
         .createSpot(widget.position, this.spotNameController.text.trim())
         .then((String idSpot) {
       if (idSpot != null) {
-        dialogState(() {
-          alertDialogContent = S.current.pictureIsBeingSynchronized;
-        });
+        uploadDialog.updateText(S.current.pictureIsBeingSynchronized);
         return Repository()
             .uploadPicture(idSpot, idUser, File(widget.imagePath));
       } else {
-        dialogState(() {
-          alertDialogContent = S.current.errorSpotCreation;
-        });
+        uploadDialog.updateText(S.current.errorSpotCreation);
         this._returnToHome(context);
       }
-    }).then((bool imageUploaded) async {
-      if (imageUploaded) {
-        dialogState(() {
-          alertDialogContent = S.current.spotCreationSuccess;
-        });
+    }).then((Picture picture) async {
+      if (picture != null) {
+        uploadDialog.updateText(S.current.spotCreationSuccess);
         this._returnToHome(context);
       } else {
-        dialogState(() {
-          alertDialogContent = S.current.errorSpotCreation;
-        });
+        uploadDialog.updateText(S.current.errorSpotCreation);
         this._returnToHome(context);
       }
     });
   }
 
   void _addPictureFlow(BuildContext context) {
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext dialogContext) =>
-            StatefulBuilder(builder: (dialogContext, setState) {
-              this.dialogState = setState;
-              this.alertDialogContent = S.current.pictureIsBeingSynchronized;
-              return AlertDialog(
-                title: Center(child: Text(S.current.addPhoto)),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CircularProgressIndicator(),
-                    SizedBox(
-                      height: 16.0,
-                    ),
-                    Text(this.alertDialogContent),
-                  ],
-                ),
-              );
-            }));
+    UploadDialog uploadDialog =
+        new UploadDialog(context, S.of(context).synchroInProgress).show();
 
     Repository()
-        .uploadPicture(widget.spotID, idUser, File(widget.imagePath))
-        .then((bool uploadSuccess) {
-      if (uploadSuccess) {
-        this.dialogState(() {
-          this.alertDialogContent = S.current.addPhotoSuccess;
-        });
+        .uploadPicture(widget.id, idUser, File(widget.imagePath))
+        .then((Picture picture) {
+      if (picture != null) {
+        uploadDialog.updateText(S.current.errorSpotCreation);
         this._returnToTakePictureScreen(context);
       } else {
-        this.dialogState(() {
-          this.alertDialogContent = S.current.errorPhotoUpload;
-        });
+        uploadDialog.updateText(S.current.errorPhotoUpload);
         this._returnToTakePictureScreen(context);
       }
+    });
+  }
+
+  void _addProfilePictureFlow(BuildContext context) {
+    UploadDialog uploadDialog =
+        new UploadDialog(context, S.of(context).pictureIsBeingSynchronized)
+            .show();
+
+    Repository()
+        .uploadPicture(idUser, idUser, File(widget.imagePath))
+        .then((Picture picture) {
+      if (picture != null) {
+        return Repository()
+            .updateUserProfile(new UpdateUserProfile(idUser, picture.id));
+      } else {
+        uploadDialog.updateText(S.current.errorPhotoUpload);
+        this._returnToProfile(context);
+      }
+    }).then((User user) {
+      if (user == null) {
+        uploadDialog.updateText(S.current.errorUpdateProfilePicture);
+      } else {
+        uploadDialog.updateText(S.current.profilePictureUploaded);
+      }
+      this._returnToProfile(context);
     });
   }
 
@@ -249,7 +227,11 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   void _returnToTakePictureScreen(BuildContext context) async {
     await Future.delayed(Duration(seconds: 2));
-    Navigator.pushNamedAndRemoveUntil(
-        context, TakePictureScreen.route, (r) => false);
+    NavigatorHelper.instance.popTimes(2, context);
+  }
+
+  void _returnToProfile(BuildContext context) async {
+    await Future.delayed(Duration(seconds: 2));
+    NavigatorHelper.instance.popTimes(3, context);
   }
 }
