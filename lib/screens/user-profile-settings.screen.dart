@@ -2,44 +2,58 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:spotfinder/enums/take-picture-for.enum.dart';
+import 'package:spotfinder/generated/l10n.dart';
 import 'package:spotfinder/helpers/camera.helper.dart';
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
+import 'package:spotfinder/screens/create-account.screen.dart';
 import 'package:spotfinder/screens/take-picture.screen.dart';
 
 class UserProfileSettingsScreen extends StatelessWidget {
   static final String route = '/user-settings';
-  final String userId;
-  UserProfileSettingsScreen({Key key, @required this.userId}) : super(key: key);
+  UserProfileSettingsScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Settings'), // TODO: Translate
+        title: Text(S.of(context).settings),
         backgroundColor: Color(0xFF011627),
       ),
       body: Container(
-        width: double.infinity,
+        width: double.maxFinite,
+        height: double.maxFinite,
         child: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.end,
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // TODO: Translate
-            FlatButton(
-                onPressed: () {
-                  this._openTakePictureScreen(context);
-                },
-                child: Text('Add profile picture')),
             FlatButton(
               onPressed: () {
-                // TODO
-                SharedPrefsHelper.instance.logout();
+                this._openTakePictureScreen(context);
               },
               child: Text(
-                'Disconnect',
+                'Add profile picture',
                 style: TextStyle(
-                  color: Colors.red,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18.0,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: FlatButton(
+                onPressed: () {
+                  SharedPrefsHelper.instance.logout().then((value) =>
+                      Navigator.pushNamedAndRemoveUntil(context,
+                          CreateAccountScreen.route, (route) => false));
+                },
+                child: Text(
+                  'Disconnect',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 18.0,
+                  ),
                 ),
               ),
             ),

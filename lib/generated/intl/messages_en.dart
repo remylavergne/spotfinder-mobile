@@ -76,6 +76,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "searchFieldEmptyError" : MessageLookupByLibrary.simpleMessage("Please, type something to search"),
     "see" : MessageLookupByLibrary.simpleMessage("See"),
     "send" : MessageLookupByLibrary.simpleMessage("Send"),
+    "settings" : MessageLookupByLibrary.simpleMessage("Settings"),
     "spotCreationSuccess" : MessageLookupByLibrary.simpleMessage("Successful creation! Automatic redirection."),
     "spotNameHint" : MessageLookupByLibrary.simpleMessage("Spot name (optional)"),
     "spotWithoutName" : MessageLookupByLibrary.simpleMessage("Spot without name"),

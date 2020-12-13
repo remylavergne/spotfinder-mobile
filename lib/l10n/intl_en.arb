@@ -133,6 +133,8 @@
     "noPictureItem": "No picture yet",
     "@noPictureItem": {},
     "noSpotYet": "No spot yet",
-    "@noSpotYet": {}
+    "@noSpotYet": {},
+    "settings": "Settings",
+    "@settings": {}
 
   }
