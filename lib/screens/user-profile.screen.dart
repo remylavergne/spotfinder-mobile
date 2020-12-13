@@ -51,16 +51,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         backgroundColor: Color(0xFF011627),
         actions: [
           IconButton(
-              icon: Icon(Icons.settings),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        UserProfileSettingsScreen(),
-                  ),
-                );
-              }),
+            icon: Icon(Icons.settings),
+            onPressed: () => this._openSettingsScreen(),
+          ),
         ],
       ),
       body: FutureBuilder(
@@ -159,6 +152,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
+  ///
+  /// Navigation
+  ///
+
   Future<PicturesDisplayScreen> _userPictures() {
     return Navigator.push(
       context,
@@ -187,6 +184,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         builder: (BuildContext context) => SpotsListScreen(
           userId: user.id,
         ),
+      ),
+    );
+  }
+
+  Future<UserProfileSettingsScreen> _openSettingsScreen() {
+    return Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => UserProfileSettingsScreen(),
       ),
     );
   }

@@ -13,6 +13,7 @@ import 'package:spotfinder/screens/retrieve-account.screen.dart';
 import 'package:spotfinder/screens/spot-details.screen.dart';
 import 'package:spotfinder/screens/spots-list.screen.dart';
 import 'package:spotfinder/screens/take-picture.screen.dart';
+import 'package:spotfinder/screens/user-profile-settings.screen.dart';
 import 'package:spotfinder/screens/user-profile.screen.dart';
 
 import 'helpers/camera.helper.dart';
@@ -66,6 +67,9 @@ class SpotFinderApp extends StatelessWidget {
           UserProfileScreen.route: (BuildContext context) =>
               // ignore: missing_required_param
               UserProfileScreen(),
+          UserProfileSettingsScreen.route: (BuildContext context) =>
+              // ignore: missing_required_param
+              UserProfileSettingsScreen(),
           SpotsListScreen.route: (BuildContext context) =>
               // ignore: missing_required_param
               SpotsListScreen()
