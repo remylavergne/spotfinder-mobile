@@ -7,6 +7,7 @@ import 'package:spotfinder/helpers/camera.helper.dart';
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/screens/create-account.screen.dart';
 import 'package:spotfinder/screens/take-picture.screen.dart';
+import 'package:spotfinder/string-methods.dart';
 
 class UserProfileSettingsScreen extends StatelessWidget {
   static final String route = '/user-settings';
@@ -48,7 +49,7 @@ class UserProfileSettingsScreen extends StatelessWidget {
                           CreateAccountScreen.route, (route) => false));
                 },
                 child: Text(
-                  'Disconnect',
+                  capitalize(S.of(context).logout),
                   style: TextStyle(
                     color: Colors.red,
                     fontWeight: FontWeight.w500,

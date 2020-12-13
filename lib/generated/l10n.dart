@@ -95,6 +95,16 @@ class S {
     );
   }
 
+  /// `logout`
+  String get logout {
+    return Intl.message(
+      'logout',
+      name: 'logout',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Username`
   String get usernameHint {
     return Intl.message(

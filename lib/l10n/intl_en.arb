@@ -15,6 +15,8 @@
     "@next": {},
     "login": "I have an account",
     "@login": {},
+    "logout": "logout",
+    "@logout": {},
     "usernameHint": "Username",
     "@usernameHint": {},
     "enterUsernameError": "Please enter your username",

@@ -55,6 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "locationServiceOff" : MessageLookupByLibrary.simpleMessage("Location service seems to be off. Please, turn it on."),
     "login" : MessageLookupByLibrary.simpleMessage("I have an account"),
     "loginError" : MessageLookupByLibrary.simpleMessage("Please check your username / password"),
+    "logout" : MessageLookupByLibrary.simpleMessage("logout"),
     "newestTabTitle" : MessageLookupByLibrary.simpleMessage("Newest"),
     "next" : MessageLookupByLibrary.simpleMessage("Next"),
     "noComment" : MessageLookupByLibrary.simpleMessage("No comment yet"),
