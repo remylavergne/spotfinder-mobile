@@ -14,6 +14,8 @@ class LastPictures extends StatelessWidget {
   final Future<ResultWrapper<List<Picture>>> Function() fetchPicturesService;
   final bool secondActionAvailable;
 
+  bool _canDisplayAll = false;
+
   LastPictures(
       {Key key,
       @required this.mediaQueryData,
@@ -48,7 +50,9 @@ class LastPictures extends StatelessWidget {
                   Text(' - '),
                   GestureDetector(
                     onTap: () {
-                      this.displayAllAction();
+                      if (this._canDisplayAll) {
+                        this.displayAllAction();
+                      }
                     },
                     child: Text(
                       S.current.displayAll,
@@ -116,11 +120,13 @@ class LastPictures extends StatelessWidget {
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Text('No picture yet'),
-          ), // TODO: Translate
+            child: Text(S.of(context).noPictureItem),
+          ),
         ),
       );
     }
+
+    this._canDisplayAll = true;
 
     List<Widget> picturesWidgets = [];
     pictures.forEach((Picture picture) {

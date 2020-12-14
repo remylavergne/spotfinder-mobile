@@ -14,6 +14,8 @@ class LastSpots extends StatelessWidget {
   final Future<ResultWrapper<List<Spot>>> Function() fetchSpotsService;
   final bool secondActionAvailable;
 
+  bool _canDisplayAll = false;
+
   LastSpots(
       {Key key,
       @required this.mediaQueryData,
@@ -48,7 +50,9 @@ class LastSpots extends StatelessWidget {
                   Text(' - '),
                   GestureDetector(
                     onTap: () {
-                      this.displayAllAction();
+                      if (this._canDisplayAll) {
+                        this.displayAllAction();
+                      }
                     },
                     child: Text(
                       S.current.displayAll,
@@ -115,11 +119,13 @@ class LastSpots extends StatelessWidget {
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Text('No spot yet'),
-          ), // TODO: Translate
+            child: Text(S.of(context).noSpotYet),
+          ),
         ),
       );
     }
+
+    this._canDisplayAll = true;
 
     List<Widget> picturesWidgets = [];
     spots.forEach((Spot spot) {
