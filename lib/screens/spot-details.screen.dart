@@ -24,6 +24,7 @@ import 'package:spotfinder/services/global-rest.service.dart';
 import 'package:spotfinder/screens/take-picture.screen.dart';
 import 'package:spotfinder/widgets/comment.dart';
 import 'package:spotfinder/widgets/last-pictures.dart';
+import 'package:spotfinder/widgets/retry.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SpotDetailsScreen extends StatefulWidget {
@@ -44,11 +45,16 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
 
   @override
   void initState() {
+    this._bindServices();
+    super.initState();
+  }
+
+  void _bindServices() {
     this.pictures =
         RestService().getPaginatedSpotPictures(1, 6, widget.spot.id);
     this.comments =
         Repository().getPaginatedSpotComments(1, 10, widget.spot.id);
-    super.initState();
+
     // Get user profile
     Repository().getUserById(widget.spot.user).then((User user) {
       if (user != null) {
@@ -280,7 +286,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
 
                 return this._getLastCommentsWidget(comments);
               } else if (snapshot.hasError) {
-                return CircularProgressIndicator(); // TODO: retry
+                return Retry(retryCalled: () => this._retrySpotDetailsFetch());
               } else {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -345,5 +351,11 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  void _retrySpotDetailsFetch() {
+    setState(() {
+      this._bindServices();
+    });
   }
 }

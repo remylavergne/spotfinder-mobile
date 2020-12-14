@@ -7,6 +7,7 @@ import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/spot-details.screen.dart';
+import 'package:spotfinder/widgets/retry.dart';
 import 'package:spotfinder/widgets/square-photo-item.dart';
 
 class SpotsListScreen extends StatefulWidget {
@@ -24,10 +25,14 @@ class _SpotsListScreenState extends State<SpotsListScreen> {
 
   @override
   void initState() {
+    this._bindServices();
+    super.initState();
+  }
+
+  void _bindServices() {
     this._spots = Repository().getUserSpots(
       new SearchWithPagination(widget.userId, 1, 20),
     );
-    super.initState();
   }
 
   @override
@@ -47,8 +52,7 @@ class _SpotsListScreenState extends State<SpotsListScreen> {
 
             return this._gridView(spots);
           } else if (snapshot.hasError) {
-            return Center(
-                child: Text(S.current.errorAndRetry)); // TODO: Retry button
+            return Retry(retryCalled: () => this._retrySpotsFetch());
           } else {
             return Container(child: Center(child: CircularProgressIndicator()));
           }
@@ -90,5 +94,11 @@ class _SpotsListScreenState extends State<SpotsListScreen> {
         ),
       ),
     );
+  }
+
+  void _retrySpotsFetch() {
+    setState(() {
+      this._bindServices();
+    });
   }
 }

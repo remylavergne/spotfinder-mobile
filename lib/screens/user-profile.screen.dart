@@ -15,6 +15,7 @@ import 'package:spotfinder/screens/user-profile-settings.screen.dart';
 import 'package:spotfinder/string-methods.dart';
 import 'package:spotfinder/widgets/last-pictures.dart';
 import 'package:spotfinder/widgets/last-spots.dart';
+import 'package:spotfinder/widgets/retry.dart';
 
 class UserProfileScreen extends StatefulWidget {
   static String route = '/user-profile';
@@ -38,12 +39,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   @override
   void initState() {
+    this._bindServices();
+    super.initState();
+  }
+
+  void _bindServices() {
     this._user = Repository().getUserById(widget.userId);
     this._pictures = Repository()
         .getUserPictures(new SearchWithPagination(widget.userId, 1, 9));
     this._spots = Repository()
         .getUserSpots(new SearchWithPagination(widget.userId, 1, 9));
-    super.initState();
   }
 
   @override
@@ -71,11 +76,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
             return this._content(user);
           } else if (snapshot.hasError) {
-            return Container(
-              child: Center(
-                child: Text('ERROR'), // TODO: Retry action
-              ),
-            );
+            return Retry(retryCalled: () => this._retryUserFetch());
           } else {
             return Container(
               child: Center(
@@ -201,5 +202,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         builder: (BuildContext context) => UserProfileSettingsScreen(),
       ),
     );
+  }
+
+  void _retryUserFetch() {
+    setState(() {
+      this._bindServices();
+    });
   }
 }

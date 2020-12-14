@@ -27,25 +27,29 @@ class ApplicationTitle extends StatelessWidget {
     paint.style = PaintingStyle.stroke;
     paint.strokeWidth = this.strokeSize != null ? this.strokeSize : 3.0;
 
-    return Stack(children: [
-      Text(
-        this.title,
-        style: TextStyle(
-          foreground: paint,
-          fontFamily: this.fontFamily != null ? this.fontFamily : 'NorthCoast', // TODO: Export family
-          fontSize: this.size,
+    return Stack(
+      children: [
+        Text(
+          this.title,
+          style: TextStyle(
+            foreground: paint,
+            fontFamily:
+                this.fontFamily != null ? this.fontFamily : 'NorthCoast',
+            fontSize: this.size,
+          ),
         ),
-      ),
-      Text(
-        this.title,
-        style: TextStyle(
-          fontFamily: this.fontFamily != null ? this.fontFamily : 'NorthCoast',
-          fontSize: this.size,
-          color: this.backgroundColor != null
-              ? this.backgroundColor
-              : Color(0xFFFF7761),
+        Text(
+          this.title,
+          style: TextStyle(
+            fontFamily:
+                this.fontFamily != null ? this.fontFamily : 'NorthCoast',
+            fontSize: this.size,
+            color: this.backgroundColor != null
+                ? this.backgroundColor
+                : Color(0xFFFF7761),
+          ),
         ),
-      ),
-    ]);
+      ],
+    );
   }
 }
