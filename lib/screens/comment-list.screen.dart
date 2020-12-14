@@ -6,6 +6,7 @@ import 'package:spotfinder/models/comment.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/widgets/comment.dart';
+import 'package:spotfinder/widgets/retry.dart';
 
 class CommentsScreen extends StatefulWidget {
   final String id;
@@ -60,13 +61,12 @@ class _CommentsScreenState extends State<CommentsScreen> {
 
                 return this._getLastCommentsWidget(comments);
               } else if (snapshot.hasError) {
-                return Container(
-                    child: Center(
-                        child: CircularProgressIndicator())); // TODO: retry
+                return Retry(retryCalled: () => this._fetchRetry());
               } else {
                 return Container(
-                  // padding: const EdgeInsets.all(8.0),
-                  child: Center(child: CircularProgressIndicator()),
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
                 );
               }
             },
@@ -145,6 +145,12 @@ class _CommentsScreenState extends State<CommentsScreen> {
         ]),
       ),
     );
+  }
+
+  void _fetchRetry() {
+    setState(() {
+      this.comments = Repository().getPaginatedSpotComments(1, 30, widget.id);
+    });
   }
 
   Widget _getLastCommentsWidget(List<Comment> comments) {
