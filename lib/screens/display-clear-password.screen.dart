@@ -67,7 +67,8 @@ class _ClearPasswordScreenState extends State<ClearPasswordScreen> {
             GestureDetector(
               onTap: () {
                 Clipboard.setData(
-                    new ClipboardData(text: this.widget.clearPassword));
+                  new ClipboardData(text: this.widget.clearPassword),
+                );
                 setState(() {
                   this.copied = true;
                 });
@@ -75,8 +76,11 @@ class _ClearPasswordScreenState extends State<ClearPasswordScreen> {
               child: Container(
                 padding: EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
-                    color: Colors.grey[400], // TODO: adapt color
-                    borderRadius: BorderRadius.all(Radius.circular(6))),
+                  color: Colors.grey[400],
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(6),
+                  ),
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
