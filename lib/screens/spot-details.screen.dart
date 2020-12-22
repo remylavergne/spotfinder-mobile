@@ -110,11 +110,23 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
 
   Widget _header(Spot spot, Size screenSize) {
     return Container(
+      color: Colors.grey[300],
       height: screenSize.height / 4,
       width: double.infinity,
-      child: Image.network(
-          '${Constants.getBaseApi()}/picture/id/${spot.pictureId}',
-          fit: BoxFit.cover),
+      child: FutureBuilder<String>(
+        future: SharedPrefsHelper.instance.getToken(),
+        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+          if (snapshot.hasData) {
+            String token = snapshot.data;
+            return Image.network(
+                '${Constants.getBaseApi()}/picture/id/${spot.pictureId}',
+                headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
+                fit: BoxFit.cover);
+          } else {
+            return Container();
+          }
+        },
+      ),
     );
   }
 
