@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/generated/l10n.dart';
+import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/models/picture.model.dart';
 
 class PictureFullScreen extends StatelessWidget {
@@ -16,15 +19,29 @@ class PictureFullScreen extends StatelessWidget {
         title: Text(S.current.photoTitle),
         backgroundColor: Color(0xFF011627),
       ),
-      body: Container(
-        width: double.maxFinite,
-        height: double.maxFinite,
-        color: Colors.red,
-        child: Image.network(
-          '${Constants.getBaseApi()}/picture/id/${picture.id}',
-          fit: BoxFit.fill,
-        ),
-      ),
+      body: FutureBuilder<String>(
+          future: SharedPrefsHelper.instance.getToken(),
+          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+            if (snapshot.hasData) {
+              String token = snapshot.data;
+              return Container(
+                width: double.maxFinite,
+                height: double.maxFinite,
+                color: Colors.red,
+                child: Image.network(
+                  '${Constants.getBaseApi()}/picture/id/${picture.id}',
+                  headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
+                  fit: BoxFit.fill,
+                ),
+              );
+            } else {
+              return Container(
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+          }),
     );
   }
 }

@@ -7,6 +7,7 @@ import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/picture-full.screen.dart';
+import 'package:spotfinder/widgets/retry.dart';
 import 'package:spotfinder/widgets/square-photo-item.dart';
 
 enum PicturesFrom { SPOT, USER }
@@ -28,7 +29,12 @@ class _PicturesDisplayScreenState extends State<PicturesDisplayScreen> {
 
   @override
   void initState() {
-    switch (widget.type) {
+    this._bindService(widget.type);
+    super.initState();
+  }
+
+  void _bindService(PicturesFrom from) {
+    switch (from) {
       case PicturesFrom.SPOT:
         this._pictures =
             Repository().getPaginatedSpotPictures(1, 20, widget.id);
@@ -39,7 +45,6 @@ class _PicturesDisplayScreenState extends State<PicturesDisplayScreen> {
         break;
       default:
     }
-    super.initState();
   }
 
   @override
@@ -59,8 +64,7 @@ class _PicturesDisplayScreenState extends State<PicturesDisplayScreen> {
 
             return this._gridView(pictures);
           } else if (snapshot.hasError) {
-            return Center(
-                child: Text(S.current.errorAndRetry)); // TODO: Retry button
+            return Retry(retryCalled: () => this._retryPicturesFetch());
           } else {
             return Container(child: Center(child: CircularProgressIndicator()));
           }
@@ -102,5 +106,11 @@ class _PicturesDisplayScreenState extends State<PicturesDisplayScreen> {
         ),
       ),
     );
+  }
+
+  void _retryPicturesFetch() {
+    setState(() {
+      this._bindService(widget.type);
+    });
   }
 }

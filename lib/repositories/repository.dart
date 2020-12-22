@@ -94,10 +94,10 @@ class Repository {
         comment = NewCommentDto(message, currentUserId, id, null, null);
         break;
       case CommentType.PICTURE:
-        // TODO
+        // TODO: Future version
         break;
       case CommentType.COMMENT:
-        // TODO
+        // TODO: Future version
         break;
       default:
     }

@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/generated/l10n.dart';
+import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/models/dto/search-with-pagination.dto.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
@@ -15,6 +18,7 @@ import 'package:spotfinder/screens/user-profile-settings.screen.dart';
 import 'package:spotfinder/string-methods.dart';
 import 'package:spotfinder/widgets/last-pictures.dart';
 import 'package:spotfinder/widgets/last-spots.dart';
+import 'package:spotfinder/widgets/retry.dart';
 
 class UserProfileScreen extends StatefulWidget {
   static String route = '/user-profile';
@@ -38,12 +42,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   @override
   void initState() {
+    this._bindServices();
+    super.initState();
+  }
+
+  void _bindServices() {
     this._user = Repository().getUserById(widget.userId);
     this._pictures = Repository()
         .getUserPictures(new SearchWithPagination(widget.userId, 1, 9));
     this._spots = Repository()
         .getUserSpots(new SearchWithPagination(widget.userId, 1, 9));
-    super.initState();
   }
 
   @override
@@ -71,11 +79,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
             return this._content(user);
           } else if (snapshot.hasError) {
-            return Container(
-              child: Center(
-                child: Text('ERROR'), // TODO: Retry action
-              ),
-            );
+            return Retry(retryCalled: () => this._retryUserFetch());
           } else {
             return Container(
               child: Center(
@@ -112,12 +116,30 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           this._displayUserProfilePicture(user);
                         }
                       },
-                      child: CircleAvatar(
-                        backgroundColor: Colors.grey[100],
-                        backgroundImage: user.pictureId != null
-                            ? NetworkImage(
-                                '${Constants.getBaseApi()}/picture/id/${this.user.pictureId}')
-                            : null,
+                      child: FutureBuilder<String>(
+                        future: SharedPrefsHelper.instance.getToken(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<String> snapshot) {
+                          if (snapshot.hasData) {
+                            String token = snapshot.data;
+                            return CircleAvatar(
+                              backgroundColor: Colors.grey[100],
+                              backgroundImage: user.pictureId != null
+                                  ? NetworkImage(
+                                      '${Constants.getBaseApi()}/picture/id/${this.user.pictureId}',
+                                      headers: {
+                                        HttpHeaders.authorizationHeader:
+                                            'Bearer $token'
+                                      },
+                                    )
+                                  : null,
+                            );
+                          } else {
+                            return CircleAvatar(
+                              backgroundColor: Colors.grey[100],
+                            );
+                          }
+                        },
                       ),
                     ),
                   ),
@@ -201,5 +223,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         builder: (BuildContext context) => UserProfileSettingsScreen(),
       ),
     );
+  }
+
+  void _retryUserFetch() {
+    setState(() {
+      this._bindServices();
+    });
   }
 }

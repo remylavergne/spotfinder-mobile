@@ -187,12 +187,13 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
     bool success = await Repository()
         .connectUserByCredentials(username.trim(), password.trim());
     if (success) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => FeedScreen(),
-        ),
-      );
+      Navigator.pushNamedAndRemoveUntil(context, FeedScreen.route, (route) => false);
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => FeedScreen(),
+      //   ),
+      // );
     } else {
       this.creationError = true;
       _formKey.currentState.validate();

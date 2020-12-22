@@ -70,16 +70,21 @@ class UserProfileSettingsScreen extends StatelessWidget {
   ///
 
   void _openTakePictureScreen(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        // TODO: Check permissions
-        builder: (BuildContext context) => TakePictureScreen(
-          camera: CameraHelper.instance.getCamera(),
-          takePictureFor: TakePictureFor.USER_PROFILE,
-          position: Position(),
-        ),
-      ),
-    );
+    CameraHelper.instance.canUse().then((bool canUse) {
+      if (canUse) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => TakePictureScreen(
+              camera: CameraHelper.instance.getCamera(),
+              takePictureFor: TakePictureFor.USER_PROFILE,
+              position: Position(),
+            ),
+          ),
+        );
+      } else {
+        // TODO => display error dialog
+      }
+    });
   }
 }

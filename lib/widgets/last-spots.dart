@@ -5,9 +5,10 @@ import 'package:spotfinder/generated/l10n.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/screens/spot-details.screen.dart';
+import 'package:spotfinder/widgets/retry.dart';
 import 'package:spotfinder/widgets/square-photo-item.dart';
 
-class LastSpots extends StatelessWidget {
+class LastSpots extends StatefulWidget {
   final MediaQueryData mediaQueryData;
   final Function() displayAllAction;
   final Function() secondAction;
@@ -24,12 +25,19 @@ class LastSpots extends StatelessWidget {
       : super(key: key);
 
   @override
+  _LastSpotsState createState() => _LastSpotsState();
+}
+
+class _LastSpotsState extends State<LastSpots> {
+  bool _canDisplayAll = false;
+
+  @override
   Widget build(BuildContext context) {
-    if (this.secondActionAvailable && this.secondAction == null) {
+    if (this.widget.secondActionAvailable && this.widget.secondAction == null) {
       throw Exception('A getter is mandatory if action is available!');
     }
 
-    double pictureSize = (this.mediaQueryData.size.width - 58.0) / 3;
+    double pictureSize = (this.widget.mediaQueryData.size.width - 58.0) / 3;
 
     return Container(
       child: Column(
@@ -48,7 +56,9 @@ class LastSpots extends StatelessWidget {
                   Text(' - '),
                   GestureDetector(
                     onTap: () {
-                      this.displayAllAction();
+                      if (this._canDisplayAll) {
+                        this.widget.displayAllAction();
+                      }
                     },
                     child: Text(
                       S.current.displayAll,
@@ -61,10 +71,10 @@ class LastSpots extends StatelessWidget {
                 ],
               ),
               Visibility(
-                visible: this.secondActionAvailable,
+                visible: this.widget.secondActionAvailable,
                 child: GestureDetector(
                   onTap: () {
-                    this.secondAction();
+                    this.widget.secondAction();
                   },
                   child: Text(
                     S.current.addAction,
@@ -83,17 +93,15 @@ class LastSpots extends StatelessWidget {
             color: Colors.grey,
           ),
           FutureBuilder<ResultWrapper<List<Spot>>>(
-            future: this.fetchSpotsService(),
+            future: this.widget.fetchSpotsService(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
                 ResultWrapper<List<Spot>> spotWrapper = snapshot.data;
                 List<Spot> spots = spotWrapper.result;
                 return this._generateSpotsWidgets(context, spots, pictureSize);
               } else if (snapshot.hasError) {
-                return Padding(
-                  // TODO: Retry
-                  padding: const EdgeInsets.all(8.0),
-                  child: CircularProgressIndicator(),
+                return Retry(
+                  retryCalled: () => this.widget.fetchSpotsService(),
                 );
               } else {
                 return Padding(
@@ -115,11 +123,13 @@ class LastSpots extends StatelessWidget {
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Text('No spot yet'),
-          ), // TODO: Translate
+            child: Text(S.of(context).noSpotYet),
+          ),
         ),
       );
     }
+
+    this._canDisplayAll = true;
 
     List<Widget> picturesWidgets = [];
     spots.forEach((Spot spot) {

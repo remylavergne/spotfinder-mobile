@@ -29,8 +29,11 @@ class RestService {
 
   Future<ResultWrapper<List<Spot>>> getPaginatedSpots(
       int page, int limit) async {
-    final response = await http
-        .get(Constants.getBaseApi() + '/spots?page=$page&limit=$limit');
+    String token = await SharedPrefsHelper.instance.getToken();
+    final response = await http.get(
+      Constants.getBaseApi() + '/spots?page=$page&limit=$limit',
+      headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
+    );
 
     if (response.statusCode == 200) {
       Map<String, dynamic> wrapperMap = jsonDecode(response.body);
@@ -43,8 +46,10 @@ class RestService {
 
   Future<ResultWrapper<List<Spot>>> getNearestPaginatedSpots(
       Position position, int page, int limit) async {
+    String token = await SharedPrefsHelper.instance.getToken();
     final response = await http.post(
         Constants.getBaseApi() + '/spots/nearest?page=$page&limit=$limit',
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
         body: jsonEncode(
             {"longitude": position.longitude, "latitude": position.latitude}));
 
@@ -58,8 +63,11 @@ class RestService {
 
   Future<ResultWrapper<List<Picture>>> getPaginatedSpotPictures(
       int page, int limit, String spotID) async {
-    final response = await http.get(Constants.getBaseApi() +
-        '/spot/$spotID/pictures?page=$page&limit=$limit');
+    String token = await SharedPrefsHelper.instance.getToken();
+    final response = await http.get(
+      Constants.getBaseApi() + '/spot/$spotID/pictures?page=$page&limit=$limit',
+      headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
+    );
 
     if (response.statusCode == 200) {
       Map<String, dynamic> wrapperMap = jsonDecode(response.body);
@@ -70,7 +78,9 @@ class RestService {
   }
 
   Future<String> createSpot(CreateSpot s) async {
+    String token = await SharedPrefsHelper.instance.getToken();
     final response = await http.post(Constants.getBaseApi() + '/spot/create',
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
         body: s.toDto());
 
     if (response.statusCode == 200) {
@@ -112,12 +122,14 @@ class RestService {
   }
 
   Future<Picture> uploadPicture(String idSpot, String idUser, File file) async {
+    String token = await SharedPrefsHelper.instance.getToken();
     MultipartRequest request = http.MultipartRequest(
         'POST', Uri.parse(Constants.getBaseApi() + '/upload/picture'));
     // Add MultiPart data
     request.files.add(await http.MultipartFile.fromPath('picture', file.path));
     request.fields['spotId'] = idSpot;
     request.fields['userId'] = idUser;
+    request.headers.addAll({HttpHeaders.authorizationHeader: 'Bearer $token'});
 
     var responseStream = await request.send();
     var response = await http.Response.fromStream(responseStream);
@@ -147,8 +159,11 @@ class RestService {
 
   Future<ResultWrapper<List<Comment>>> getPaginatedSpotComments(
       String spotId, int page, int limit) async {
-    final response = await http.get(Constants.getBaseApi() +
-        '/spot/$spotId/comments?page=$page&limit=$limit');
+    String token = await SharedPrefsHelper.instance.getToken();
+    final response = await http.get(
+      Constants.getBaseApi() + '/spot/$spotId/comments?page=$page&limit=$limit',
+      headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
+    );
 
     if (response.statusCode == 200) {
       Map<String, dynamic> wrapperMap = jsonDecode(response.body);
@@ -160,8 +175,10 @@ class RestService {
   }
 
   Future<bool> addComment(NewCommentDto comment) async {
+    String token = await SharedPrefsHelper.instance.getToken();
     Response response = await http.post(
         Constants.getBaseApi() + '/comment/create',
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
         body: comment.toJson());
 
     if (response.statusCode == 200) {
@@ -172,8 +189,9 @@ class RestService {
   }
 
   Future<User> getUserById(String id) async {
-    final response =
-        await http.post(Constants.getBaseApi() + '/user', body: id);
+    String token = await SharedPrefsHelper.instance.getToken();
+    final response = await http.post(Constants.getBaseApi() + '/user',
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'}, body: id);
 
     if (response.statusCode == 200) {
       Map<String, dynamic> userMap = jsonDecode(response.body);
@@ -185,7 +203,9 @@ class RestService {
 
   Future<ResultWrapper<List<Picture>>> getUserPictures(
       SearchWithPagination query) async {
+    String token = await SharedPrefsHelper.instance.getToken();
     final response = await http.post(Constants.getBaseApi() + '/user/pictures',
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
         body: query.toJson());
 
     if (response.statusCode == 200) {
@@ -198,7 +218,9 @@ class RestService {
 
   Future<ResultWrapper<List<Comment>>> getUserComments(
       SearchWithPagination query) async {
+    String token = await SharedPrefsHelper.instance.getToken();
     final response = await http.post(Constants.getBaseApi() + '/user/comments',
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
         body: query.toJson());
 
     if (response.statusCode == 200) {
@@ -211,7 +233,9 @@ class RestService {
 
   Future<ResultWrapper<List<Spot>>> getUserSpots(
       SearchWithPagination searchWithPagination) async {
+    String token = await SharedPrefsHelper.instance.getToken();
     final response = await http.post(Constants.getBaseApi() + '/user/spots',
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
         body: searchWithPagination.toJson());
 
     if (response.statusCode == 200) {
@@ -223,8 +247,10 @@ class RestService {
   }
 
   Future<User> updateUserProfile(UpdateUserProfile data) async {
+    String token = await SharedPrefsHelper.instance.getToken();
     final response = await http.put(
         Constants.getBaseApi() + '/user/update-profile',
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
         body: data.toJson());
 
     if (response.statusCode == 200) {

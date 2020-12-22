@@ -5,9 +5,10 @@ import 'package:spotfinder/generated/l10n.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/screens/picture-full.screen.dart';
+import 'package:spotfinder/widgets/retry.dart';
 import 'package:spotfinder/widgets/square-photo-item.dart';
 
-class LastPictures extends StatelessWidget {
+class LastPictures extends StatefulWidget {
   final MediaQueryData mediaQueryData;
   final Function() displayAllAction;
   final Function() secondAction;
@@ -24,12 +25,19 @@ class LastPictures extends StatelessWidget {
       : super(key: key);
 
   @override
+  _LastPicturesState createState() => _LastPicturesState();
+}
+
+class _LastPicturesState extends State<LastPictures> {
+  bool _canDisplayAll = false;
+
+  @override
   Widget build(BuildContext context) {
-    if (this.secondActionAvailable && this.secondAction == null) {
+    if (this.widget.secondActionAvailable && this.widget.secondAction == null) {
       throw Exception('A getter is mandatory if action is available!');
     }
 
-    double pictureSize = (this.mediaQueryData.size.width - 58.0) / 3;
+    double pictureSize = (this.widget.mediaQueryData.size.width - 58.0) / 3;
 
     return Container(
       child: Column(
@@ -48,7 +56,9 @@ class LastPictures extends StatelessWidget {
                   Text(' - '),
                   GestureDetector(
                     onTap: () {
-                      this.displayAllAction();
+                      if (this._canDisplayAll) {
+                        this.widget.displayAllAction();
+                      }
                     },
                     child: Text(
                       S.current.displayAll,
@@ -61,10 +71,10 @@ class LastPictures extends StatelessWidget {
                 ],
               ),
               Visibility(
-                visible: this.secondActionAvailable,
+                visible: this.widget.secondActionAvailable,
                 child: GestureDetector(
                   onTap: () {
-                    this.secondAction();
+                    this.widget.secondAction();
                   },
                   child: Text(
                     S.current.addAction,
@@ -83,7 +93,7 @@ class LastPictures extends StatelessWidget {
             color: Colors.grey,
           ),
           FutureBuilder<ResultWrapper<List<Picture>>>(
-            future: this.fetchPicturesService(),
+            future: this.widget.fetchPicturesService(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
                 ResultWrapper<List<Picture>> picturesWrapper = snapshot.data;
@@ -91,11 +101,7 @@ class LastPictures extends StatelessWidget {
                 return this
                     ._generatePicturesWidgets(context, pictures, pictureSize);
               } else if (snapshot.hasError) {
-                return Padding(
-                  // TODO: Retry
-                  padding: const EdgeInsets.all(8.0),
-                  child: CircularProgressIndicator(),
-                );
+                return Retry(retryCalled: () => this._retryPicturesFetch());
               } else {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -116,11 +122,13 @@ class LastPictures extends StatelessWidget {
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Text('No picture yet'),
-          ), // TODO: Translate
+            child: Text(S.of(context).noPictureItem),
+          ),
         ),
       );
     }
+
+    this._canDisplayAll = true;
 
     List<Widget> picturesWidgets = [];
     pictures.forEach((Picture picture) {
@@ -152,5 +160,11 @@ class LastPictures extends StatelessWidget {
         children: picturesWidgets,
       ),
     );
+  }
+
+  void _retryPicturesFetch() {
+    setState(() {
+      this.widget.fetchPicturesService();
+    });
   }
 }
