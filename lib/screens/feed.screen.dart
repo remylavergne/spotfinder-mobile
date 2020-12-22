@@ -237,35 +237,52 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
             ResultWrapper<List<Spot>> wrapper = snapshot.data;
             List<Spot> spots = wrapper.result;
 
-            return RefreshIndicator(
-              onRefresh: () async {
-                this._refreshNewestSpots();
-              },
-              child: GridView.builder(
-                itemCount: spots.length,
-                padding: EdgeInsets.only(top: 0),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3),
-                itemBuilder: (BuildContext context, int index) =>
-                    GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                SpotDetailsScreen(spot: spots[index])));
-                  },
-                  child: this._getSpotWidget(spots[index]),
+            if (spots.isEmpty) {
+              return RefreshIndicator(
+                onRefresh: () async {
+                  this._refreshNewestSpots();
+                },
+                child: Container(
+                  child: Center(
+                    child: Text('No data'),
+                  ),
                 ),
-              ),
-            );
+              );
+            } else {
+              return RefreshIndicator(
+                onRefresh: () async {
+                  this._refreshNewestSpots();
+                },
+                child: GridView.builder(
+                  itemCount: spots.length,
+                  padding: EdgeInsets.only(top: 0),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3),
+                  itemBuilder: (BuildContext context, int index) =>
+                      GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  SpotDetailsScreen(spot: spots[index])));
+                    },
+                    child: this._getSpotWidget(spots[index]),
+                  ),
+                ),
+              );
+            }
           } else if (snapshot.hasError) {
             return this._retry(
                 () => this._refreshNewestSpots(), S.current.errorGetSpots);
           } else {
             return Container(
               child: Center(
-                child: CircularProgressIndicator(),
+                child: Container(
+                  width: 50.0,
+                  height: 50.0,
+                  child: CircularProgressIndicator(),
+                ),
               ),
             );
           }
@@ -320,35 +337,52 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
             ResultWrapper<List<Spot>> wrapper = snapshot.data;
             List<Spot> spots = wrapper.result;
 
-            return RefreshIndicator(
-              onRefresh: () async {
-                this._refreshNearestSpots(position);
-              },
-              child: GridView.builder(
-                itemCount: spots.length,
-                padding: EdgeInsets.only(top: 0),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3),
-                itemBuilder: (BuildContext context, int index) =>
-                    GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                SpotDetailsScreen(spot: spots[index])));
-                  },
-                  child: this._getSpotWidget(spots[index]),
+            if (spots.isEmpty) {
+              return RefreshIndicator(
+                onRefresh: () async {
+                  this._refreshNearestSpots(position);
+                },
+                child: Container(
+                  child: Center(
+                    child: Text('No data'),
+                  ),
                 ),
-              ),
-            );
+              );
+            } else {
+              return RefreshIndicator(
+                onRefresh: () async {
+                  this._refreshNearestSpots(position);
+                },
+                child: GridView.builder(
+                  itemCount: spots.length,
+                  padding: EdgeInsets.only(top: 0),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3),
+                  itemBuilder: (BuildContext context, int index) =>
+                      GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  SpotDetailsScreen(spot: spots[index])));
+                    },
+                    child: this._getSpotWidget(spots[index]),
+                  ),
+                ),
+              );
+            }
           } else if (snapshot.hasError) {
             return this._retry(() => this._refreshNearestSpots(position),
                 S.current.errorPermissionNearestSpots);
           } else {
             return Container(
               child: Center(
-                child: CircularProgressIndicator(),
+                child: Container(
+                  width: 50.0,
+                  height: 50.0,
+                  child: CircularProgressIndicator(),
+                ),
               ),
             );
           }

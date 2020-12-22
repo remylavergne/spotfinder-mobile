@@ -10,6 +10,7 @@ class Retry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.maxFinite,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

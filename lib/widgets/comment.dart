@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spotfinder/constants.dart';
@@ -32,12 +34,29 @@ class CommentWidget extends StatelessWidget {
                   ),
                 );
               },
-              leading: CircleAvatar(
-                backgroundColor: Colors.grey[300],
-                backgroundImage: this.comment.user.pictureId != null
-                    ? NetworkImage(
-                        '${Constants.getBaseApi()}/picture/id/${this.comment.user.getThumbnail()}')
-                    : null,
+              leading: FutureBuilder<String>(
+                future: SharedPrefsHelper.instance.getToken(),
+                builder:
+                    (BuildContext context, AsyncSnapshot<String> snapshot) {
+                  if (snapshot.hasData) {
+                    String token = snapshot.data;
+                    return CircleAvatar(
+                      backgroundColor: Colors.grey[300],
+                      backgroundImage: this.comment.user.pictureId != null
+                          ? NetworkImage(
+                              '${Constants.getBaseApi()}/picture/id/${this.comment.user.getThumbnail()}',
+                              headers: {
+                                HttpHeaders.authorizationHeader: 'Bearer $token'
+                              },
+                            )
+                          : null,
+                    );
+                  } else {
+                    return CircleAvatar(
+                      backgroundColor: Colors.grey[100],
+                    );
+                  }
+                },
               ),
               title: Text(
                 this.comment.user.username,
