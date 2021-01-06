@@ -42,7 +42,73 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     MediaQueryData mediaQueryData = MediaQuery.of(context);
 
-    AppBar _appBar = AppBar(
+    return Scaffold(
+      appBar: this._getAppBar(),
+      body: Container(
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // Background view
+            Container(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: TabBarView(
+                      controller: this.tabController,
+                      children: [
+                        this._displayNewestSpots(mediaQueryData),
+                        FutureBuilder<Position>(
+                            future:
+                                GeolocationHelper.instance.getCurrentPosition(),
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                              if (snapshot.hasData) {
+                                Position position = snapshot.data;
+
+                                this._nearest = Repository()
+                                    .getNearestPaginatedSpots(position, 1, 20);
+
+                                return this._displayNearestSpots(
+                                    mediaQueryData, position);
+                              }
+                              if (snapshot.hasError) {
+                                return this._retry(
+                                    () => GeolocationHelper.instance
+                                            .getCurrentPosition()
+                                            .then((Position position) {
+                                          if (position != null) {
+                                            this._refreshNearestSpots(position);
+                                          }
+                                        }).catchError((e) => debugPrint(e)),
+                                    S.current.errorGetSpots);
+                              } else {
+                                return Container(
+                                  child: Center(
+                                    child: Container(
+                                      width: 50.0,
+                                      height: 50.0,
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  ),
+                                );
+                              }
+                            }),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Button to create
+            this._createButton(mediaQueryData),
+          ],
+        ),
+      ),
+    );
+  }
+
+  AppBar _getAppBar() {
+    return AppBar(
       title: ApplicationTitle(
         title: S.current.spotfinder,
         size: 56.0,
@@ -82,62 +148,6 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
               showSearch(context: context, delegate: Search());
             }),
       ],
-    );
-
-    return Scaffold(
-      appBar: _appBar,
-      body: Container(
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            // Background view
-            Container(
-              child: Column(
-                children: [
-                  Expanded(
-                    child: TabBarView(
-                      controller: this.tabController,
-                      children: [
-                        this._displayNewestSpots(mediaQueryData),
-                        FutureBuilder<Position>(
-                            future:
-                                GeolocationHelper.instance.getCurrentPosition(),
-                            builder:
-                                (BuildContext context, AsyncSnapshot snapshot) {
-                              if (snapshot.hasData) {
-                                Position position = snapshot.data;
-
-                                this._nearest = Repository()
-                                    .getNearestPaginatedSpots(position, 1, 20);
-
-                                return this._displayNearestSpots(
-                                    mediaQueryData, position);
-                              }
-                              if (snapshot.hasError) {
-                                return this._retry(
-                                    () => GeolocationHelper.instance
-                                            .getCurrentPosition()
-                                            .then((Position position) {
-                                          if (position != null) {
-                                            this._refreshNearestSpots(position);
-                                          }
-                                        }),
-                                    S.current.errorGetSpots);
-                              } else {
-                                return CircularProgressIndicator();
-                              }
-                            }),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // Button to create
-            this._createButton(mediaQueryData),
-          ],
-        ),
-      ),
     );
   }
 
