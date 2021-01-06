@@ -14,7 +14,7 @@
             "name": "iOS Physical",
             "request": "launch",
             "type": "dart",
-            "deviceId": "emulator-5554"
+            "deviceId": "00008030-0008183934D9802E"
         },
         {
             "name": "spotfinder-mobile profile",
