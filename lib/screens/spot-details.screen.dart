@@ -337,16 +337,51 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
   }
 
   void _takeAndAddPicture(BuildContext context, Spot spot) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
+    CameraHelper.instance.canUse().then((bool canUse) {
+      if (canUse) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
             builder: (BuildContext context) => TakePictureScreen(
-                  camera: CameraHelper.instance.getCamera(),
-                  position:
-                      GeolocationHelper.instance.getPositionFromSpot(spot),
-                  takePictureFor: TakePictureFor.SPOT,
-                  id: spot.id,
-                )));
+              camera: CameraHelper.instance.getCamera(),
+              position: GeolocationHelper.instance.getPositionFromSpot(spot),
+              takePictureFor: TakePictureFor.SPOT,
+              id: spot.id,
+            ),
+          ),
+        );
+      } else {
+        this.showDialogOpenSettings(
+          context,
+          Text(S.current.permissionDialogTitle),
+          Text(S.current.cameraPermissionMandatory),
+        );
+      }
+    });
+  }
+
+  void showDialogOpenSettings(
+      BuildContext context, Widget title, Widget message) {
+    showDialog(
+        builder: (_) => AlertDialog(
+              title: title,
+              content: message,
+              actions: [
+                FlatButton(
+                  onPressed: () async {
+                    await Geolocator.openAppSettings();
+                  },
+                  child: Text(S.current.openSettings),
+                ),
+                FlatButton(
+                  onPressed: () =>
+                      Navigator.of(context, rootNavigator: true).pop(),
+                  child: Text(S.current.okay),
+                ),
+              ],
+            ),
+        barrierDismissible: false,
+        context: context);
   }
 
   void _navigateToSpot(Spot spot) async {

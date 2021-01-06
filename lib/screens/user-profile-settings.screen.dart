@@ -83,8 +83,36 @@ class UserProfileSettingsScreen extends StatelessWidget {
           ),
         );
       } else {
-        // TODO => display error dialog
+        this.showDialogOpenSettings(
+          context,
+          Text(S.current.permissionDialogTitle),
+          Text(S.current.cameraPermissionMandatory),
+        );
       }
     });
+  }
+
+  void showDialogOpenSettings(
+      BuildContext context, Widget title, Widget message) {
+    showDialog(
+        builder: (_) => AlertDialog(
+              title: title,
+              content: message,
+              actions: [
+                FlatButton(
+                  onPressed: () async {
+                    await Geolocator.openAppSettings();
+                  },
+                  child: Text(S.current.openSettings),
+                ),
+                FlatButton(
+                  onPressed: () =>
+                      Navigator.of(context, rootNavigator: true).pop(),
+                  child: Text(S.current.okay),
+                ),
+              ],
+            ),
+        barrierDismissible: false,
+        context: context);
   }
 }
