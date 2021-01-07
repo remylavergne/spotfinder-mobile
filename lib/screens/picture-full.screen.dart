@@ -27,7 +27,6 @@ class PictureFullScreen extends StatelessWidget {
               return Container(
                 width: double.maxFinite,
                 height: double.maxFinite,
-                color: Colors.red,
                 child: Image.network(
                   '${Constants.getBaseApi()}/picture/id/${picture.id}',
                   headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
