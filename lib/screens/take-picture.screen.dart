@@ -28,24 +28,40 @@ class TakePictureScreen extends StatefulWidget {
   TakePictureScreenState createState() => TakePictureScreenState();
 }
 
-class TakePictureScreenState extends State<TakePictureScreen> {
+class TakePictureScreenState extends State<TakePictureScreen>
+    with WidgetsBindingObserver {
   CameraController _controller;
   Future<void> _initializeControllerFuture;
 
   @override
   void initState() {
     super.initState();
-    _controller = CameraController(
-      widget.camera,
-      ResolutionPreset.high,
-    );
+    WidgetsBinding.instance.addObserver(this);
+    _controller = CameraController(widget.camera, ResolutionPreset.high,
+        enableAudio: false);
 
     _initializeControllerFuture = _controller.initialize();
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // App state changed before we got the chance to initialize.
+    if (_controller == null || !_controller.value.isInitialized) {
+      return;
+    }
+    if (state == AppLifecycleState.inactive) {
+      _controller?.dispose();
+    } else if (state == AppLifecycleState.resumed) {
+      if (_controller != null) {
+        onNewCameraSelected(_controller.description);
+      }
+    }
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -162,5 +178,38 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     } catch (e) {
       print(e);
     }
+  }
+
+  void onNewCameraSelected(CameraDescription cameraDescription) async {
+    if (_controller != null) {
+      await _controller.dispose();
+    }
+    _controller = CameraController(
+      cameraDescription,
+      ResolutionPreset.high,
+      enableAudio: false,
+    );
+
+    // If the controller is updated then update the UI.
+    _controller.addListener(() {
+      if (mounted) setState(() {});
+      if (_controller.value.hasError) {
+        debugPrint('Camera error ${_controller.value.errorDescription}');
+      }
+    });
+
+    try {
+      await _controller.initialize();
+    } on CameraException catch (e) {
+      _showCameraException(e);
+    }
+
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  void _showCameraException(CameraException e) {
+    debugPrint('Error: ${e.code}\n${e.description}');
   }
 }
