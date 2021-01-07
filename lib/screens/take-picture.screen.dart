@@ -1,5 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:path/path.dart';
@@ -35,6 +36,8 @@ class TakePictureScreenState extends State<TakePictureScreen>
 
   @override
   void initState() {
+    // Portrait mode only
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _controller = CameraController(widget.camera, ResolutionPreset.high,
@@ -62,6 +65,8 @@ class TakePictureScreenState extends State<TakePictureScreen>
   void dispose() {
     _controller.dispose();
     WidgetsBinding.instance.removeObserver(this);
+    // Allow all orientations
+    SystemChrome.setPreferredOrientations([]);
     super.dispose();
   }
 
@@ -145,7 +150,16 @@ class TakePictureScreenState extends State<TakePictureScreen>
       future: _initializeControllerFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return CameraPreview(_controller);
+          return RotatedBox(
+            quarterTurns:
+                MediaQuery.of(context).orientation == Orientation.landscape
+                    ? 3
+                    : 0,
+            child: AspectRatio(
+              aspectRatio: _controller.value.aspectRatio,
+              child: CameraPreview(_controller),
+            ),
+          );
         } else {
           return Container(child: Center(child: CircularProgressIndicator()));
         }
