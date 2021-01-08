@@ -195,11 +195,13 @@ class _CommentsScreenState extends State<CommentsScreen> {
       padding: EdgeInsets.only(
         left: 16.0,
         right: 16.0,
-        bottom: 100.0,
       ),
       child: ListView.builder(
           itemCount: comments.length,
           itemBuilder: (BuildContext context, int index) {
+            if (index == comments.length - 1) {
+              return const SizedBox(height: 100.0,);
+            }
             return CommentWidget(comment: comments[index]);
           }),
     );
