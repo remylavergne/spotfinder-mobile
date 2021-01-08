@@ -92,7 +92,7 @@ class TakePictureScreenState extends State<TakePictureScreen>
     );
   }
 
-  Widget _actionsButtons(BuildContext context) {
+  Container _actionsButtons(BuildContext context) {
     MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     return Container(
@@ -103,39 +103,46 @@ class TakePictureScreenState extends State<TakePictureScreen>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-            width: 180.0,
-            child: FlatButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4.0),
-              ),
-              color: Color(0xFF011627),
-              textColor: Colors.white,
-              height: 56.0,
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text(
-                S.current.back,
-                style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
+          Expanded(
+            flex: 1,
+            child: Container(
+              child: FlatButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+                color: Color(0xFF011627),
+                textColor: Colors.white,
+                height: 56.0,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  S.current.back,
+                  style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ),
-          Container(
-            width: 180.0,
-            child: FlatButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4.0),
-              ),
-              color: Color(0xFF276FBF),
-              textColor: Colors.white,
-              height: 56.0,
-              onPressed: () {
-                this._takePicture(context);
-              },
-              child: Text(
-                S.current.takePictureAction,
-                style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
+          SizedBox(
+            width: 16.0,
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(
+              child: FlatButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+                color: Color(0xFF276FBF),
+                textColor: Colors.white,
+                height: 56.0,
+                onPressed: () {
+                  this._takePicture(context);
+                },
+                child: Text(
+                  S.current.takePictureAction,
+                  style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ),
