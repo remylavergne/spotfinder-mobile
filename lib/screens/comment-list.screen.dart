@@ -44,6 +44,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
   @override
   Widget build(BuildContext context) {
     MediaQueryData mediaQueryData = MediaQuery.of(context);
+    bool displayError = false;
 
     return Scaffold(
       appBar: AppBar(
@@ -51,98 +52,125 @@ class _CommentsScreenState extends State<CommentsScreen> {
         backgroundColor: Color(0xFF011627),
       ),
       body: Container(
-        child: Stack(children: [
-          FutureBuilder<ResultWrapper<List<Comment>>>(
-            future: this.comments,
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData) {
-                ResultWrapper<List<Comment>> wrapper = snapshot.data;
-                List<Comment> comments = wrapper.result;
+        child: Stack(
+          children: [
+            FutureBuilder<ResultWrapper<List<Comment>>>(
+              future: this.comments,
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  ResultWrapper<List<Comment>> wrapper = snapshot.data;
+                  List<Comment> comments = wrapper.result;
 
-                return this._getLastCommentsWidget(comments);
-              } else if (snapshot.hasError) {
-                return Retry(retryCalled: () => this._fetchRetry());
-              } else {
-                return Container(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
-              }
-            },
-          ),
-          // Writing zone
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              decoration: BoxDecoration(
+                  return this._getLastCommentsWidget(comments);
+                } else if (snapshot.hasError) {
+                  return Retry(retryCalled: () => this._fetchRetry());
+                } else {
+                  return Container(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+              },
+            ),
+            // Writing zone
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                decoration: BoxDecoration(
                   color: Colors.white,
                   border: Border(
                     top: BorderSide(
                       color: Color(0xFF011627),
                       width: 2.0,
                     ),
-                  )),
-              padding: EdgeInsets.only(
-                  left: 4.0, bottom: mediaQueryData.padding.bottom + 16.0),
-              child: Form(
-                key: this._formKey,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Expanded(
-                        child: Padding(
-                      padding: const EdgeInsets.only(top: 16.0, left: 8.0),
-                      child: TextFormField(
-                        textCapitalization: TextCapitalization.sentences,
-                        keyboardType: TextInputType.multiline,
-                        minLines: 1,
-                        maxLines: 3,
-                        focusNode: this.focusNode,
-                        controller: this.messageCtrl,
-                        decoration: InputDecoration(
-                          enabledBorder: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          filled: true,
-                          hintText: S.current.typeCommentHint,
-                          fillColor: Colors.grey[100],
+                  ),
+                ),
+                padding: EdgeInsets.only(
+                    left: 4.0, bottom: mediaQueryData.padding.bottom + 16.0),
+                child: Form(
+                  key: this._formKey,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 4,
+                          child: TextFormField(
+                            textCapitalization: TextCapitalization.sentences,
+                            keyboardType: TextInputType.multiline,
+                            minLines: 1,
+                            maxLines: 3,
+                            focusNode: this.focusNode,
+                            controller: this.messageCtrl,
+                            validator: (value) {
+                              if (value.length < 5) {
+                                displayError = true;
+                                return 'Message have to contains 5 caracters at least';
+                              } else {
+                                displayError = false;
+                                return null;
+                              }
+                            },
+                            onChanged: (value) {
+                              if (displayError) {
+                                displayError = false;
+                                this._formKey.currentState.validate();
+                              }
+                            },
+                            decoration: InputDecoration(
+                              enabledBorder: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              filled: true,
+                              hintText: S.current.typeCommentHint,
+                              fillColor: Colors.grey[100],
+                            ),
+                          ),
                         ),
-                      ),
-                    )),
-                    FlatButton(
-                      onPressed: () async {
-                        if (this._formKey.currentState.validate() &&
-                            this.messageCtrl.text.trim().length > 5) {
-                          await Repository()
-                              .sendComment(this.messageCtrl.text.trim(),
-                                  CommentType.SPOT, widget.id)
-                              .then((bool added) {
-                            if (added) {
-                              setState(() {
-                                this.focusNode.unfocus();
-                                this.messageCtrl.clear();
-                                this.comments = Repository()
-                                    .getPaginatedSpotComments(1, 30, widget.id);
-                              });
-                            }
-                          });
-                        } else {
-                          // TODO: Snackbar or dialog
-                        }
-                      },
-                      child: Text(
-                        S.current.send,
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    )
-                  ],
+                        // Button to send message
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            child: FlatButton(
+                              onPressed: () async {
+                                if (this._formKey.currentState.validate() &&
+                                    this.messageCtrl.text.trim().length >= 5) {
+                                  await Repository()
+                                      .sendComment(this.messageCtrl.text.trim(),
+                                          CommentType.SPOT, widget.id)
+                                      .then((bool added) {
+                                    if (added) {
+                                      setState(() {
+                                        this.focusNode.unfocus();
+                                        this.messageCtrl.clear();
+                                        this.comments = Repository()
+                                            .getPaginatedSpotComments(
+                                                1, 30, widget.id);
+                                      });
+                                    }
+                                  });
+                                } else {
+                                  displayError = true;
+                                }
+                              },
+                              child: Text(
+                                S.current.send,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-        ]),
+          ],
+        ),
       ),
     );
   }
