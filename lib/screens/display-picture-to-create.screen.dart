@@ -68,7 +68,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
           Container(
             child: Image.file(
               File(widget.imagePath),
-              fit: BoxFit.fitHeight,
+              fit: BoxFit.cover,
             ),
           ),
           this._actionsButtons(context),
