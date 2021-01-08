@@ -267,8 +267,8 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                 ],
               ),
               GestureDetector(
-                onTap: () {
-                  Navigator.push(
+                onTap: () async {
+                  bool refreshComments = await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (BuildContext context) => CommentsScreen(
@@ -278,6 +278,10 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                       ),
                     ),
                   );
+
+                  if (refreshComments) {
+                    this._updateSpotComments();
+                  }
                 },
                 child: Text(S.current.addAction,
                     style: TextStyle(fontSize: 14.0, color: Color(0xFF2196F3))),
@@ -334,6 +338,13 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
         children: widgets,
       ),
     );
+  }
+
+  void _updateSpotComments() {
+    setState(() {
+      this.comments =
+          Repository().getPaginatedSpotComments(1, 10, widget.spot.id);
+    });
   }
 
   void _takeAndAddPicture(BuildContext context, Spot spot) {
