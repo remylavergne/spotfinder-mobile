@@ -283,8 +283,13 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                     this._updateSpotComments();
                   }
                 },
-                child: Text(S.current.addAction,
-                    style: TextStyle(fontSize: 14.0, color: Color(0xFF2196F3))),
+                child: Text(
+                  S.current.addAction,
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    color: Color(0xFF2196F3),
+                  ),
+                ),
               ),
             ],
           ),
