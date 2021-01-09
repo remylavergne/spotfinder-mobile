@@ -35,7 +35,6 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
-
   /// `SpotFinder`
   String get spotfinder {
     return Intl.message(
