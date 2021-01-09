@@ -1,4 +1,5 @@
 enum TakePictureFor {
-  creation,
-  spot
+  CREATION,
+  SPOT,
+  USER_PROFILE
 }

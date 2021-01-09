@@ -1,17 +1,30 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:spotfinder/camera.helper.dart';
+import 'package:spotfinder/enums/comments-type.enum.dart';
+import 'package:spotfinder/generated/l10n.dart';
+import 'package:spotfinder/helpers/camera.helper.dart';
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/enums/take-picture-for.enum.dart';
 import 'package:spotfinder/helpers/geolocation.helper.dart';
+import 'package:spotfinder/helpers/shared-preferences.helper.dart';
+import 'package:spotfinder/models/comment.model.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
+import 'package:spotfinder/models/user.model.dart';
+import 'package:spotfinder/repositories/repository.dart';
+import 'package:spotfinder/screens/comment-list.screen.dart';
+import 'package:spotfinder/screens/pictures-list.screen.dart';
+import 'package:spotfinder/screens/user-profile.screen.dart';
 import 'package:spotfinder/services/global-rest.service.dart';
-import 'package:spotfinder/views/take-picture.dart';
+import 'package:spotfinder/screens/take-picture.screen.dart';
+import 'package:spotfinder/widgets/comment.dart';
+import 'package:spotfinder/widgets/last-pictures.dart';
+import 'package:spotfinder/widgets/retry.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SpotDetailsScreen extends StatefulWidget {
@@ -26,11 +39,31 @@ class SpotDetailsScreen extends StatefulWidget {
 
 class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
   Future<ResultWrapper<List<Picture>>> pictures;
+  Future<ResultWrapper<List<Comment>>> comments;
+  User _user;
+  String _username = '';
 
   @override
   void initState() {
-    this.pictures = RestService().getPaginatedPictures(1, 3, widget.spot.id);
+    this._bindServices();
     super.initState();
+  }
+
+  void _bindServices() {
+    this.pictures =
+        RestService().getPaginatedSpotPictures(1, 6, widget.spot.id);
+    this.comments =
+        Repository().getPaginatedSpotComments(1, 10, widget.spot.id);
+
+    // Get user profile
+    Repository().getUserById(widget.spot.user).then((User user) {
+      if (user != null) {
+        setState(() {
+          this._user = user;
+          this._username = user.username;
+        });
+      }
+    });
   }
 
   @override
@@ -43,13 +76,31 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          // color: Colors.green,
           child: Column(
             children: [
               this._header(widget.spot, mediaQueryData.size),
               this._generalInformations(widget.spot),
-              this._lastPictures(),
-              // this._lastComments(),
+              Padding(
+                padding: const EdgeInsets.only(
+                  right: 16.0,
+                  left: 16.0,
+                ),
+                child: LastPictures(
+                  mediaQueryData: MediaQuery.of(context),
+                  displayAllAction: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => PicturesDisplayScreen(
+                          id: widget.spot.id, type: PicturesFrom.SPOT),
+                    ),
+                  ),
+                  fetchPicturesService: () => this.pictures,
+                  secondActionAvailable: true,
+                  secondAction: () =>
+                      this._takeAndAddPicture(context, widget.spot),
+                ),
+              ),
+              this._lastComments(),
             ],
           ),
         ),
@@ -59,12 +110,24 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
 
   Widget _header(Spot spot, Size screenSize) {
     return Container(
-        height: screenSize.height / 4,
-        width: double.infinity,
-        // color: Colors.red,
-        child: Image.network(
-            '${Constants.getBaseApi()}/picture/id/${spot.pictureId}',
-            fit: BoxFit.cover));
+      color: Colors.grey[300],
+      height: screenSize.height / 4,
+      width: double.infinity,
+      child: FutureBuilder<String>(
+        future: SharedPrefsHelper.instance.getToken(),
+        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+          if (snapshot.hasData) {
+            String token = snapshot.data;
+            return Image.network(
+                '${Constants.getBaseApi()}/picture/id/${spot.pictureId}',
+                headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
+                fit: BoxFit.cover);
+          } else {
+            return Container();
+          }
+        },
+      ),
+    );
   }
 
   Widget _generalInformations(Spot spot) {
@@ -75,7 +138,6 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
         top: 16.0,
         bottom: 16.0,
       ),
-      // color: Colors.blue,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,7 +149,25 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                 spot.getSpotName(),
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
-              Text('FakeRunner', style: TextStyle(color: Colors.grey)),
+              GestureDetector(
+                onTap: () async {
+                  bool isCurrentUser = await SharedPrefsHelper.instance
+                      .isCurrentUser(this._user.id);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => UserProfileScreen(
+                        userId: this._user.id,
+                        isCurrentUser: isCurrentUser,
+                      ),
+                    ),
+                  );
+                },
+                child: Text(
+                  this._username,
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
             ],
           ),
           Container(
@@ -112,11 +192,15 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                       onPressed: () {
                         this._navigateToSpot(spot);
                       },
+                      onLongPress: () {
+                        Clipboard.setData(new ClipboardData(
+                            text: '${spot.longitude} ${spot.latitude}'));
+                      },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Icon(Icons.directions_run),
-                          Text('Distance : '),
+                          Text(S.current.distance),
                           Text(realDistance),
                         ],
                       ),
@@ -134,79 +218,13 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Icon(Icons.directions_run),
-                          Text('Voir itinéraire')
+                          Text(S.current.routeCalculation)
                         ],
                       ),
                     ),
                   );
                 }
               }),
-        ],
-      ),
-    );
-  }
-
-  Widget _lastPictures() {
-    return Container(
-      padding: EdgeInsets.only(
-        left: 16.0,
-        right: 16.0,
-        // top: 8.0,
-        bottom: 16.0,
-      ),
-      // color: Colors.red[200],
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                children: [
-                  Text('Dernières photos',
-                      style: TextStyle(
-                          fontSize: 16.0, fontWeight: FontWeight.w500)),
-                  Text(' - '),
-                  GestureDetector(
-                    onTap: () {
-                      debugPrint('Display all pictures');
-                    },
-                    child: Text('Afficher tout',
-                        style: TextStyle(
-                            fontSize: 14.0, color: Color(0xFF2196F3))),
-                  )
-                ],
-              ),
-              GestureDetector(
-                onTap: () {
-                  //todo: Check all permissions before...
-                  this._takeAndAddPicture(context, widget.spot);
-                },
-                child: Text('+ Ajouter',
-                    style: TextStyle(fontSize: 14.0, color: Color(0xFF2196F3))),
-              ),
-            ],
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 4.0),
-            height: 1.0,
-            color: Colors.grey,
-          ),
-          FutureBuilder<ResultWrapper<List<Picture>>>(
-            future: this.pictures,
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData) {
-                ResultWrapper<List<Picture>> picturesWrapper = snapshot.data;
-                List<Picture> pictures = picturesWrapper.result;
-
-                return this._getLastPicturesWidgets(pictures);
-              } else if (snapshot.hasError) {
-                return CircularProgressIndicator();
-              } else {
-                return CircularProgressIndicator();
-              }
-            },
-          ),
         ],
       ),
     );
@@ -220,35 +238,81 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
         top: 16.0,
         bottom: 16.0,
       ),
-      // color: Colors.orange[200],
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
                 children: [
-                  Text('Derniers commentaires - '),
-                  Text('Afficher tout')
+                  Text(S.current.latestComments,
+                      style: TextStyle(
+                          fontSize: 16.0, fontWeight: FontWeight.w500)),
+                  Text(' - '),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => CommentsScreen(
+                              id: widget.spot.id, from: CommentType.SPOT),
+                        ),
+                      );
+                    },
+                    child: Text(S.current.displayAll,
+                        style: TextStyle(
+                            fontSize: 14.0, color: Color(0xFF2196F3))),
+                  )
                 ],
               ),
-              Text('+ Ajouter'),
+              GestureDetector(
+                onTap: () async {
+                  bool refreshComments = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => CommentsScreen(
+                        id: widget.spot.id,
+                        from: CommentType.SPOT,
+                        focusInput: true,
+                      ),
+                    ),
+                  );
+
+                  if (refreshComments) {
+                    this._updateSpotComments();
+                  }
+                },
+                child: Text(
+                  S.current.addAction,
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    color: Color(0xFF2196F3),
+                  ),
+                ),
+              ),
             ],
           ),
           Container(
+            margin: EdgeInsets.only(top: 4.0),
             height: 1.0,
             color: Colors.grey,
           ),
-          FutureBuilder<List<Widget>>(
+          FutureBuilder<ResultWrapper<List<Comment>>>(
+            future: this.comments,
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
-                List<Picture> pictures = snapshot.data;
-                return this._getLastCommentsWidgets(pictures);
+                ResultWrapper<List<Comment>> wrapper = snapshot.data;
+                List<Comment> comments = wrapper.result;
+
+                return this._getLastCommentsWidget(comments);
               } else if (snapshot.hasError) {
-                print('');
-                return CircularProgressIndicator();
+                return Retry(retryCalled: () => this._retrySpotDetailsFetch());
               } else {
-                return CircularProgressIndicator();
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CircularProgressIndicator(),
+                );
               }
             },
           ),
@@ -257,71 +321,83 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
     );
   }
 
-  Container _getLastPicturesWidgets(List<Picture> pictures) {
-    List<Widget> picturesWidgets = [];
-    // todo: taille des images en fonction de la taille de l'écran ! => MediaQueryData
-    pictures.forEach((Picture picture) {
-      Widget w = Container(
-          width: 120.0,
-          height: 120.0,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(6.0)),
-            // border: Border.all(color: Colors.black, width: 0.5),
-          ),
-          child: ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              child: Image.network(
-                '${Constants.getBaseApi()}/picture/id/${picture.id}',
-                height: 120.0,
-                width: 120.0,
-                fit: BoxFit.cover,
-              )));
+  Container _getLastCommentsWidget(List<Comment> comments) {
+    if (comments.length == 0) {
+      return Container(
+        margin: const EdgeInsets.only(top: 8.0),
+        child: Center(
+          child: Text(S.current.noComment),
+        ),
+      );
+    }
 
-      picturesWidgets.add(w);
+    List<CommentWidget> widgets = [];
+    comments.forEach((Comment comment) {
+      CommentWidget cw = CommentWidget(comment: comment);
+      widgets.add(cw);
     });
 
     return Container(
       margin: EdgeInsets.only(top: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: picturesWidgets,
+      child: Column(
+        children: widgets,
       ),
     );
   }
 
-  Row _getLastCommentsWidgets(List<Picture> pictures) {
-    // todo refactor
-    List<Widget> picturesWidgets = [];
-
-    pictures.forEach((Picture picture) {
-      Widget w = Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(6.0)),
-              border: Border.all(color: Colors.black, width: 0.5)),
-          child: Image.network(
-              '${Constants.getBaseApi()}/picture/id/${picture.id}',
-              fit: BoxFit.cover));
-
-      picturesWidgets.add(w);
+  void _updateSpotComments() {
+    setState(() {
+      this.comments =
+          Repository().getPaginatedSpotComments(1, 10, widget.spot.id);
     });
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: picturesWidgets,
-    );
   }
 
   void _takeAndAddPicture(BuildContext context, Spot spot) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
+    CameraHelper.instance.canUse().then((bool canUse) {
+      if (canUse) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
             builder: (BuildContext context) => TakePictureScreen(
-                  camera: CameraHelper.instance.getCamera(),
-                  position:
-                      GeolocationHelper.instance.getPositionFromSpot(spot),
-                  takePictureFor: TakePictureFor.spot,
-                  spotID: spot.id,
-                )));
+              camera: CameraHelper.instance.getCamera(),
+              position: GeolocationHelper.instance.getPositionFromSpot(spot),
+              takePictureFor: TakePictureFor.SPOT,
+              id: spot.id,
+            ),
+          ),
+        );
+      } else {
+        this.showDialogOpenSettings(
+          context,
+          Text(S.current.permissionDialogTitle),
+          Text(S.current.cameraPermissionMandatory),
+        );
+      }
+    });
+  }
+
+  void showDialogOpenSettings(
+      BuildContext context, Widget title, Widget message) {
+    showDialog(
+        builder: (_) => AlertDialog(
+              title: title,
+              content: message,
+              actions: [
+                FlatButton(
+                  onPressed: () async {
+                    await Geolocator.openAppSettings();
+                  },
+                  child: Text(S.current.openSettings),
+                ),
+                FlatButton(
+                  onPressed: () =>
+                      Navigator.of(context, rootNavigator: true).pop(),
+                  child: Text(S.current.okay),
+                ),
+              ],
+            ),
+        barrierDismissible: false,
+        context: context);
   }
 
   void _navigateToSpot(Spot spot) async {
@@ -338,5 +414,11 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  void _retrySpotDetailsFetch() {
+    setState(() {
+      this._bindServices();
+    });
   }
 }

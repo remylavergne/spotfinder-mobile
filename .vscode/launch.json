@@ -5,9 +5,31 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "spotfinder-mobile",
+            "name": "Android Emulator",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "deviceId": "emulator-5554"
+        },
+        {
+            "name": "iOS Physical",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "00008030-0008183934D9802E"
+        },
+        {
+            "name": "spotfinder-mobile profile",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "All Devices",
+            "configurations": [
+                "Android Emulator",
+                "iOS Physical"
+            ]
         }
     ]
 }

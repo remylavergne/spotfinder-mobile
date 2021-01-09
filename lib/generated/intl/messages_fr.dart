@@ -1,5 +1,5 @@
 // DO NOT EDIT. This is code generated via package:intl/generate_localized.dart
-// This is a library that provides messages for a en locale. All the
+// This is a library that provides messages for a fr locale. All the
 // messages from the main program should be duplicated here with the same
 // function name.
 
@@ -17,7 +17,7 @@ final messages = new MessageLookup();
 typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 
 class MessageLookup extends MessageLookupByLibrary {
-  String get localeName => 'en';
+  String get localeName => 'fr';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -29,8 +29,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "addPictureTitle" : MessageLookupByLibrary.simpleMessage("Add a picture"),
     "addressBeingCalculated" : MessageLookupByLibrary.simpleMessage("Address is being calculated"),
     "back" : MessageLookupByLibrary.simpleMessage("Back"),
-    "cameraPermissionMandatory" : MessageLookupByLibrary.simpleMessage("Camera permission is mandatory during spot creation process."),
-    "chooseYourUsername" : MessageLookupByLibrary.simpleMessage("Choisissez un pseudo"),
+    "chooseYourUsername" : MessageLookupByLibrary.simpleMessage("Choose an username"),
     "clearPasswordExplanation" : MessageLookupByLibrary.simpleMessage("Un mot de passe a été généré pour récupérer votre compte. Vous devez l\'avoir si vous voulez vous connecter sur un autre appareil, ou tout simplement récupérer votre compte après une réinstallation."),
     "clickToCopy" : MessageLookupByLibrary.simpleMessage("Click to copy"),
     "closestTabTitle" : MessageLookupByLibrary.simpleMessage("Closest"),
@@ -44,40 +43,27 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterUsernameError" : MessageLookupByLibrary.simpleMessage("Please enter your username"),
     "errorAndRetry" : MessageLookupByLibrary.simpleMessage("An error occured... Please retry."),
     "errorGetSpots" : MessageLookupByLibrary.simpleMessage("Error while retrieving Spots..."),
-    "errorPermissionNearestSpots" : MessageLookupByLibrary.simpleMessage("Location permission is mandatory to display closest Spots around you. Please, activate it into application settings."),
     "errorPhotoUpload" : MessageLookupByLibrary.simpleMessage("Error during photo synchronization... Redirection to the main screen."),
     "errorSpotCreation" : MessageLookupByLibrary.simpleMessage("Error during creation... Redirection to the main screen."),
-    "errorUpdateProfilePicture" : MessageLookupByLibrary.simpleMessage("Error during profile picture update... Please retry."),
-    "gpsPermissionMandatory" : MessageLookupByLibrary.simpleMessage("Access to gps is mandatory during spot creation process."),
     "latestComments" : MessageLookupByLibrary.simpleMessage("Latest comments"),
     "latestPhotos" : MessageLookupByLibrary.simpleMessage("Latest photos"),
-    "latestSpots" : MessageLookupByLibrary.simpleMessage("Lastest spots"),
-    "locationServiceOff" : MessageLookupByLibrary.simpleMessage("Location service seems to be off. Please, turn it on."),
     "login" : MessageLookupByLibrary.simpleMessage("I have an account"),
     "loginError" : MessageLookupByLibrary.simpleMessage("Please check your username / password"),
-    "logout" : MessageLookupByLibrary.simpleMessage("logout"),
     "newestTabTitle" : MessageLookupByLibrary.simpleMessage("Newest"),
     "next" : MessageLookupByLibrary.simpleMessage("Next"),
     "noComment" : MessageLookupByLibrary.simpleMessage("No comment yet"),
-    "noPictureItem" : MessageLookupByLibrary.simpleMessage("No picture yet"),
-    "noSpotYet" : MessageLookupByLibrary.simpleMessage("No spot yet"),
     "okay" : MessageLookupByLibrary.simpleMessage("Okay"),
     "openSettings" : MessageLookupByLibrary.simpleMessage("Open settings"),
     "passwordError" : MessageLookupByLibrary.simpleMessage("Please enter your password"),
     "passwordHint" : MessageLookupByLibrary.simpleMessage("Password"),
-    "permissionDialogTitle" : MessageLookupByLibrary.simpleMessage("Missing permission"),
     "photoTitle" : MessageLookupByLibrary.simpleMessage("Photo"),
     "photosTitle" : MessageLookupByLibrary.simpleMessage("Photos"),
     "pictureIsBeingSynchronized" : MessageLookupByLibrary.simpleMessage("Picture is being synchronized"),
     "pleaseEnterUsername" : MessageLookupByLibrary.simpleMessage("Please enter your username"),
-    "profile" : MessageLookupByLibrary.simpleMessage("profile"),
-    "profilePictureUploaded" : MessageLookupByLibrary.simpleMessage("Profile picture uploaded"),
     "queryTooShortError" : MessageLookupByLibrary.simpleMessage("Query too short!"),
     "routeCalculation" : MessageLookupByLibrary.simpleMessage("Route calculation"),
     "searchFieldEmptyError" : MessageLookupByLibrary.simpleMessage("Please, type something to search"),
-    "see" : MessageLookupByLibrary.simpleMessage("See"),
     "send" : MessageLookupByLibrary.simpleMessage("Send"),
-    "settings" : MessageLookupByLibrary.simpleMessage("Settings"),
     "spotCreationSuccess" : MessageLookupByLibrary.simpleMessage("Successful creation! Automatic redirection."),
     "spotNameHint" : MessageLookupByLibrary.simpleMessage("Spot name (optional)"),
     "spotWithoutName" : MessageLookupByLibrary.simpleMessage("Spot without name"),
@@ -85,7 +71,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "synchroInProgress" : MessageLookupByLibrary.simpleMessage("Synchronization in progress..."),
     "takePictureAction" : MessageLookupByLibrary.simpleMessage("Take"),
     "typeCommentHint" : MessageLookupByLibrary.simpleMessage("Type comment here"),
-    "userSpotsTitle" : MessageLookupByLibrary.simpleMessage("User\'s spots"),
     "usernameAlreadyExists" : MessageLookupByLibrary.simpleMessage("This username already exist. Please choose another one."),
     "usernameHint" : MessageLookupByLibrary.simpleMessage("Username")
   };

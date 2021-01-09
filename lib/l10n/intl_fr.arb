@@ -3,7 +3,7 @@
     "@spotfinder": {
       "description": "Application name"
     },
-    "chooseYourUsername": "Choisissez un pseudo",
+    "chooseYourUsername": "Choose an username",
     "@chooseYourUsername": {
       "description": "Hint for account creation"
     },
@@ -15,8 +15,6 @@
     "@next": {},
     "login": "I have an account",
     "@login": {},
-    "logout": "logout",
-    "@logout": {},
     "usernameHint": "Username",
     "@usernameHint": {},
     "enterUsernameError": "Please enter your username",
@@ -85,9 +83,6 @@
     "@okay": {},
     "errorGetSpots": "Error while retrieving Spots...",
     "@errorGetSpots": {},
-    "@okay": {},
-    "errorPermissionNearestSpots": "Location permission is mandatory to display closest Spots around you. Please, activate it into application settings.",
-    "@errorPermissionNearestSpots": {},
     "photoTitle": "Photo",
     "@photoTitle": {},
     "photosTitle": "Photos",
@@ -111,32 +106,6 @@
     "searchFieldEmptyError": "Please, type something to search",
     "@searchFieldEmptyError": {},
     "queryTooShortError": "Query too short!",
-    "@queryTooShortError": {},
-    "cameraPermissionMandatory": "Camera permission is mandatory during spot creation process.",
-    "@cameraPermissionMandatory": {},
-    "permissionDialogTitle": "Missing permission",
-    "@permissionDialogTitle": {},
-    "locationServiceOff": "Location service seems to be off. Please, turn it on.",
-    "@locationServiceOff": {},
-    "gpsPermissionMandatory": "Access to gps is mandatory during spot creation process.",
-    "@gpsPermissionMandatory": {},
-    "profile": "profile",
-    "@profile": {},
-    "see": "See",
-    "@see": {},
-    "latestSpots": "Lastest spots",
-    "@latestSpots": {},
-    "userSpotsTitle": "User's spots",
-    "@userSpotsTitle": {},
-    "profilePictureUploaded": "Profile picture uploaded",
-    "@profilePictureUploaded": {},
-    "errorUpdateProfilePicture": "Error during profile picture update... Please retry.",
-    "@errorUpdateProfilePicture": {},
-    "noPictureItem": "No picture yet",
-    "@noPictureItem": {},
-    "noSpotYet": "No spot yet",
-    "@noSpotYet": {},
-    "settings": "Settings",
-    "@settings": {}
+    "@queryTooShortError": {}
 
   }
