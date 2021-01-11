@@ -422,10 +422,17 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
 
   GridTile _getSpotWidget(Spot spot) {
     return GridTile(
-      footer: spot.isPending() ? Padding(
-        padding: const EdgeInsets.only(bottom: 8.0),
-        child: Center(child: Icon(Icons.public_off, color: Colors.orange)),
-      ) : null,
+      footer: spot.isPending()
+          ? Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Center(
+                child: Icon(
+                  Icons.public_off,
+                  color: Color(0xFFFF7761),
+                ),
+              ),
+            )
+          : null,
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(color: Colors.transparent, width: 4.0),
