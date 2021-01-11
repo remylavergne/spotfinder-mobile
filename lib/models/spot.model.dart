@@ -82,4 +82,8 @@ class Spot {
   String getThumbnail() {
     return 'thumbnail_${this.pictureId}';
   }
+
+  bool isPending() {
+    return !this.allowed;
+  }
 }
