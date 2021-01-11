@@ -113,19 +113,52 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
       color: Colors.grey[300],
       height: screenSize.height / 4,
       width: double.infinity,
-      child: FutureBuilder<String>(
-        future: SharedPrefsHelper.instance.getToken(),
-        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-          if (snapshot.hasData) {
-            String token = snapshot.data;
-            return Image.network(
-                '${Constants.getBaseApi()}/picture/id/${spot.pictureId}',
-                headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
-                fit: BoxFit.cover);
-          } else {
-            return Container();
-          }
-        },
+      child: Stack(
+        children: [
+          FutureBuilder<String>(
+            future: SharedPrefsHelper.instance.getToken(),
+            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+              if (snapshot.hasData) {
+                String token = snapshot.data;
+                return Container(
+                  width: double.maxFinite,
+                  color: Colors.red,
+                  child: Image.network(
+                      '${Constants.getBaseApi()}/picture/id/${spot.pictureId}',
+                      headers: {
+                        HttpHeaders.authorizationHeader: 'Bearer $token'
+                      },
+                      fit: BoxFit.cover),
+                );
+              } else {
+                return Container();
+              }
+            },
+          ),
+          Positioned(
+            bottom: 8.0,
+            left: 8.0,
+            child: Row(
+              children: [
+                Icon(
+                  Icons.public_off,
+                  color: Color(0xFFFF7761),
+                ),
+                SizedBox(
+                  width: 8.0,
+                ),
+                Text(
+                  'Spot awaiting validation...',
+                  style: TextStyle(
+                    color: Color(0xFFFF7761),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

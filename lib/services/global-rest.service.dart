@@ -242,7 +242,23 @@ class RestService {
       Map<String, dynamic> wrapperMap = jsonDecode(response.body);
       return ResultWrapper.fromJsonMap<Spot>(wrapperMap);
     } else {
-      throw Exception('Failed to get user pictures');
+      throw Exception('Failed to get user spots');
+    }
+  }
+
+  Future<ResultWrapper<List<Spot>>> getUserPendingSpots(
+      SearchWithPagination searchWithPagination) async {
+    String token = await SharedPrefsHelper.instance.getToken();
+    final response = await http.post(
+        Constants.getBaseApi() + '/user/pending-spots',
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
+        body: searchWithPagination.toJson());
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> wrapperMap = jsonDecode(response.body);
+      return ResultWrapper.fromJsonMap<Spot>(wrapperMap);
+    } else {
+      throw Exception('Failed to get user pending spots');
     }
   }
 

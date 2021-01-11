@@ -8,6 +8,7 @@ import 'package:spotfinder/enums/take-picture-for.enum.dart';
 import 'package:spotfinder/helpers/geolocation.helper.dart';
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/helpers/throttling.dart';
+import 'package:spotfinder/models/dto/search-with-pagination.dto.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
@@ -28,13 +29,13 @@ class FeedScreen extends StatefulWidget {
 class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
   TabController tabController;
   Throttling createSpotThrottling = Throttling(Duration(seconds: 2));
-  Future<ResultWrapper<List<Spot>>> _newest;
+  Future<List<ResultWrapper<List<Spot>>>> _newest;
   Future<ResultWrapper<List<Spot>>> _nearest;
+  String _currentUserId;
 
   @override
   void initState() {
     this.tabController = TabController(length: 2, vsync: this);
-    this._newest = Repository().getPaginatedSpots(1, 20);
     super.initState();
   }
 
@@ -56,7 +57,20 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
                     child: TabBarView(
                       controller: this.tabController,
                       children: [
-                        this._displayNewestSpots(mediaQueryData),
+                        FutureBuilder<String>(
+                            future: SharedPrefsHelper.instance.getId(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<String> snapshot) {
+                              this._currentUserId = snapshot.data;
+                              this._newest = Repository()
+                                  .getNewestSpotsWithUserPendingSpots(
+                                      new SearchWithPagination(
+                                          this._currentUserId, 1, 20),
+                                      1,
+                                      50);
+
+                              return this._displayNewestSpots(mediaQueryData);
+                            }),
                         FutureBuilder<Position>(
                             future:
                                 GeolocationHelper.instance.getCurrentPosition(),
@@ -239,13 +253,16 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
   }
 
   Widget _displayNewestSpots(MediaQueryData mediaQuery) {
-    return FutureBuilder<ResultWrapper<List<Spot>>>(
+    return FutureBuilder<List<ResultWrapper<List<Spot>>>>(
         future: this._newest,
         builder: (BuildContext context,
-            AsyncSnapshot<ResultWrapper<List<Spot>>> snapshot) {
+            AsyncSnapshot<List<ResultWrapper<List<Spot>>>> snapshot) {
           if (snapshot.hasData) {
-            ResultWrapper<List<Spot>> wrapper = snapshot.data;
-            List<Spot> spots = wrapper.result;
+            // Extract all spots - Pending spots on top of the list
+            List<Spot> pendingSpots = snapshot.data[0].result;
+            List<Spot> newestSpots = snapshot.data[1].result;
+            // Concat all
+            List<Spot> spots = pendingSpots + newestSpots;
 
             if (spots.isEmpty) {
               return RefreshIndicator(
@@ -272,10 +289,13 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
                       GestureDetector(
                     onTap: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  SpotDetailsScreen(spot: spots[index])));
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => SpotDetailsScreen(
+                            spot: spots[index],
+                          ),
+                        ),
+                      );
                     },
                     child: this._getSpotWidget(spots[index]),
                   ),
@@ -328,7 +348,8 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
 
   void _refreshNewestSpots() {
     setState(() {
-      this._newest = Repository().getPaginatedSpots(1, 20);
+      this._newest = Repository().getNewestSpotsWithUserPendingSpots(
+          new SearchWithPagination(this._currentUserId, 1, 20), 1, 50);
     });
   }
 
@@ -401,6 +422,17 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
 
   GridTile _getSpotWidget(Spot spot) {
     return GridTile(
+      footer: spot.isPending()
+          ? Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Center(
+                child: Icon(
+                  Icons.public_off,
+                  color: Color(0xFFFF7761),
+                ),
+              ),
+            )
+          : null,
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(color: Colors.transparent, width: 4.0),
