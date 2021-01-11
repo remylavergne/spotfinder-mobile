@@ -135,27 +135,30 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
               }
             },
           ),
-          Positioned(
-            bottom: 8.0,
-            left: 8.0,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.public_off,
-                  color: Color(0xFFFF7761),
-                ),
-                SizedBox(
-                  width: 8.0,
-                ),
-                Text(
-                  'Spot awaiting validation...',
-                  style: TextStyle(
+          Visibility(
+            visible: spot.isPending(),
+            child: Positioned(
+              bottom: 8.0,
+              left: 8.0,
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.public_off,
                     color: Color(0xFFFF7761),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0,
                   ),
-                ),
-              ],
+                  SizedBox(
+                    width: 8.0,
+                  ),
+                  Text(
+                    'Spot awaiting validation...',
+                    style: TextStyle(
+                      color: Color(0xFFFF7761),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
