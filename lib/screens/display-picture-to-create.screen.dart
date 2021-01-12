@@ -185,10 +185,10 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
         .uploadPicture(widget.id, idUser, File(widget.imagePath))
         .then((Picture picture) {
       if (picture != null) {
-        uploadDialog.updateText(S.current.errorSpotCreation);
+        uploadDialog.updateText(S.current.addPhotoSuccess);
         this._returnToTakePictureScreen(context);
       } else {
-        uploadDialog.updateText(S.current.addPhotoSuccess);
+        uploadDialog.updateText(S.current.errorSpotCreation);
         this._returnToTakePictureScreen(context);
       }
     });
