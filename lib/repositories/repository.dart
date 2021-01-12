@@ -74,6 +74,11 @@ class Repository {
     return RestService().getPaginatedSpotPictures(page, limit, spotID);
   }
 
+  Future<ResultWrapper<List<Picture>>> getPendingPicturesBySpotId(
+      int page, int limit, String spotId) async {
+    return RestService().getPendingPicturesBySpotId(page, limit, spotId);
+  }
+
   Future<List<ResultWrapper<List<Spot>>>> getNewestSpotsWithUserPendingSpots(
       SearchWithPagination searchWithPagination, int page, int limit) {
     // Calls

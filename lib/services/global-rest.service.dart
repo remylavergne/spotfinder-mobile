@@ -77,6 +77,22 @@ class RestService {
     }
   }
 
+  Future<ResultWrapper<List<Picture>>> getPendingPicturesBySpotId(
+      int page, int limit, String spotId) async {
+    String token = await SharedPrefsHelper.instance.getToken();
+    final response = await http.post(
+        Constants.getBaseApi() + '/spot/pending-pictures',
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
+        body: new SearchWithPagination(spotId, page, limit).toJson());
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> wrapperMap = jsonDecode(response.body);
+      return ResultWrapper.fromJsonMap<Picture>(wrapperMap);
+    } else {
+      throw Exception('Failed to get paginated spots');
+    }
+  }
+
   Future<String> createSpot(CreateSpot s) async {
     String token = await SharedPrefsHelper.instance.getToken();
     final response = await http.post(Constants.getBaseApi() + '/spot/create',
