@@ -39,7 +39,7 @@ class SquarePhotoItem extends StatelessWidget {
                       child: Center(
                         child: Icon(
                           Icons.public_off,
-                          color: Color(0xFFFF7761),
+                          color: Color(0xCCFF7761),
                         ),
                       ),
                     )
