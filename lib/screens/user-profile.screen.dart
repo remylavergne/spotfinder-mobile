@@ -103,60 +103,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Container(
-                    width: 80.0,
-                    height: 80.0,
-                    child: GestureDetector(
-                      onTap: () {
-                        if (user.pictureId != null) {
-                          this._displayUserProfilePicture(user);
-                        }
-                      },
-                      child: FutureBuilder<String>(
-                        future: SharedPrefsHelper.instance.getToken(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<String> snapshot) {
-                          if (snapshot.hasData) {
-                            String token = snapshot.data;
-                            return CircleAvatar(
-                              backgroundColor: Colors.grey[100],
-                              backgroundImage: user.pictureId != null
-                                  ? NetworkImage(
-                                      '${Constants.getBaseApi()}/picture/id/${this.user.pictureId}',
-                                      headers: {
-                                        HttpHeaders.authorizationHeader:
-                                            'Bearer $token'
-                                      },
-                                    )
-                                  : null,
-                            );
-                          } else {
-                            return CircleAvatar(
-                              backgroundColor: Colors.grey[100],
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 16.0,
-                  ),
-                  Text(
-                    user.username,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 60.0,
-                      fontFamily: 'NorthCoast',
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            this._header(),
             Padding(
               padding: const EdgeInsets.only(top: 24.0),
               child: LastPictures(
@@ -229,5 +176,87 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     setState(() {
       this._bindServices();
     });
+  }
+
+  Widget _header() {
+    return Container(
+      width: double.maxFinite,
+      // color: Colors.red,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 100.0,
+            height: 100.0,
+            child: GestureDetector(
+              onTap: () {
+                if (user.pictureId != null) {
+                  this._displayUserProfilePicture(user);
+                }
+              },
+              child: FutureBuilder<String>(
+                future: SharedPrefsHelper.instance.getToken(),
+                builder:
+                    (BuildContext context, AsyncSnapshot<String> snapshot) {
+                  if (snapshot.hasData) {
+                    String token = snapshot.data;
+
+                    if (user.pictureId != null) {
+                      return CircleAvatar(
+                        backgroundColor: Colors.grey[100],
+                        backgroundImage: NetworkImage(
+                          '${Constants.getBaseApi()}/picture/id/${this.user.pictureId}',
+                          headers: {
+                            HttpHeaders.authorizationHeader: 'Bearer $token'
+                          },
+                        ),
+                      );
+                    } else {
+                      return Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: Colors.grey[300],
+                          ),
+                          Icon(
+                            Icons.camera_alt_outlined,
+                            size: 30.0,
+                          ),
+                        ],
+                      );
+                    }
+                  } else {
+                    return Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.grey[300],
+                        ),
+                        Icon(
+                          Icons.camera_alt_outlined,
+                          size: 30.0,
+                        ),
+                      ],
+                    );
+                  }
+                },
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 16.0,
+          ),
+          Text(
+            user.username,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 60.0,
+              fontFamily: 'NorthCoast',
+            ),
+          ),
+        ],
+      ),
+    );
+    // );
   }
 }
