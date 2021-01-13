@@ -39,4 +39,8 @@ class Picture {
   String getThumbnail() {
     return 'thumbnail_${this.id}';
   }
+
+  bool isPending() {
+    return !this.allowed;
+  }
 }

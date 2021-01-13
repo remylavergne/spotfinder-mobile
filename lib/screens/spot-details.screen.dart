@@ -50,10 +50,17 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
   }
 
   void _bindServices() {
-    this.pictures =
-        RestService().getPaginatedSpotPictures(1, 6, widget.spot.id);
-    this.comments =
-        Repository().getPaginatedSpotComments(1, 10, widget.spot.id);
+    if (widget.spot.isPending()) {
+      this.pictures =
+          RestService().getPendingPicturesBySpotId(1, 6, widget.spot.id);
+      this.comments =
+          Repository().getPaginatedSpotComments(1, 10, widget.spot.id);
+    } else {
+      this.pictures =
+          RestService().getPaginatedSpotPictures(1, 6, widget.spot.id);
+      this.comments =
+          Repository().getPaginatedSpotComments(1, 10, widget.spot.id);
+    }
 
     // Get user profile
     Repository().getUserById(widget.spot.user).then((User user) {

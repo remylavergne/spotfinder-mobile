@@ -145,6 +145,7 @@ class _LastPicturesState extends State<LastPictures> {
         child: SquarePhotoItem(
           url: '${Constants.getBaseApi()}/picture/id/${picture.getThumbnail()}',
           size: size,
+          isPending: picture.isPending(),
         ),
       );
 

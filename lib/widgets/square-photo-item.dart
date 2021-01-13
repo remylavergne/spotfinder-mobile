@@ -7,8 +7,14 @@ import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 class SquarePhotoItem extends StatelessWidget {
   final double size;
   final String url;
+  // The item displayed awaiting validation
+  final bool isPending;
 
-  SquarePhotoItem({Key key, @required this.url, @required this.size})
+  SquarePhotoItem(
+      {Key key,
+      @required this.url,
+      @required this.size,
+      this.isPending = false})
       : super(key: key);
 
   @override
@@ -26,14 +32,27 @@ class SquarePhotoItem extends StatelessWidget {
                 Radius.circular(6.0),
               ),
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              child: Image.network(
-                url,
-                headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
-                height: size,
-                width: size,
-                fit: BoxFit.cover,
+            child: GridTile(
+              footer: this.isPending
+                  ? Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Center(
+                        child: Icon(
+                          Icons.public_off,
+                          color: Color(0xFFFF7761),
+                        ),
+                      ),
+                    )
+                  : null,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: Image.network(
+                  url,
+                  headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
+                  height: size,
+                  width: size,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           );

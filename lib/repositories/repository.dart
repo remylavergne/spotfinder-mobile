@@ -74,6 +74,11 @@ class Repository {
     return RestService().getPaginatedSpotPictures(page, limit, spotID);
   }
 
+  Future<ResultWrapper<List<Picture>>> getPendingPicturesBySpotId(
+      int page, int limit, String spotId) async {
+    return RestService().getPendingPicturesBySpotId(page, limit, spotId);
+  }
+
   Future<List<ResultWrapper<List<Spot>>>> getNewestSpotsWithUserPendingSpots(
       SearchWithPagination searchWithPagination, int page, int limit) {
     // Calls
@@ -82,6 +87,12 @@ class Repository {
     Future<ResultWrapper<List<Spot>>> pending =
         RestService().getUserPendingSpots(searchWithPagination);
     return Future.wait([pending, newestSpots]);
+  }
+
+  Future<ResultWrapper<List<Spot>>> getUserSpotsWithPending(
+      SearchWithPagination searchWithPagination, int page, int limit) {
+    return RestService()
+        .getUserSpotsWithPending(searchWithPagination, page, limit);
   }
 
   Future<ResultWrapper<List<Spot>>> search(String query) {
@@ -124,6 +135,11 @@ class Repository {
   Future<ResultWrapper<List<Picture>>> getUserPictures(
       SearchWithPagination query) {
     return RestService().getUserPictures(query);
+  }
+
+  Future<ResultWrapper<List<Picture>>> getUserPicturesWithPending(
+      SearchWithPagination query) {
+    return RestService().getUserPicturesWithPending(query);
   }
 
   Future<ResultWrapper<List<Comment>>> getUserComments(
