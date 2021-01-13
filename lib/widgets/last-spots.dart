@@ -147,6 +147,7 @@ class _LastSpotsState extends State<LastSpots> {
         child: SquarePhotoItem(
           url: '${Constants.getBaseApi()}/picture/id/${spot.getThumbnail()}',
           size: size,
+          isPending: spot.isPending(),
         ),
       );
 

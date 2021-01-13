@@ -48,10 +48,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   void _bindServices() {
     this._user = Repository().getUserById(widget.userId);
-    this._pictures = Repository()
-        .getUserPictures(new SearchWithPagination(widget.userId, 1, 9));
-    this._spots = Repository()
-        .getUserSpots(new SearchWithPagination(widget.userId, 1, 9));
+    this._pictures = Repository().getUserPicturesWithPending(
+        new SearchWithPagination(widget.userId, 1, 9));
+    this._spots = Repository().getUserSpotsWithPending(
+        new SearchWithPagination(widget.userId, 1, 9), 1, 9);
   }
 
   @override

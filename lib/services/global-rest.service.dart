@@ -232,6 +232,36 @@ class RestService {
     }
   }
 
+  Future<ResultWrapper<List<Picture>>> getPendingUserPictures(
+      SearchWithPagination query) async {
+    String token = await SharedPrefsHelper.instance.getToken();
+    final response = await http.post(
+        Constants.getBaseApi() + '/user/pending-pictures',
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
+        body: query.toJson());
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> wrapperMap = jsonDecode(response.body);
+      return ResultWrapper.fromJsonMap<Picture>(wrapperMap);
+    } else {
+      throw Exception('Failed to get user pictures');
+    }
+  }
+
+  Future<ResultWrapper<List<Picture>>> getUserPicturesWithPending(
+      SearchWithPagination query) async {
+    // Calls
+    ResultWrapper<List<Picture>> userPictures =
+        await this.getUserPictures(query);
+    ResultWrapper<List<Picture>> pending =
+        await this.getPendingUserPictures(query);
+
+    List<Picture> pictures = pending.result + userPictures.result;
+    userPictures.result = pictures;
+
+    return userPictures;
+  }
+
   Future<ResultWrapper<List<Comment>>> getUserComments(
       SearchWithPagination query) async {
     String token = await SharedPrefsHelper.instance.getToken();
@@ -291,5 +321,19 @@ class RestService {
     } else {
       throw Exception('Failed to get user pictures');
     }
+  }
+
+  Future<ResultWrapper<List<Spot>>> getUserSpotsWithPending(
+      SearchWithPagination searchWithPagination, int page, int limit) async {
+    // Calls
+    ResultWrapper<List<Spot>> userSpots =
+        await this.getUserSpots(searchWithPagination);
+    ResultWrapper<List<Spot>> pending =
+        await this.getUserPendingSpots(searchWithPagination);
+
+    List<Spot> spots = pending.result + userSpots.result;
+    userSpots.result = spots;
+
+    return userSpots;
   }
 }
