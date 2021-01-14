@@ -12,6 +12,7 @@ import 'package:spotfinder/models/dto/update-user-profile.dto.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
+import 'package:spotfinder/models/user-statistics.model.dart';
 import 'package:spotfinder/models/user.model.dart';
 import 'package:spotfinder/services/global-rest.service.dart';
 
@@ -159,5 +160,9 @@ class Repository {
 
   Future<User> updateUserProfile(UpdateUserProfile data) {
     return RestService().updateUserProfile(data);
+  }
+
+  Future<UserStatistics> getUserStatistics(SearchWithPagination data) {
+    return RestService().getUserStatistics(data);
   }
 }

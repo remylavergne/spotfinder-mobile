@@ -2,18 +2,23 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:spotfinder/constants.dart';
+import 'package:spotfinder/enums/take-picture-for.enum.dart';
 import 'package:spotfinder/generated/l10n.dart';
+import 'package:spotfinder/helpers/camera.helper.dart';
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/models/dto/search-with-pagination.dto.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
+import 'package:spotfinder/models/user-statistics.model.dart';
 import 'package:spotfinder/models/user.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/picture-full.screen.dart';
 import 'package:spotfinder/screens/pictures-list.screen.dart';
 import 'package:spotfinder/screens/spots-list.screen.dart';
+import 'package:spotfinder/screens/take-picture.screen.dart';
 import 'package:spotfinder/screens/user-profile-settings.screen.dart';
 import 'package:spotfinder/string-methods.dart';
 import 'package:spotfinder/widgets/last-pictures.dart';
@@ -104,6 +109,29 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             this._header(),
+            // Statistics
+            FutureBuilder<UserStatistics>(
+              future: Repository().getUserStatistics(
+                  new SearchWithPagination(widget.userId, 0, 0)),
+              builder: (BuildContext context,
+                  AsyncSnapshot<UserStatistics> snapshot) {
+                if (snapshot.hasData) {
+                  UserStatistics statistics = snapshot.data;
+
+                  return this._statistics(statistics);
+                } else if (snapshot.hasError) {
+                  return Container();
+                } else {
+                  return Container(
+                    width: double.maxFinite,
+                    height: 50.0,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+              },
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 24.0),
               child: LastPictures(
@@ -192,6 +220,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               onTap: () {
                 if (user.pictureId != null) {
                   this._displayUserProfilePicture(user);
+                } else {
+                  this._openTakePictureScreen(context);
                 }
               },
               child: FutureBuilder<String>(
@@ -258,5 +288,133 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       ),
     );
     // );
+  }
+
+  Widget _statistics(UserStatistics userStatistics) {
+    return Container(
+      margin: EdgeInsets.only(
+        top: 16.0,
+      ),
+      // color: Colors.grey[200],
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              children: [
+                Text(
+                  '${userStatistics.spots}',
+                  style: TextStyle(
+                    fontSize: 32.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'SPOTS',
+                  style: TextStyle(
+                    fontSize: 32.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'NorthCoast',
+                  ),
+                )
+              ],
+            ),
+          ),
+          Expanded(
+            child: Column(
+              children: [
+                Text(
+                  '${userStatistics.pictures}',
+                  style: TextStyle(
+                    fontSize: 32.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'PICTURES',
+                  style: TextStyle(
+                    fontSize: 32.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'NorthCoast',
+                  ),
+                )
+              ],
+            ),
+          ),
+          Expanded(
+            child: Column(
+              children: [
+                Text(
+                  '${userStatistics.comments}',
+                  style: TextStyle(
+                    fontSize: 32.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'COMMENTS',
+                  style: TextStyle(
+                    fontSize: 32.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'NorthCoast',
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  ///
+  /// Navigation
+  ///
+  ///
+
+  void _openTakePictureScreen(BuildContext context) {
+    CameraHelper.instance.canUse().then((bool canUse) {
+      if (canUse) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => TakePictureScreen(
+              camera: CameraHelper.instance.getCamera(),
+              takePictureFor: TakePictureFor.USER_PROFILE,
+              position: Position(),
+            ),
+          ),
+        );
+      } else {
+        this.showDialogOpenSettings(
+          context,
+          Text(S.current.permissionDialogTitle),
+          Text(S.current.cameraPermissionMandatory),
+        );
+      }
+    });
+  }
+
+  void showDialogOpenSettings(
+      BuildContext context, Widget title, Widget message) {
+    showDialog(
+        builder: (_) => AlertDialog(
+              title: title,
+              content: message,
+              actions: [
+                FlatButton(
+                  onPressed: () async {
+                    await Geolocator.openAppSettings();
+                  },
+                  child: Text(S.current.openSettings),
+                ),
+                FlatButton(
+                  onPressed: () =>
+                      Navigator.of(context, rootNavigator: true).pop(),
+                  child: Text(S.current.okay),
+                ),
+              ],
+            ),
+        barrierDismissible: false,
+        context: context);
   }
 }
