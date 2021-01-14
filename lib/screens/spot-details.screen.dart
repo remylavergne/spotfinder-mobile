@@ -151,7 +151,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                 children: [
                   Icon(
                     Icons.public_off,
-                    color: Color(0xFFFF7761),
+                    color: Color(0xCCFF7761),
                   ),
                   SizedBox(
                     width: 8.0,
@@ -159,7 +159,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                   Text(
                     'Spot awaiting validation...',
                     style: TextStyle(
-                      color: Color(0xFFFF7761),
+                      color: Color(0xCCFF7761),
                       fontWeight: FontWeight.bold,
                       fontSize: 16.0,
                     ),

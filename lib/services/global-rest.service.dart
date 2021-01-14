@@ -16,6 +16,7 @@ import 'package:spotfinder/models/dto/update-user-profile.dto.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
 import 'package:spotfinder/models/spot.model.dart';
+import 'package:spotfinder/models/user-statistics.model.dart';
 import 'package:spotfinder/models/user.model.dart';
 
 class RestService {
@@ -335,5 +336,22 @@ class RestService {
     userSpots.result = spots;
 
     return userSpots;
+  }
+
+  Future<UserStatistics> getUserStatistics(
+      SearchWithPagination searchWithPagination) async {
+    String token = await SharedPrefsHelper.instance.getToken();
+    final response = await http.post(
+        Constants.getBaseApi() + '/user/statistics',
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
+        body: searchWithPagination.toJson());
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> wrapperMap = jsonDecode(response.body);
+
+      return UserStatistics.fromJson(wrapperMap['result']);
+    } else {
+      throw Exception('Failed to get user spots');
+    }
   }
 }
