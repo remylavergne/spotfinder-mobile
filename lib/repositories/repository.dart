@@ -8,6 +8,7 @@ import 'package:spotfinder/models/dto/create-spot.dto.dart';
 import 'package:spotfinder/models/dto/login-infos.dto.dart';
 import 'package:spotfinder/models/dto/new-comment.dto.dart';
 import 'package:spotfinder/models/dto/search-with-pagination.dto.dart';
+import 'package:spotfinder/models/dto/update-password.dto.dart';
 import 'package:spotfinder/models/dto/update-user-profile.dto.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
@@ -164,5 +165,9 @@ class Repository {
 
   Future<UserStatistics> getUserStatistics(SearchWithPagination data) {
     return RestService().getUserStatistics(data);
+  }
+
+  Future<bool> updateUserPassword(UpdatePassword data) {
+    return RestService().updateUserPassword(data);
   }
 }

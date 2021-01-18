@@ -704,6 +704,36 @@ class S {
       args: [],
     );
   }
+
+  /// `Change current password`
+  String get changePassword {
+    return Intl.message(
+      'Change current password',
+      name: 'changePassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add profile picture`
+  String get addProfilePicture {
+    return Intl.message(
+      'Add profile picture',
+      name: 'addProfilePicture',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change profile picture`
+  String get changeProfilePicture {
+    return Intl.message(
+      'Change profile picture',
+      name: 'changeProfilePicture',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

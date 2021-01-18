@@ -5,13 +5,18 @@ import 'package:spotfinder/enums/take-picture-for.enum.dart';
 import 'package:spotfinder/generated/l10n.dart';
 import 'package:spotfinder/helpers/camera.helper.dart';
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
+import 'package:spotfinder/models/user.model.dart';
+import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/create-account.screen.dart';
 import 'package:spotfinder/screens/take-picture.screen.dart';
 import 'package:spotfinder/string-methods.dart';
 
 class UserProfileSettingsScreen extends StatelessWidget {
   static final String route = '/user-settings';
-  UserProfileSettingsScreen({Key key}) : super(key: key);
+
+  final User user;
+
+  UserProfileSettingsScreen({Key key, @required this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +38,20 @@ class UserProfileSettingsScreen extends StatelessWidget {
                 this._openTakePictureScreen(context);
               },
               child: Text(
-                'Add profile picture',
+                S.of(context).addProfilePicture,
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18.0,
+                ),
+              ),
+            ),
+            FlatButton(
+              onPressed: () {
+                // TODO
+                this._changeCurrentPassword(context, this.user);
+              },
+              child: Text(
+                S.of(context).changePassword,
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 18.0,
@@ -114,5 +132,36 @@ class UserProfileSettingsScreen extends StatelessWidget {
             ),
         barrierDismissible: false,
         context: context);
+  }
+
+// TODO => Finir la modal
+  void _changeCurrentPassword(BuildContext context, User user) {
+    // Open Popup
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        content: Container(
+          color: Colors.red,
+          child: Form(
+            child: Column(
+              children: [
+                Text('Current password'),
+                TextFormField(),
+                Text('New password'),
+                TextFormField(),
+                TextFormField(),
+                FlatButton(
+                  onPressed: () {
+                    debugPrint('Call Repository');
+                  },
+                  child: Text('Change'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      barrierDismissible: true,
+    );
   }
 }

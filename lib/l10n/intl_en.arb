@@ -137,6 +137,12 @@
     "noSpotYet": "No spot yet",
     "@noSpotYet": {},
     "settings": "Settings",
-    "@settings": {}
+    "@settings": {},
+    "changePassword": "Change current password",
+    "@changePassword": {},
+    "addProfilePicture": "Add profile picture",
+    "@addProfilePicture": {},
+    "changeProfilePicture": "Change profile picture",
+    "@changeProfilePicture": {}
 
   }
