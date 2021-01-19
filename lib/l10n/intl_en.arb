@@ -143,6 +143,22 @@
     "addProfilePicture": "Add profile picture",
     "@addProfilePicture": {},
     "changeProfilePicture": "Change profile picture",
-    "@changeProfilePicture": {}
-
+    "@changeProfilePicture": {},
+    "closeGeneric": "close",
+    "@closeGeneric": {},
+    "changeGeneric": "change",
+    "@changeGeneric": {},
+    "currentPassword": "current password",
+    "@currentPassword": {},
+    "newPassword": "new password",
+    "@newPassword": {},
+    "passwordDontMatch": "Passwords don't match",
+    "@passwordDontMatch": {},
+    "fieldEmptyError": "this field must don't be empty",
+    "@fieldEmptyError": {},
+    "genericSuccess": "success",
+    "@genericSuccess": {},
+    "genericError": "error",
+    "@genericError": {}
+    
   }
