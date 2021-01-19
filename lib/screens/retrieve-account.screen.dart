@@ -24,6 +24,7 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    MediaQueryData mediaQueryData = MediaQuery.of(context);
     return Scaffold(
       body: Stack(
         children: [
@@ -31,7 +32,7 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
           Container(
             margin: EdgeInsets.only(top: 35.0),
             alignment: Alignment.topCenter,
-            child: ApplicationTitle(title: S.current.spotfinder, size: 130.0),
+            child: ApplicationTitle(title: S.of(context).appTitle, size: mediaQueryData.size.width * 0.3),
           ),
           Positioned.fill(child: this._form(context)),
         ],
@@ -187,7 +188,8 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
     bool success = await Repository()
         .connectUserByCredentials(username.trim(), password.trim());
     if (success) {
-      Navigator.pushNamedAndRemoveUntil(context, FeedScreen.route, (route) => false);
+      Navigator.pushNamedAndRemoveUntil(
+          context, FeedScreen.route, (route) => false);
       // Navigator.push(
       //   context,
       //   MaterialPageRoute(

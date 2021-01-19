@@ -1,6 +1,6 @@
 {
-    "spotfinder": "SpotFinder",
-    "@spotfinder": {
+    "appTitle": "ShredMySpot",
+    "@appTitle": {
       "description": "Application name"
     },
     "chooseYourUsername": "Choisissez un pseudo",

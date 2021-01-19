@@ -124,7 +124,7 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
   AppBar _getAppBar() {
     return AppBar(
       title: ApplicationTitle(
-        title: S.current.spotfinder,
+        title: S.current.appTitle,
         size: 56.0,
         strokeSize: 2.0,
         backgroundColor: Color(0xFF011627),

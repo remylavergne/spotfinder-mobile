@@ -25,6 +25,7 @@ class _CreateAccountState extends State<CreateAccountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    MediaQueryData mediaQueryData = MediaQuery.of(context);
     return Scaffold(
       body: Stack(
         children: [
@@ -32,7 +33,7 @@ class _CreateAccountState extends State<CreateAccountScreen> {
           Container(
             margin: EdgeInsets.only(top: 35.0),
             alignment: Alignment.topCenter,
-            child: ApplicationTitle(title: S.current.spotfinder, size: 130.0),
+            child: ApplicationTitle(title: S.of(context).appTitle, size: mediaQueryData.size.width * 0.3),
           ),
           Positioned.fill(child: this._form(context)),
         ],

@@ -33,7 +33,7 @@ class _ClearPasswordScreenState extends State<ClearPasswordScreen> {
             Container(
               alignment: Alignment.topCenter,
               child: ApplicationTitle(
-                title: S.current.spotfinder,
+                title: S.of(context).appTitle,
                 size: 130.0,
               ),
             ),

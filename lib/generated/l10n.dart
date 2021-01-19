@@ -35,11 +35,11 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
-  /// `SpotFinder`
-  String get spotfinder {
+  /// `ShredMySpot`
+  String get appTitle {
     return Intl.message(
-      'SpotFinder',
-      name: 'spotfinder',
+      'ShredMySpot',
+      name: 'appTitle',
       desc: 'Application name',
       args: [],
     );

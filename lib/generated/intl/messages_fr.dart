@@ -67,7 +67,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "spotCreationSuccess" : MessageLookupByLibrary.simpleMessage("Successful creation! Automatic redirection."),
     "spotNameHint" : MessageLookupByLibrary.simpleMessage("Spot name (optional)"),
     "spotWithoutName" : MessageLookupByLibrary.simpleMessage("Spot without name"),
-    "spotfinder" : MessageLookupByLibrary.simpleMessage("SpotFinder"),
     "synchroInProgress" : MessageLookupByLibrary.simpleMessage("Synchronization in progress..."),
     "takePictureAction" : MessageLookupByLibrary.simpleMessage("Take"),
     "typeCommentHint" : MessageLookupByLibrary.simpleMessage("Type comment here"),
