@@ -12,6 +12,7 @@ import 'package:spotfinder/models/dto/login-infos.dto.dart';
 import 'package:spotfinder/models/dto/new-comment.dto.dart';
 import 'package:spotfinder/models/dto/search-dto.dto.dart';
 import 'package:spotfinder/models/dto/search-with-pagination.dto.dart';
+import 'package:spotfinder/models/dto/update-password.dto.dart';
 import 'package:spotfinder/models/dto/update-user-profile.dto.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/result-wrapper.model.dart';
@@ -352,6 +353,20 @@ class RestService {
       return UserStatistics.fromJson(wrapperMap['result']);
     } else {
       throw Exception('Failed to get user spots');
+    }
+  }
+
+  Future<bool> updateUserPassword(UpdatePassword data) async {
+    String token = await SharedPrefsHelper.instance.getToken();
+    final response = await http.post(
+        Constants.getBaseApi() + '/user/update-password',
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
+        body: data.toJson());
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

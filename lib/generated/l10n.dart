@@ -704,6 +704,116 @@ class S {
       args: [],
     );
   }
+
+  /// `Change current password`
+  String get changePassword {
+    return Intl.message(
+      'Change current password',
+      name: 'changePassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add profile picture`
+  String get addProfilePicture {
+    return Intl.message(
+      'Add profile picture',
+      name: 'addProfilePicture',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change profile picture`
+  String get changeProfilePicture {
+    return Intl.message(
+      'Change profile picture',
+      name: 'changeProfilePicture',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `close`
+  String get closeGeneric {
+    return Intl.message(
+      'close',
+      name: 'closeGeneric',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `change`
+  String get changeGeneric {
+    return Intl.message(
+      'change',
+      name: 'changeGeneric',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `current password`
+  String get currentPassword {
+    return Intl.message(
+      'current password',
+      name: 'currentPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `new password`
+  String get newPassword {
+    return Intl.message(
+      'new password',
+      name: 'newPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Passwords don't match`
+  String get passwordDontMatch {
+    return Intl.message(
+      'Passwords don\'t match',
+      name: 'passwordDontMatch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `this field must don't be empty`
+  String get fieldEmptyError {
+    return Intl.message(
+      'this field must don\'t be empty',
+      name: 'fieldEmptyError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `success`
+  String get genericSuccess {
+    return Intl.message(
+      'success',
+      name: 'genericSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `error`
+  String get genericError {
+    return Intl.message(
+      'error',
+      name: 'genericError',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
