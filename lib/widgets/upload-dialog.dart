@@ -31,7 +31,7 @@ class UploadDialog {
               SizedBox(
                 height: 16.0,
               ),
-              Text(this._alertDialogContent),
+              Center(child: Text(this._alertDialogContent)),
             ],
           ),
         );
