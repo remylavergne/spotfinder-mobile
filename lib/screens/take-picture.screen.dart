@@ -9,6 +9,7 @@ import 'package:spotfinder/enums/take-picture-for.enum.dart';
 import 'package:spotfinder/generated/l10n.dart';
 import 'package:spotfinder/helpers/camera.helper.dart';
 import 'package:spotfinder/screens/display-picture-to-create.screen.dart';
+import 'package:spotfinder/widgets/bottom-action-button.dart';
 
 class TakePictureScreen extends StatefulWidget {
   static String route = '/take-picture';
@@ -80,74 +81,26 @@ class TakePictureScreenState extends State<TakePictureScreen>
     });
 
     return Scaffold(
+      appBar: this._getAppBar(context),
       body: Container(
-        child: Stack(
-          fit: StackFit.expand,
+        child: Column(
           children: [
             this._cameraPreview(),
-            this._actionsButtons(context),
+            BottomActionButton(
+              parentContext: context,
+              text: S.of(context).takePictureAction,
+              onTap: () => this._takePicture(context),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Container _actionsButtons(BuildContext context) {
-    MediaQueryData mediaQueryData = MediaQuery.of(context);
-
-    return Container(
-      width: double.infinity,
-      margin: EdgeInsets.only(left: 16.0, right: 16.0),
-      alignment: Alignment.bottomCenter,
-      padding: EdgeInsets.only(bottom: mediaQueryData.padding.bottom + 16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            flex: 1,
-            child: Container(
-              child: FlatButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4.0),
-                ),
-                color: Color(0xFF011627),
-                textColor: Colors.white,
-                height: 56.0,
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  S.current.back,
-                  style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 16.0,
-          ),
-          Expanded(
-            flex: 1,
-            child: Container(
-              child: FlatButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4.0),
-                ),
-                color: Color(0xFF276FBF),
-                textColor: Colors.white,
-                height: 56.0,
-                onPressed: () {
-                  this._takePicture(context);
-                },
-                child: Text(
-                  S.current.takePictureAction,
-                  style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+  AppBar _getAppBar(BuildContext context) {
+    return AppBar(
+      backgroundColor: Color(0xFF011627),
+      title: Text(S.of(context).takePhoto),
     );
   }
 
@@ -157,16 +110,7 @@ class TakePictureScreenState extends State<TakePictureScreen>
       future: _initializeControllerFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return RotatedBox(
-            quarterTurns:
-                MediaQuery.of(context).orientation == Orientation.landscape
-                    ? 3
-                    : 0,
-            child: AspectRatio(
-              aspectRatio: _controller.value.aspectRatio,
-              child: CameraPreview(_controller),
-            ),
-          );
+          return Expanded(child: CameraPreview(_controller));
         } else {
           return Container(child: Center(child: CircularProgressIndicator()));
         }
