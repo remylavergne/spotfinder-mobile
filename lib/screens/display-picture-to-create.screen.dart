@@ -12,6 +12,7 @@ import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/user.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/feed.screen.dart';
+import 'package:spotfinder/widgets/bottom-action-button.dart';
 import 'package:spotfinder/widgets/upload-dialog.dart';
 
 class DisplayPictureScreen extends StatefulWidget {
@@ -53,6 +54,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   @override
   Widget build(BuildContext context) {
     this.mediaQueryData = MediaQuery.of(context);
+    double formPadding = 56.0 + this.mediaQueryData.padding.bottom;
     AppBar appBar = AppBar(
       title: Text(widget.takePictureFor == TakePictureFor.CREATION
           ? S.current.createSpotTitle
@@ -63,91 +65,80 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     return Scaffold(
       appBar: appBar,
       body: Stack(
-        fit: StackFit.expand,
         children: [
-          Container(
-            child: Image.file(
-              File(widget.imagePath),
-              fit: BoxFit.fill,
+          Column(
+            children: [
+              Expanded(
+                child: Container(
+                  width: double.maxFinite,
+                  child: Image.file(
+                    File(widget.imagePath),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              BottomActionButton(
+                parentContext: context,
+                text: widget.takePictureFor == TakePictureFor.CREATION
+                    ? S.of(context).create
+                    : S.of(context).add,
+                onTap: () => this._manageFlows(),
+              ),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+                bottom: formPadding + 16.0, right: 16.0, left: 16.0),
+            child: Form(
+              key: this._formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Visibility(
+                    visible: widget.takePictureFor == TakePictureFor.CREATION,
+                    child: TextFormField(
+                      controller: this.spotNameController,
+                      decoration: InputDecoration(
+                        hintStyle: TextStyle(
+                          color: Color(0xFF989898),
+                          fontSize: 18.0,
+                        ),
+                        hintText: S.current.spotNameHint,
+                        fillColor: Colors.white,
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                      validator: (value) => null,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          this._actionsButtons(context),
         ],
       ),
     );
   }
 
-  Widget _actionsButtons(BuildContext context) {
-    return Container(
-      // color: Colors.red[200],
-      width: double.infinity,
-      margin: EdgeInsets.only(left: 16.0, right: 16.0),
-      // alignment: Alignment.bottomCenter,
-      padding: EdgeInsets.only(bottom: mediaQueryData.padding.bottom + 16.0),
-      child: Form(
-        key: this._formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Visibility(
-              visible: widget.takePictureFor == TakePictureFor.CREATION,
-              child: TextFormField(
-                controller: this.spotNameController,
-                decoration: InputDecoration(
-                  hintStyle: TextStyle(
-                    color: Color(0xFF989898),
-                    fontSize: 18.0,
-                  ),
-                  hintText: S.current.spotNameHint,
-                  fillColor: Colors.white,
-                  filled: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(4.0),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-                validator: (value) => null,
-              ),
-            ),
-            Container(
-              width: 180.0,
-              margin: EdgeInsets.only(top: 16.0),
-              child: FlatButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4.0),
-                ),
-                color: Color(0xFF276FBF),
-                textColor: Colors.white,
-                height: 56.0,
-                onPressed: () {
-                  if (this._formKey.currentState.validate()) {
-                    switch (widget.takePictureFor) {
-                      case TakePictureFor.CREATION:
-                        this._spotCreationFlow(context);
-                        break;
-                      case TakePictureFor.SPOT:
-                        this._addPictureFlow(context);
-                        break;
-                      case TakePictureFor.USER_PROFILE:
-                        this._addProfilePictureFlow(context);
-                        break;
-                      default:
-                        throw Exception('Unknown flow picture');
-                    }
-                  }
-                },
-                child: Text(
-                  widget.takePictureFor == TakePictureFor.CREATION
-                      ? S.current.create
-                      : S.current.add, // todo: update texte
-                  style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  void _manageFlows() {
+    if (this._formKey.currentState.validate()) {
+      switch (widget.takePictureFor) {
+        case TakePictureFor.CREATION:
+          this._spotCreationFlow(context);
+          break;
+        case TakePictureFor.SPOT:
+          this._addPictureFlow(context);
+          break;
+        case TakePictureFor.USER_PROFILE:
+          this._addProfilePictureFlow(context);
+          break;
+        default:
+          throw Exception('Unknown flow picture');
+      }
+    }
   }
 
   /// Business
