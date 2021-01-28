@@ -19,7 +19,6 @@ class BottomActionButton extends StatelessWidget {
 
     return Container(
       alignment: Alignment.bottomCenter,
-      color: Color(0xFF011627),
       child: SizedBox(
         width: double.maxFinite,
         child: FlatButton(
