@@ -159,6 +159,8 @@
     "genericSuccess": "success",
     "@genericSuccess": {},
     "genericError": "error",
-    "@genericError": {}
+    "@genericError": {},
+    "takePhoto": "Take a photo",
+    "@takePhoto": {}
     
   }

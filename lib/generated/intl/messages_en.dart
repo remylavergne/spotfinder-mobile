@@ -94,6 +94,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "spotNameHint" : MessageLookupByLibrary.simpleMessage("Spot name (optional)"),
     "spotWithoutName" : MessageLookupByLibrary.simpleMessage("Spot without name"),
     "synchroInProgress" : MessageLookupByLibrary.simpleMessage("Synchronization in progress..."),
+    "takePhoto" : MessageLookupByLibrary.simpleMessage("Take a photo"),
     "takePictureAction" : MessageLookupByLibrary.simpleMessage("Take"),
     "typeCommentHint" : MessageLookupByLibrary.simpleMessage("Type comment here"),
     "userSpotsTitle" : MessageLookupByLibrary.simpleMessage("User\'s spots"),
