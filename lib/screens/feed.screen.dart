@@ -45,78 +45,11 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
 
     return Scaffold(
       appBar: this._getAppBar(),
-      body: Container(
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            // Background view
-            Container(
-              child: Column(
-                children: [
-                  Expanded(
-                    child: TabBarView(
-                      controller: this.tabController,
-                      children: [
-                        FutureBuilder<String>(
-                            future: SharedPrefsHelper.instance.getId(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<String> snapshot) {
-                              this._currentUserId = snapshot.data;
-                              this._newest = Repository()
-                                  .getNewestSpotsWithUserPendingSpots(
-                                      new SearchWithPagination(
-                                          this._currentUserId, 1, 20),
-                                      1,
-                                      50);
-
-                              return this._displayNewestSpots(mediaQueryData);
-                            }),
-                        FutureBuilder<Position>(
-                            future:
-                                GeolocationHelper.instance.getCurrentPosition(),
-                            builder:
-                                (BuildContext context, AsyncSnapshot snapshot) {
-                              if (snapshot.hasData) {
-                                Position position = snapshot.data;
-
-                                this._nearest = Repository()
-                                    .getNearestPaginatedSpots(position, 1, 20);
-
-                                return this._displayNearestSpots(
-                                    mediaQueryData, position);
-                              }
-                              if (snapshot.hasError) {
-                                return this._retry(
-                                    () => GeolocationHelper.instance
-                                            .getCurrentPosition()
-                                            .then((Position position) {
-                                          if (position != null) {
-                                            this._refreshNearestSpots(position);
-                                          }
-                                        }).catchError((e) => debugPrint(e)),
-                                    S.current.errorGetSpots);
-                              } else {
-                                return Container(
-                                  child: Center(
-                                    child: Container(
-                                      width: 50.0,
-                                      height: 50.0,
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  ),
-                                );
-                              }
-                            }),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // Button to create
-            this._createButton(mediaQueryData),
-          ],
-        ),
+      body: Column(
+        children: [
+          this._getBody(context),
+          this._createButton(mediaQueryData),
+        ],
       ),
     );
   }
@@ -162,6 +95,61 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
               showSearch(context: context, delegate: Search());
             }),
       ],
+    );
+  }
+
+  Widget _getBody(BuildContext context) {
+    MediaQueryData mediaQueryData = MediaQuery.of(context);
+    return Expanded(
+      child: TabBarView(
+        controller: this.tabController,
+        children: [
+          FutureBuilder<String>(
+              future: SharedPrefsHelper.instance.getId(),
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                this._currentUserId = snapshot.data;
+                this._newest = Repository().getNewestSpotsWithUserPendingSpots(
+                    new SearchWithPagination(this._currentUserId, 1, 20),
+                    1,
+                    50);
+
+                return this._displayNewestSpots(mediaQueryData);
+              }),
+          FutureBuilder<Position>(
+              future: GeolocationHelper.instance.getCurrentPosition(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  Position position = snapshot.data;
+
+                  this._nearest =
+                      Repository().getNearestPaginatedSpots(position, 1, 20);
+
+                  return this._displayNearestSpots(mediaQueryData, position);
+                }
+                if (snapshot.hasError) {
+                  return this._retry(
+                      () => GeolocationHelper.instance
+                              .getCurrentPosition()
+                              .then((Position position) {
+                            if (position != null) {
+                              this._refreshNearestSpots(position);
+                            }
+                          }).catchError((e) => debugPrint(e)),
+                      S.current.errorGetSpots);
+                } else {
+                  return Container(
+                    child: Center(
+                      child: Container(
+                        width: 50.0,
+                        height: 50.0,
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  );
+                }
+              }),
+        ],
+      ),
     );
   }
 
@@ -448,23 +436,25 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
   Container _createButton(MediaQueryData mediaQueryData) {
     return Container(
       alignment: Alignment.bottomCenter,
-      width: 180.0,
-      margin: EdgeInsets.only(bottom: mediaQueryData.padding.bottom + 16.0),
-      child: FlatButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4.0),
-        ),
-        color: Color(0xFF148F12),
-        textColor: Colors.white,
-        height: 56.0,
-        onPressed: () async {
-          this.createSpotThrottling.throttle(() {
-            this._startCreation(context);
-          });
-        },
-        child: Text(
-          S.current.create,
-          style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
+      color: Color(0xFF011627),
+      child: SizedBox(
+        width: double.maxFinite,
+        child: FlatButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4.0),
+          ),
+          color: Color(0xFF011627),
+          textColor: Colors.white,
+          height: 56.0 + mediaQueryData.padding.bottom,
+          onPressed: () async {
+            this.createSpotThrottling.throttle(() {
+              this._startCreation(context);
+            });
+          },
+          child: Text(
+            S.current.create,
+            style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
+          ),
         ),
       ),
     );
