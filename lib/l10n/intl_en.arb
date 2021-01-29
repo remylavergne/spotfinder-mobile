@@ -161,6 +161,7 @@
     "genericError": "error",
     "@genericError": {},
     "takePhoto": "Take a photo",
-    "@takePhoto": {}
-    
+    "@takePhoto": {},
+    "setMyOwnPassword": "I want to use my own password!",
+    "@setMyOwnPassword": {}
   }

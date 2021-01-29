@@ -824,6 +824,16 @@ class S {
       args: [],
     );
   }
+
+  /// `I want to use my own password!`
+  String get setMyOwnPassword {
+    return Intl.message(
+      'I want to use my own password!',
+      name: 'setMyOwnPassword',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
