@@ -19,28 +19,28 @@ class PictureFullScreen extends StatelessWidget {
         title: Text(S.current.photoTitle),
         backgroundColor: Color(0xFF011627),
       ),
-      body: FutureBuilder<String>(
-          future: SharedPrefsHelper.instance.getToken(),
-          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-            if (snapshot.hasData) {
-              String token = snapshot.data;
-              return Container(
-                width: double.maxFinite,
-                height: double.maxFinite,
-                child: Image.network(
-                  '${Constants.getBaseApi()}/picture/id/${picture.id}',
-                  headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
-                  fit: BoxFit.fill,
-                ),
-              );
-            } else {
-              return Container(
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            }
-          }),
+      body: Container(
+        child: FutureBuilder<String>(
+            future: SharedPrefsHelper.instance.getToken(),
+            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+              if (snapshot.hasData) {
+                String token = snapshot.data;
+                return SizedBox.expand(
+                  child: Image.network(
+                    '${Constants.getBaseApi()}/picture/id/${picture.id}',
+                    headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
+                    fit: BoxFit.cover,
+                  ),
+                );
+              } else {
+                return Container(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+            }),
+      ),
     );
   }
 }
