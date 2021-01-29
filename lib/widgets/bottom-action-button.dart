@@ -22,6 +22,9 @@ class BottomActionButton extends StatelessWidget {
       child: SizedBox(
         width: double.maxFinite,
         child: FlatButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
           color: Color(0xFF011627),
           textColor: Colors.white,
           height: 56.0 + mediaQueryData.padding.bottom,
