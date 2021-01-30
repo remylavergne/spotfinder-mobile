@@ -287,6 +287,7 @@ class _ClearPasswordScreenState extends State<ClearPasswordScreen> {
                       await Future.delayed(Duration(seconds: 3)).then((_) {
                         Navigator.of(context).pop();
                         this.clearPasswordDialog();
+                        this._navigateToFeedScreen();
                       });
                     } else {
                       this.setDisplayPasswordUpdateResult(success, true);
