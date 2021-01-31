@@ -107,13 +107,26 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
           FutureBuilder<String>(
               future: SharedPrefsHelper.instance.getId(),
               builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                this._currentUserId = snapshot.data;
-                this._newest = Repository().getNewestSpotsWithUserPendingSpots(
-                    new SearchWithPagination(this._currentUserId, 1, 20),
-                    1,
-                    50);
+                if (snapshot.hasData) {
+                  this._currentUserId = snapshot.data;
+                  this._newest = Repository()
+                      .getNewestSpotsWithUserPendingSpots(
+                          new SearchWithPagination(this._currentUserId, 1, 20),
+                          1,
+                          50);
 
-                return this._displayNewestSpots(mediaQueryData);
+                  return this._displayNewestSpots(mediaQueryData);
+                } else {
+                  return Container(
+                    child: Center(
+                      child: Container(
+                        width: 50.0,
+                        height: 50.0,
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  );
+                }
               }),
           FutureBuilder<Position>(
               future: GeolocationHelper.instance.getCurrentPosition(),
