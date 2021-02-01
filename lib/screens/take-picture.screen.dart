@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:spotfinder/enums/take-picture-for.enum.dart';
 import 'package:spotfinder/generated/l10n.dart';
 import 'package:spotfinder/helpers/camera.helper.dart';
@@ -37,8 +35,6 @@ class TakePictureScreenState extends State<TakePictureScreen>
 
   @override
   void initState() {
-    // Portrait mode only
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _controller = CameraController(widget.camera, ResolutionPreset.high,
@@ -66,8 +62,6 @@ class TakePictureScreenState extends State<TakePictureScreen>
   void dispose() {
     _controller.dispose();
     WidgetsBinding.instance.removeObserver(this);
-    // Allow all orientations
-    SystemChrome.setPreferredOrientations([]);
     super.dispose();
   }
 
@@ -83,13 +77,22 @@ class TakePictureScreenState extends State<TakePictureScreen>
     return Scaffold(
       appBar: this._getAppBar(context),
       body: Container(
+        // width: double.infinity,
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           children: [
-            this._cameraPreview(),
-            BottomActionButton(
-              parentContext: context,
-              text: S.of(context).takePictureAction,
-              onTap: () => this._takePicture(context),
+            GestureDetector(
+              onDoubleTap: () {
+                debugPrint('Switch camera');
+              },
+              child: this._cameraPreview(),
+            ),
+            Expanded(
+              child: BottomActionButton(
+                parentContext: context,
+                text: S.of(context).takePictureAction,
+                onTap: () => this.onTakePictureButtonPressed(context),
+              ),
             ),
           ],
         ),
@@ -110,7 +113,7 @@ class TakePictureScreenState extends State<TakePictureScreen>
       future: _initializeControllerFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return Expanded(child: CameraPreview(_controller));
+          return CameraPreview(_controller);
         } else {
           return Container(child: Center(child: CircularProgressIndicator()));
         }
@@ -118,30 +121,39 @@ class TakePictureScreenState extends State<TakePictureScreen>
     );
   }
 
-  Future<void> _takePicture(BuildContext ctx) async {
-    try {
-      await _initializeControllerFuture;
-
-      final path = join(
-        (await getTemporaryDirectory()).path,
-        '${DateTime.now()}.png',
-      );
-
-      await _controller.takePicture(path);
-
+  void onTakePictureButtonPressed(BuildContext context) {
+    takePicture().then((XFile file) {
       Navigator.push(
-        ctx,
+        context,
         MaterialPageRoute(
           builder: (context) => DisplayPictureScreen(
-            imagePath: path,
+            imagePath: file.path,
             position: widget.position,
             takePictureFor: widget.takePictureFor,
             id: widget.id,
           ),
         ),
       );
-    } catch (e) {
-      print(e);
+    });
+  }
+
+  Future<XFile> takePicture() async {
+    if (!_controller.value.isInitialized) {
+      // showInSnackBar('Error: select a camera first.');
+      return null;
+    }
+
+    if (_controller.value.isTakingPicture) {
+      // A capture is already pending, do nothing.
+      return null;
+    }
+
+    try {
+      XFile file = await _controller.takePicture();
+      return file;
+    } on CameraException catch (e) {
+      _showCameraException(e);
+      return null;
     }
   }
 
