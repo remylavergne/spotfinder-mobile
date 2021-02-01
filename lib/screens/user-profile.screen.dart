@@ -44,6 +44,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   User user;
   Future<ResultWrapper<List<Picture>>> _pictures;
   Future<ResultWrapper<List<Spot>>> _spots;
+  Future<UserStatistics> _userStatistics;
 
   @override
   void initState() {
@@ -57,6 +58,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         new SearchWithPagination(widget.userId, 1, 9));
     this._spots = Repository().getUserSpotsWithPending(
         new SearchWithPagination(widget.userId, 1, 9), 1, 9);
+    this._userStatistics = Repository()
+        .getUserStatistics(new SearchWithPagination(widget.userId, 0, 0));
   }
 
   @override
@@ -111,8 +114,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             this._header(),
             // Statistics
             FutureBuilder<UserStatistics>(
-              future: Repository().getUserStatistics(
-                  new SearchWithPagination(widget.userId, 0, 0)),
+              future: this._userStatistics,
               builder: (BuildContext context,
                   AsyncSnapshot<UserStatistics> snapshot) {
                 if (snapshot.hasData) {

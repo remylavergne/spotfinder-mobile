@@ -40,6 +40,8 @@ class SpotDetailsScreen extends StatefulWidget {
 class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
   Future<ResultWrapper<List<Picture>>> pictures;
   Future<ResultWrapper<List<Comment>>> comments;
+  Future<String> _token;
+  Future<Position> _position;
   User _user;
   String _username = '';
 
@@ -61,6 +63,9 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
       this.comments =
           Repository().getPaginatedSpotComments(1, 10, widget.spot.id);
     }
+
+    this._token = SharedPrefsHelper.instance.getToken();
+    this._position = GeolocationHelper.instance.getCurrentPosition();
 
     // Get user profile
     Repository().getUserById(widget.spot.user).then((User user) {
@@ -123,7 +128,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
       child: Stack(
         children: [
           FutureBuilder<String>(
-            future: SharedPrefsHelper.instance.getToken(),
+            future: this._token,
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
               if (snapshot.hasData) {
                 String token = snapshot.data;
@@ -217,7 +222,7 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
               margin: EdgeInsets.only(top: 8.0),
               child: Text(spot.getSpotAddress())),
           FutureBuilder<Position>(
-              future: GeolocationHelper.instance.getCurrentPosition(),
+              future: this._position,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   Position userPosition = snapshot.data;

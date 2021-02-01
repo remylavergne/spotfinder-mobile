@@ -30,6 +30,13 @@ class LastPictures extends StatefulWidget {
 
 class _LastPicturesState extends State<LastPictures> {
   bool _canDisplayAll = false;
+  Future<ResultWrapper<List<Picture>>> _pictures;
+
+  @override
+  void initState() {
+    super.initState();
+    this._pictures = this.widget.fetchPicturesService();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +100,7 @@ class _LastPicturesState extends State<LastPictures> {
             color: Colors.grey,
           ),
           FutureBuilder<ResultWrapper<List<Picture>>>(
-            future: this.widget.fetchPicturesService(),
+            future: this._pictures,
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
                 ResultWrapper<List<Picture>> picturesWrapper = snapshot.data;

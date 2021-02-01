@@ -30,6 +30,13 @@ class LastSpots extends StatefulWidget {
 
 class _LastSpotsState extends State<LastSpots> {
   bool _canDisplayAll = false;
+  Future<ResultWrapper<List<Spot>>> _spots;
+
+  @override
+  void initState() {
+    super.initState();
+    this._spots = this.widget.fetchSpotsService();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,15 +100,16 @@ class _LastSpotsState extends State<LastSpots> {
             color: Colors.grey,
           ),
           FutureBuilder<ResultWrapper<List<Spot>>>(
-            future: this.widget.fetchSpotsService(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
+            future: this._spots,
+            builder: (BuildContext context,
+                AsyncSnapshot<ResultWrapper<List<Spot>>> snapshot) {
               if (snapshot.hasData) {
                 ResultWrapper<List<Spot>> spotWrapper = snapshot.data;
                 List<Spot> spots = spotWrapper.result;
                 return this._generateSpotsWidgets(context, spots, pictureSize);
               } else if (snapshot.hasError) {
                 return Retry(
-                  retryCalled: () => this.widget.fetchSpotsService(),
+                  retryCalled: () => this._spots,
                 );
               } else {
                 return Padding(
