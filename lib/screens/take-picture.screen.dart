@@ -77,9 +77,7 @@ class TakePictureScreenState extends State<TakePictureScreen>
     return Scaffold(
       appBar: this._getAppBar(context),
       body: Container(
-        // width: double.infinity,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
+        child: Stack(
           children: [
             GestureDetector(
               onDoubleTap: () {
@@ -87,12 +85,10 @@ class TakePictureScreenState extends State<TakePictureScreen>
               },
               child: this._cameraPreview(),
             ),
-            Expanded(
-              child: BottomActionButton(
-                parentContext: context,
-                text: S.of(context).takePictureAction,
-                onTap: () => this.onTakePictureButtonPressed(context),
-              ),
+            BottomActionButton(
+              parentContext: context,
+              text: S.of(context).takePictureAction,
+              onTap: () => this.onTakePictureButtonPressed(context),
             ),
           ],
         ),
