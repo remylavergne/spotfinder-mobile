@@ -26,21 +26,41 @@ class FeedScreen extends StatefulWidget {
   _FeedState createState() => _FeedState();
 }
 
-class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
+class _FeedState extends State<FeedScreen>
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   TabController tabController;
   Throttling createSpotThrottling = Throttling(Duration(seconds: 2));
   Future<List<ResultWrapper<List<Spot>>>> _newest;
   Future<ResultWrapper<List<Spot>>> _nearest;
-  String _currentUserId;
+  Position _position;
 
   @override
   void initState() {
-    this.tabController = TabController(length: 2, vsync: this);
     super.initState();
+    this.tabController = TabController(length: 2, vsync: this);
+    this._newest = SharedPrefsHelper.instance.getId().then((String id) =>
+        Repository().getNewestSpotsWithUserPendingSpots(
+            new SearchWithPagination(id, 1, 200), 1, 200));
+    this._nearest = GeolocationHelper.instance
+        .getCurrentPosition()
+        .then((Position position) {
+      this._position = position;
+      return Repository().getNearestPaginatedSpots(position, 1, 200);
+    });
+  }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     return Scaffold(
@@ -104,17 +124,10 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
       child: TabBarView(
         controller: this.tabController,
         children: [
-          FutureBuilder<String>(
-              future: SharedPrefsHelper.instance.getId(),
-              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+          FutureBuilder(
+              future: this._newest,
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
-                  this._currentUserId = snapshot.data;
-                  this._newest = Repository()
-                      .getNewestSpotsWithUserPendingSpots(
-                          new SearchWithPagination(this._currentUserId, 1, 20),
-                          1,
-                          50);
-
                   return this._displayNewestSpots(mediaQueryData);
                 } else {
                   return Container(
@@ -128,27 +141,52 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
                   );
                 }
               }),
-          FutureBuilder<Position>(
-              future: GeolocationHelper.instance.getCurrentPosition(),
+          FutureBuilder(
+              future: this._nearest,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
-                  Position position = snapshot.data;
+                  ResultWrapper<List<Spot>> wrapper = snapshot.data;
+                  List<Spot> spots = wrapper.result;
 
-                  this._nearest =
-                      Repository().getNearestPaginatedSpots(position, 1, 20);
-
-                  return this._displayNearestSpots(mediaQueryData, position);
-                }
-                if (snapshot.hasError) {
+                  if (spots.isEmpty) {
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        this._refreshNearestSpots(this._position);
+                      },
+                      child: Container(
+                        child: Center(
+                          child: Text('No data'),
+                        ),
+                      ),
+                    );
+                  } else {
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        this._refreshNearestSpots(this._position);
+                      },
+                      child: GridView.builder(
+                        itemCount: spots.length,
+                        padding: EdgeInsets.only(top: 0),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3),
+                        itemBuilder: (BuildContext context, int index) =>
+                            GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        SpotDetailsScreen(spot: spots[index])));
+                          },
+                          child: this._getSpotWidget(spots[index]),
+                        ),
+                      ),
+                    );
+                  }
+                } else if (snapshot.hasError) {
                   return this._retry(
-                      () => GeolocationHelper.instance
-                              .getCurrentPosition()
-                              .then((Position position) {
-                            if (position != null) {
-                              this._refreshNearestSpots(position);
-                            }
-                          }).catchError((e) => debugPrint(e)),
-                      S.current.errorGetSpots);
+                      () => this._refreshNearestSpots(this._position),
+                      S.current.errorPermissionNearestSpots);
                 } else {
                   return Container(
                     child: Center(
@@ -349,76 +387,16 @@ class _FeedState extends State<FeedScreen> with SingleTickerProviderStateMixin {
 
   void _refreshNewestSpots() {
     setState(() {
-      this._newest = Repository().getNewestSpotsWithUserPendingSpots(
-          new SearchWithPagination(this._currentUserId, 1, 20), 1, 50);
+      this._newest = SharedPrefsHelper.instance.getId().then((String id) =>
+          Repository().getNewestSpotsWithUserPendingSpots(
+              new SearchWithPagination(id, 1, 200), 1, 200));
     });
   }
 
   void _refreshNearestSpots(Position position) {
     setState(() {
-      this._nearest = Repository().getNearestPaginatedSpots(position, 1, 20);
+      this._nearest = Repository().getNearestPaginatedSpots(position, 1, 200);
     });
-  }
-
-  FutureBuilder<ResultWrapper<List<Spot>>> _displayNearestSpots(
-      MediaQueryData mediaQuery, Position position) {
-    return FutureBuilder<ResultWrapper<List<Spot>>>(
-        future: this._nearest,
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData) {
-            ResultWrapper<List<Spot>> wrapper = snapshot.data;
-            List<Spot> spots = wrapper.result;
-
-            if (spots.isEmpty) {
-              return RefreshIndicator(
-                onRefresh: () async {
-                  this._refreshNearestSpots(position);
-                },
-                child: Container(
-                  child: Center(
-                    child: Text('No data'),
-                  ),
-                ),
-              );
-            } else {
-              return RefreshIndicator(
-                onRefresh: () async {
-                  this._refreshNearestSpots(position);
-                },
-                child: GridView.builder(
-                  itemCount: spots.length,
-                  padding: EdgeInsets.only(top: 0),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3),
-                  itemBuilder: (BuildContext context, int index) =>
-                      GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  SpotDetailsScreen(spot: spots[index])));
-                    },
-                    child: this._getSpotWidget(spots[index]),
-                  ),
-                ),
-              );
-            }
-          } else if (snapshot.hasError) {
-            return this._retry(() => this._refreshNearestSpots(position),
-                S.current.errorPermissionNearestSpots);
-          } else {
-            return Container(
-              child: Center(
-                child: Container(
-                  width: 50.0,
-                  height: 50.0,
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-            );
-          }
-        });
   }
 
   GridTile _getSpotWidget(Spot spot) {
