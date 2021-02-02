@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:spotfinder/constants.dart';
+import 'package:spotfinder/enums/camera-type.enum.dart';
 import 'package:spotfinder/enums/take-picture-for.enum.dart';
 import 'package:spotfinder/generated/l10n.dart';
 import 'package:spotfinder/helpers/camera.helper.dart';
@@ -29,11 +30,8 @@ class UserProfileScreen extends StatefulWidget {
   static String route = '/user-profile';
 
   final String userId;
-  final bool isCurrentUser;
 
-  UserProfileScreen(
-      {Key key, @required this.userId, @required this.isCurrentUser})
-      : super(key: key);
+  UserProfileScreen({Key key, @required this.userId}) : super(key: key);
 
   @override
   _UserProfileScreenState createState() => _UserProfileScreenState();
@@ -45,11 +43,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   Future<ResultWrapper<List<Picture>>> _pictures;
   Future<ResultWrapper<List<Spot>>> _spots;
   Future<UserStatistics> _userStatistics;
+  bool _isCurrentUser = false;
 
   @override
   void initState() {
-    this._bindServices();
     super.initState();
+    this._bindServices();
   }
 
   void _bindServices() {
@@ -60,6 +59,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         new SearchWithPagination(widget.userId, 1, 9), 1, 9);
     this._userStatistics = Repository()
         .getUserStatistics(new SearchWithPagination(widget.userId, 0, 0));
+    SharedPrefsHelper.instance.getId().then((String id) {
+      setState(() {
+        this._isCurrentUser = id == widget.userId;
+      });
+    });
   }
 
   @override
@@ -70,7 +74,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         backgroundColor: Color(0xFF011627),
         actions: [
           Visibility(
-            visible: widget.isCurrentUser,
+            visible: this._isCurrentUser,
             child: IconButton(
               icon: Icon(Icons.settings),
               onPressed: () => this._openSettingsScreen(),
@@ -224,7 +228,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               onTap: () {
                 if (user.pictureId != null) {
                   this._displayUserProfilePicture(user);
-                } else {
+                } else if (this._isCurrentUser) {
+                  this._openTakePictureScreen(context);
+                }
+              },
+              onLongPress: () {
+                if (this._isCurrentUser) {
                   this._openTakePictureScreen(context);
                 }
               },
@@ -382,9 +391,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           context,
           MaterialPageRoute(
             builder: (BuildContext context) => TakePictureScreen(
-              camera: CameraHelper.instance.getCamera(),
               takePictureFor: TakePictureFor.USER_PROFILE,
               position: Position(),
+              cameraLocation: CameraLocation.FRONT,
             ),
           ),
         );

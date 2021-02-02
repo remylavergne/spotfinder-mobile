@@ -1,0 +1,4 @@
+enum CameraLocation {
+  FRONT,
+  BACK
+}

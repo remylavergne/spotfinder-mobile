@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:spotfinder/enums/camera-type.enum.dart';
 import 'package:spotfinder/enums/take-picture-for.enum.dart';
 import 'package:spotfinder/generated/l10n.dart';
 import 'package:spotfinder/helpers/camera.helper.dart';
@@ -110,9 +111,9 @@ class _UserProfileSettingsScreenState extends State<UserProfileSettingsScreen> {
           context,
           MaterialPageRoute(
             builder: (BuildContext context) => TakePictureScreen(
-              camera: CameraHelper.instance.getCamera(),
               takePictureFor: TakePictureFor.USER_PROFILE,
               position: Position(),
+              cameraLocation: CameraLocation.FRONT,
             ),
           ),
         );

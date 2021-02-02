@@ -102,10 +102,8 @@ class _FeedState extends State<FeedScreen>
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (BuildContext context) => UserProfileScreen(
-                    userId: currentUserId,
-                    isCurrentUser: true,
-                  ),
+                  builder: (BuildContext context) =>
+                      UserProfileScreen(userId: currentUserId),
                 ),
               );
             }),
@@ -233,7 +231,6 @@ class _FeedState extends State<FeedScreen>
       pageBuilder: (context, animation, secondaryAnimation) =>
           TakePictureScreen(
         position: position,
-        camera: CameraHelper.instance.getCamera(),
         takePictureFor: TakePictureFor.CREATION,
       ),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
