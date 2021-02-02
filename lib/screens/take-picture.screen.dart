@@ -95,7 +95,10 @@ class TakePictureScreenState extends State<TakePictureScreen>
           children: [
             Center(
               child: Text(
-                this._cameraSwipes % 2 == 0 ? '🤡' : '🤓',
+                widget.takePictureFor == TakePictureFor.USER_PROFILE &&
+                        this._cameraSwipes % 2 == 0
+                    ? '🤡'
+                    : '',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 30.0,
