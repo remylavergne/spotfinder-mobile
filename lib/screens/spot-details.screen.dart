@@ -198,16 +198,12 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
               GestureDetector(
-                onTap: () async {
-                  bool isCurrentUser = await SharedPrefsHelper.instance
-                      .isCurrentUser(this._user.id);
+                onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (BuildContext context) => UserProfileScreen(
-                        userId: this._user.id,
-                        isCurrentUser: isCurrentUser,
-                      ),
+                      builder: (BuildContext context) =>
+                          UserProfileScreen(userId: this._user.id),
                     ),
                   );
                 },
@@ -407,7 +403,6 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
           context,
           MaterialPageRoute(
             builder: (BuildContext context) => TakePictureScreen(
-              camera: CameraHelper.instance.getCamera(),
               position: GeolocationHelper.instance.getPositionFromSpot(spot),
               takePictureFor: TakePictureFor.SPOT,
               id: spot.id,

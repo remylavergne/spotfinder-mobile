@@ -22,15 +22,11 @@ class CommentWidget extends StatelessWidget {
             ListTile(
               tileColor: Color(0xAAE5E5E5),
               onTap: () async {
-                bool isCurrentUser = await SharedPrefsHelper.instance
-                    .isCurrentUser(this.comment.userId);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (BuildContext context) => UserProfileScreen(
-                      userId: this.comment.userId,
-                      isCurrentUser: isCurrentUser,
-                    ),
+                    builder: (BuildContext context) =>
+                        UserProfileScreen(userId: this.comment.userId),
                   ),
                 );
               },

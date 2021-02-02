@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:spotfinder/enums/camera-type.enum.dart';
 import 'package:spotfinder/enums/take-picture-for.enum.dart';
 import 'package:spotfinder/generated/l10n.dart';
 import 'package:spotfinder/helpers/camera.helper.dart';
@@ -10,18 +11,18 @@ import 'package:spotfinder/widgets/bottom-action-button.dart';
 
 class TakePictureScreen extends StatefulWidget {
   static String route = '/take-picture';
-  final CameraDescription camera;
+  final CameraLocation cameraLocation;
   final Position position;
   final TakePictureFor takePictureFor;
   final String id;
 
-  const TakePictureScreen(
-      {Key key,
-      @required this.camera,
-      @required this.position,
-      @required this.takePictureFor,
-      this.id})
-      : super(key: key);
+  const TakePictureScreen({
+    Key key,
+    @required this.position,
+    @required this.takePictureFor,
+    this.id,
+    this.cameraLocation = CameraLocation.BACK,
+  }) : super(key: key);
 
   @override
   TakePictureScreenState createState() => TakePictureScreenState();
@@ -31,18 +32,28 @@ class TakePictureScreenState extends State<TakePictureScreen>
     with WidgetsBindingObserver {
   CameraController _controller;
   Future<void> _initializeControllerFuture;
-  int cameraSwipes = 0;
+  int _cameraSwipes = 0;
   CameraDescription _activeCamera;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _controller = CameraController(widget.camera, ResolutionPreset.high,
+    switch (widget.cameraLocation) {
+      case CameraLocation.FRONT:
+        this._cameraSwipes = 1;
+        break;
+      case CameraLocation.BACK:
+      default:
+        this._cameraSwipes = 0;
+        break;
+    }
+    this._activeCamera = CameraHelper.instance.getCamera(this._cameraSwipes);
+
+    _controller = CameraController(this._activeCamera, ResolutionPreset.high,
         enableAudio: false);
 
     _initializeControllerFuture = _controller.initialize();
-    this._activeCamera = CameraHelper.instance.getCamera(this.cameraSwipes);
   }
 
   @override
@@ -84,7 +95,7 @@ class TakePictureScreenState extends State<TakePictureScreen>
           children: [
             Center(
               child: Text(
-                this.cameraSwipes % 2 == 0 ? '🤡' : '🤓',
+                this._cameraSwipes % 2 == 0 ? '🤡' : '🤓',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 30.0,
@@ -95,13 +106,13 @@ class TakePictureScreenState extends State<TakePictureScreen>
               children: [
                 GestureDetector(
                   onDoubleTap: () {
-                    if (this.cameraSwipes % 2 == 0) {
+                    if (this._cameraSwipes % 2 == 0) {
                       this._activeCamera = CameraHelper.instance.getCamera(1);
                     } else {
                       this._activeCamera = CameraHelper.instance.getCamera(0);
                     }
 
-                    this.cameraSwipes++;
+                    this._cameraSwipes++;
                     this.onNewCameraSelected(this._activeCamera);
                   },
                   child: this._cameraPreview(),

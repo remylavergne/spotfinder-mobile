@@ -222,6 +222,6 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   void _returnToProfile(BuildContext context) async {
     await Future.delayed(Duration(seconds: 2));
-    NavigatorHelper.instance.popTimes(3, context);
+    NavigatorHelper.instance.popTimes(2, context);
   }
 }
