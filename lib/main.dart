@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:spotfinder/generated/l10n.dart';
 import 'package:spotfinder/helpers/camera.helper.dart';
@@ -19,6 +20,8 @@ import 'package:spotfinder/screens/user-profile.screen.dart';
 import 'helpers/camera.helper.dart';
 
 void main() async {
+  // Portrait mode only
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   WidgetsFlutterBinding.ensureInitialized();
   await CameraHelper.instance.initCameras();
 

@@ -1,6 +1,5 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:spotfinder/enums/take-picture-for.enum.dart';
@@ -32,6 +31,8 @@ class TakePictureScreenState extends State<TakePictureScreen>
     with WidgetsBindingObserver {
   CameraController _controller;
   Future<void> _initializeControllerFuture;
+  int cameraSwipes = 0;
+  CameraDescription _activeCamera;
 
   @override
   void initState() {
@@ -41,6 +42,7 @@ class TakePictureScreenState extends State<TakePictureScreen>
         enableAudio: false);
 
     _initializeControllerFuture = _controller.initialize();
+    this._activeCamera = CameraHelper.instance.getCamera(this.cameraSwipes);
   }
 
   @override
@@ -77,18 +79,39 @@ class TakePictureScreenState extends State<TakePictureScreen>
     return Scaffold(
       appBar: this._getAppBar(context),
       body: Container(
+        color: Color(0xFF011627),
         child: Stack(
           children: [
-            GestureDetector(
-              onDoubleTap: () {
-                debugPrint('Switch camera');
-              },
-              child: this._cameraPreview(),
+            Center(
+              child: Text(
+                this.cameraSwipes % 2 == 0 ? '🤡' : '🤓',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 30.0,
+                ),
+              ),
             ),
-            BottomActionButton(
-              parentContext: context,
-              text: S.of(context).takePictureAction,
-              onTap: () => this.onTakePictureButtonPressed(context),
+            Stack(
+              children: [
+                GestureDetector(
+                  onDoubleTap: () {
+                    if (this.cameraSwipes % 2 == 0) {
+                      this._activeCamera = CameraHelper.instance.getCamera(1);
+                    } else {
+                      this._activeCamera = CameraHelper.instance.getCamera(0);
+                    }
+
+                    this.cameraSwipes++;
+                    this.onNewCameraSelected(this._activeCamera);
+                  },
+                  child: this._cameraPreview(),
+                ),
+                BottomActionButton(
+                  parentContext: context,
+                  text: S.of(context).takePictureAction,
+                  onTap: () => this.onTakePictureButtonPressed(context),
+                ),
+              ],
             ),
           ],
         ),
@@ -161,6 +184,7 @@ class TakePictureScreenState extends State<TakePictureScreen>
       cameraDescription,
       ResolutionPreset.high,
       enableAudio: false,
+      imageFormatGroup: ImageFormatGroup.jpeg,
     );
 
     // If the controller is updated then update the UI.
