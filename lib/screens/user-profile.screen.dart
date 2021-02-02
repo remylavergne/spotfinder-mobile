@@ -228,12 +228,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               onTap: () {
                 if (user.pictureId != null) {
                   this._displayUserProfilePicture(user);
-                } else {
+                } else if (this._isCurrentUser) {
                   this._openTakePictureScreen(context);
                 }
               },
               onLongPress: () {
-                this._openTakePictureScreen(context);
+                if (this._isCurrentUser) {
+                  this._openTakePictureScreen(context);
+                }
               },
               child: FutureBuilder<String>(
                 future: SharedPrefsHelper.instance.getToken(),
