@@ -191,10 +191,13 @@ class _CommentsScreenState extends State<CommentsScreen> {
 
   Widget _getLastCommentsWidget(List<Comment> comments) {
     if (comments.length == 0) {
-      return Container(
-        margin: const EdgeInsets.only(top: 8.0),
-        child: Center(
-          child: Text(S.current.noComment),
+      return Expanded(
+        child: Container(
+          child: Expanded(
+            child: Center(
+              child: Text(S.current.noComment),
+            ),
+          ),
         ),
       );
     }
