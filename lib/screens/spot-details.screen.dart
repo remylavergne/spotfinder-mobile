@@ -304,9 +304,12 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                         ),
                       );
                     },
-                    child: Text(S.current.displayAll,
-                        style: TextStyle(
-                            fontSize: 14.0, color: Color(0xFF2196F3))),
+                    child: Container(
+                      padding: EdgeInsets.only(top: 8.0, right: 16.0),
+                      child: Text(S.current.displayAll,
+                          style: TextStyle(
+                              fontSize: 14.0, color: Color(0xFF2196F3))),
+                    ),
                   )
                 ],
               ),
@@ -327,11 +330,14 @@ class _SpotDetailsScreenState extends State<SpotDetailsScreen> {
                     this._updateSpotComments();
                   }
                 },
-                child: Text(
-                  S.current.addAction,
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    color: Color(0xFF2196F3),
+                child: Container(
+                  padding: EdgeInsets.only(top: 8.0, left: 16.0),
+                  child: Text(
+                    S.current.addAction,
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      color: Color(0xFF2196F3),
+                    ),
                   ),
                 ),
               ),

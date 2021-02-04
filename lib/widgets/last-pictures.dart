@@ -67,11 +67,14 @@ class _LastPicturesState extends State<LastPictures> {
                         this.widget.displayAllAction();
                       }
                     },
-                    child: Text(
-                      S.current.displayAll,
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        color: Color(0xFF2196F3),
+                    child: Container(
+                      padding: EdgeInsets.only(top: 8.0, right: 16.0),
+                      child: Text(
+                        S.current.displayAll,
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          color: Color(0xFF2196F3),
+                        ),
                       ),
                     ),
                   )
@@ -83,11 +86,14 @@ class _LastPicturesState extends State<LastPictures> {
                   onTap: () {
                     this.widget.secondAction();
                   },
-                  child: Text(
-                    S.current.addAction,
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      color: Color(0xFF2196F3),
+                  child: Container(
+                    padding: EdgeInsets.only(top: 8.0, left: 16.0),
+                    child: Text(
+                      S.current.addAction,
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        color: Color(0xFF2196F3),
+                      ),
                     ),
                   ),
                 ),
