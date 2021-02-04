@@ -193,10 +193,8 @@ class _CommentsScreenState extends State<CommentsScreen> {
     if (comments.length == 0) {
       return Expanded(
         child: Container(
-          child: Expanded(
-            child: Center(
-              child: Text(S.current.noComment),
-            ),
+          child: Center(
+            child: Text(S.current.noComment),
           ),
         ),
       );
