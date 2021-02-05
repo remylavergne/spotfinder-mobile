@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/models/comment.model.dart';
@@ -60,28 +61,45 @@ class CommentWidget extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              // subtitle: Text(
-              //   'Secondary Text',
-              //   style: TextStyle(color: Colors.black.withOpacity(0.6)),
             ),
-            Container(
-              // color: Colors.red,
-              // margin: EdgeInsets.only(bottom: 16.0),
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    bottom: 16.0, left: 16.0, top: 12.0, right: 16.0),
-                child: Text(
-                  this.comment.message,
-                  style: TextStyle(color: Colors.black),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: double.maxFinite,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        bottom: 4.0, left: 16.0, top: 16.0, right: 16.0),
+                    child: Text(
+                      this.comment.message,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
                 ),
-              ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 4.0,
+                      right: 8.0,
+                    ),
+                    child: Text(
+                      this._formatDate(this.comment.createdAt),
+                      style: TextStyle(color: Colors.grey[500], fontSize: 12.0),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
-          // ),
-          // ),
-          // ],
         ),
       ),
     );
+  }
+
+  String _formatDate(int timeInMillis) {
+    DateTime date = DateTime.fromMillisecondsSinceEpoch(timeInMillis);
+    String formattedDate = DateFormat.yMMMd().format(date);
+    return formattedDate;
   }
 }
