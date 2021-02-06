@@ -9,6 +9,7 @@ import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/models/picture.model.dart';
 import 'package:spotfinder/models/user.model.dart';
 import 'package:spotfinder/repositories/repository.dart';
+import 'package:spotfinder/screens/user-profile.screen.dart';
 
 class PictureFullScreen extends StatefulWidget {
   static String route = '/picture-fullscreen';
@@ -91,8 +92,13 @@ class _PictureFullScreenState extends State<PictureFullScreen> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                // TODO: Open profile // Check if not already opened
-                                debugPrint('Open profile');
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        UserProfileScreen(userId: user.id),
+                                  ),
+                                );
                               },
                               child: Container(
                                 padding: const EdgeInsets.only(
