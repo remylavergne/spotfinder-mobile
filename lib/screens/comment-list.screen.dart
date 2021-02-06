@@ -72,9 +72,11 @@ class _CommentsScreenState extends State<CommentsScreen> {
                   } else if (snapshot.hasError) {
                     return Retry(retryCalled: () => this._fetchRetry());
                   } else {
-                    return Container(
-                      child: Center(
-                        child: CircularProgressIndicator(),
+                    return Expanded(
+                      child: Container(
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
                       ),
                     );
                   }
@@ -109,9 +111,9 @@ class _CommentsScreenState extends State<CommentsScreen> {
                             focusNode: this.focusNode,
                             controller: this.messageCtrl,
                             validator: (value) {
-                              if (value.length < 5) {
+                              if (value.length < 1) {
                                 displayError = true;
-                                return 'Message have to contains 5 caracters at least';
+                                return 'Message have to contains 1 characters at least';
                               } else {
                                 displayError = false;
                                 return null;
