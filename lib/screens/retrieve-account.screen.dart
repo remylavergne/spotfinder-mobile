@@ -15,41 +15,34 @@ class RetrieveAccountScreen extends StatefulWidget {
 }
 
 class _RetrieveAccount extends State<RetrieveAccountScreen> {
-  PageController controller = PageController(initialPage: 0);
   final _formKey = GlobalKey<FormState>();
-  Throttling loginThrottle = Throttling(Duration(seconds: 5));
-  bool creationError = false;
-  TextEditingController usernameCtrl = TextEditingController();
-  TextEditingController passwordCtrl = TextEditingController();
+  Throttling _loginThrottle = Throttling(Duration(seconds: 5));
+  bool _creationError = false;
+  TextEditingController _usernameCtrl = TextEditingController();
+  TextEditingController _passwordCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     MediaQueryData mediaQueryData = MediaQuery.of(context);
     return Scaffold(
       body: Stack(
+        fit: StackFit.expand,
         children: [
-          this._viewPager(),
           Container(
-            margin: EdgeInsets.only(top: 35.0),
+            child: Image(
+                image: AssetImage('assets/onboarding/onboarding-1.jpg'),
+                fit: BoxFit.cover),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 40.0),
             alignment: Alignment.topCenter,
-            child: ApplicationTitle(title: S.of(context).appTitle, size: mediaQueryData.size.width * 0.3),
+            child: ApplicationTitle(
+                title: S.of(context).appTitle,
+                size: mediaQueryData.size.width * 0.25),
           ),
           Positioned.fill(child: this._form(context)),
         ],
       ),
-    );
-  }
-
-  Widget _viewPager() {
-    return PageView(
-      controller: this.controller,
-      children: [
-        Container(
-          child: Image(
-              image: AssetImage('assets/onboarding/onboarding-1.jpg'),
-              fit: BoxFit.cover),
-        ),
-      ],
     );
   }
 
@@ -68,7 +61,7 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
             Container(
               margin: EdgeInsets.only(bottom: 16.0),
               child: TextFormField(
-                controller: this.usernameCtrl,
+                controller: this._usernameCtrl,
                 decoration: InputDecoration(
                   hintStyle: TextStyle(
                     color: Color(0xFF989898),
@@ -85,8 +78,8 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
                 validator: (value) {
                   if (value.isEmpty) {
                     return S.current.pleaseEnterUsername;
-                  } else if (this.creationError) {
-                    this.creationError = false;
+                  } else if (this._creationError) {
+                    this._creationError = false;
                     return S.current.loginError;
                   } else {
                     return null;
@@ -97,7 +90,7 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
             Container(
               margin: EdgeInsets.only(bottom: 16.0),
               child: TextFormField(
-                controller: this.passwordCtrl,
+                controller: this._passwordCtrl,
                 decoration: InputDecoration(
                   hintStyle: TextStyle(
                     color: Color(0xFF989898),
@@ -159,11 +152,11 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
                       height: 56.0,
                       onPressed: () async {
                         if (_formKey.currentState.validate()) {
-                          this.loginThrottle.throttle(
+                          this._loginThrottle.throttle(
                                 () => this._loginUserProcess(
                                     context,
-                                    this.usernameCtrl.text,
-                                    this.passwordCtrl.text),
+                                    this._usernameCtrl.text,
+                                    this._passwordCtrl.text),
                               );
                         }
                       },
@@ -190,14 +183,8 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
     if (success) {
       Navigator.pushNamedAndRemoveUntil(
           context, FeedScreen.route, (route) => false);
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => FeedScreen(),
-      //   ),
-      // );
     } else {
-      this.creationError = true;
+      this._creationError = true;
       _formKey.currentState.validate();
     }
   }
