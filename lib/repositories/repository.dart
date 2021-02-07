@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:spotfinder/enums/comments-type.enum.dart';
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/models/comment.model.dart';
+import 'package:spotfinder/models/dto/create-account.dto.dart';
 import 'package:spotfinder/models/dto/create-spot.dto.dart';
 import 'package:spotfinder/models/dto/login-infos.dto.dart';
 import 'package:spotfinder/models/dto/new-comment.dto.dart';
@@ -26,8 +27,8 @@ class Repository {
     return _instance;
   }
 
-  Future<LoginInfos> createAccount(String username) async {
-    LoginInfos infos = await RestService().createAccount(username);
+  Future<LoginInfos> createAccount(CreateAccount account) async {
+    LoginInfos infos = await RestService().createAccount(account);
     SharedPrefsHelper.instance.saveUserInfos(infos);
     return Future.value(infos);
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spotfinder/generated/l10n.dart';
 import 'package:spotfinder/helpers/throttling.dart';
+import 'package:spotfinder/models/dto/create-account.dto.dart';
 import 'package:spotfinder/models/dto/login-infos.dto.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/display-clear-password.screen.dart';
@@ -21,6 +22,7 @@ class CreateAccountScreen extends StatefulWidget {
 class _CreateAccountState extends State<CreateAccountScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _usernameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
   Throttling _createSpotThrottling = Throttling(Duration(seconds: 5));
   bool _creationError = false;
   bool _displayLoader = false;
@@ -100,6 +102,25 @@ class _CreateAccountState extends State<CreateAccountScreen> {
               ),
             ),
             Container(
+              margin: EdgeInsets.only(bottom: 16.0),
+              child: TextFormField(
+                controller: this._emailController,
+                decoration: InputDecoration(
+                  hintStyle: TextStyle(
+                    color: Color(0xFF989898),
+                    fontSize: 18.0,
+                  ),
+                  hintText: S.of(context).yourEmail,
+                  fillColor: Colors.white,
+                  filled: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(4.0),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+            ),
+            Container(
               width: double.infinity,
               child: FlatButton(
                 shape: RoundedRectangleBorder(
@@ -112,8 +133,8 @@ class _CreateAccountState extends State<CreateAccountScreen> {
                   if (_formKey.currentState.validate()) {
                     this._loaderState();
                     this._createSpotThrottling.throttle(() => this
-                        ._createAccountProcess(
-                            _usernameController.text, context));
+                        ._createAccountProcess(this._usernameController.text,
+                            this._emailController.text, context));
                   }
                 },
                 child: Text(
@@ -148,8 +169,11 @@ class _CreateAccountState extends State<CreateAccountScreen> {
     );
   }
 
-  void _createAccountProcess(String username, BuildContext context) async {
-    LoginInfos infos = await Repository().createAccount(username.trim());
+  void _createAccountProcess(
+      String username, String email, BuildContext context) async {
+    CreateAccount account =
+        CreateAccount(username.trim(), email != null ? email.trim() : null);
+    LoginInfos infos = await Repository().createAccount(account);
     this._loaderState();
     if (infos != null) {
       Navigator.push(

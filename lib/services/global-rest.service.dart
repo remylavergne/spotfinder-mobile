@@ -7,6 +7,7 @@ import 'package:http/http.dart';
 import 'package:spotfinder/constants.dart';
 import 'package:spotfinder/helpers/shared-preferences.helper.dart';
 import 'package:spotfinder/models/comment.model.dart';
+import 'package:spotfinder/models/dto/create-account.dto.dart';
 import 'package:spotfinder/models/dto/create-spot.dto.dart';
 import 'package:spotfinder/models/dto/login-infos.dto.dart';
 import 'package:spotfinder/models/dto/new-comment.dto.dart';
@@ -111,16 +112,16 @@ class RestService {
     }
   }
 
-  Future<LoginInfos> createAccount(String username) async {
+  Future<LoginInfos> createAccount(CreateAccount account) async {
     final response = await http.post(Constants.getBaseApi() + '/user/create',
-        body: username);
+        body: account.toDto());
 
     if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
       LoginInfos infos = LoginInfos.fromJson(data);
-      return infos;
+      return Future.value(infos);
     } else {
-      return null;
+      return Future.value(null);
     }
   }
 
