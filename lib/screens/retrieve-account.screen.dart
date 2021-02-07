@@ -155,6 +155,7 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
                       height: 56.0,
                       onPressed: () async {
                         if (_formKey.currentState.validate()) {
+                          this._loaderState();
                           this._loginThrottle.throttle(
                                 () => this._loginUserProcess(
                                     context,
@@ -183,6 +184,7 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
       BuildContext context, String username, String password) async {
     bool success = await Repository()
         .connectUserByCredentials(username.trim(), password.trim());
+    this._loaderState();
     if (success) {
       Navigator.pushNamedAndRemoveUntil(
           context, FeedScreen.route, (route) => false);
