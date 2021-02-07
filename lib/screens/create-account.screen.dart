@@ -31,11 +31,11 @@ class _CreateAccountState extends State<CreateAccountScreen> {
         children: [
           this._viewPager(),
           Container(
-            margin: EdgeInsets.only(top: 35.0),
+            margin: EdgeInsets.only(top: 40.0),
             alignment: Alignment.topCenter,
             child: ApplicationTitle(
                 title: S.of(context).appTitle,
-                size: mediaQueryData.size.width * 0.3),
+                size: mediaQueryData.size.width * 0.25),
           ),
           Positioned.fill(child: this._form(context)),
         ],
