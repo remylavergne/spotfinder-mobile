@@ -33,7 +33,9 @@ class _CreateAccountState extends State<CreateAccountScreen> {
           Container(
             margin: EdgeInsets.only(top: 35.0),
             alignment: Alignment.topCenter,
-            child: ApplicationTitle(title: S.of(context).appTitle, size: mediaQueryData.size.width * 0.3),
+            child: ApplicationTitle(
+                title: S.of(context).appTitle,
+                size: mediaQueryData.size.width * 0.3),
           ),
           Positioned.fill(child: this._form(context)),
         ],
@@ -76,7 +78,7 @@ class _CreateAccountState extends State<CreateAccountScreen> {
                     color: Color(0xFF989898),
                     fontSize: 18.0,
                   ),
-                  hintText: S.current.chooseYourUsername,
+                  hintText: S.of(context).chooseYourUsername,
                   fillColor: Colors.white,
                   filled: true,
                   border: OutlineInputBorder(
@@ -86,10 +88,12 @@ class _CreateAccountState extends State<CreateAccountScreen> {
                 ),
                 validator: (value) {
                   if (value.isEmpty) {
-                    return S.current.pleaseEnterUsername;
+                    return S.of(context).pleaseEnterUsername;
                   } else if (this.creationError) {
                     this.creationError = false;
-                    return S.current.usernameAlreadyExists;
+                    return S.of(context).usernameAlreadyExists;
+                  } else if (value.contains(' ')) {
+                    return S.of(context).usernameSpaceNotAllowed;
                   } else {
                     return null;
                   }
@@ -113,7 +117,7 @@ class _CreateAccountState extends State<CreateAccountScreen> {
                   }
                 },
                 child: Text(
-                  S.current.next,
+                  S.of(context).next,
                   style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -129,7 +133,7 @@ class _CreateAccountState extends State<CreateAccountScreen> {
                   );
                 },
                 child: Text(
-                  S.current.login,
+                  S.of(context).login,
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,

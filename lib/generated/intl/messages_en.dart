@@ -100,6 +100,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "typeCommentHint" : MessageLookupByLibrary.simpleMessage("Type comment here"),
     "userSpotsTitle" : MessageLookupByLibrary.simpleMessage("User\'s spots"),
     "usernameAlreadyExists" : MessageLookupByLibrary.simpleMessage("This username already exist. Please choose another one."),
-    "usernameHint" : MessageLookupByLibrary.simpleMessage("Username")
+    "usernameHint" : MessageLookupByLibrary.simpleMessage("Username"),
+    "usernameSpaceNotAllowed" : MessageLookupByLibrary.simpleMessage("Username can\'t contain space.")
   };
 }

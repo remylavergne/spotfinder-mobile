@@ -75,6 +75,16 @@ class S {
     );
   }
 
+  /// `Username can't contain space.`
+  String get usernameSpaceNotAllowed {
+    return Intl.message(
+      'Username can\'t contain space.',
+      name: 'usernameSpaceNotAllowed',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Next`
   String get next {
     return Intl.message(

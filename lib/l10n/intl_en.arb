@@ -11,6 +11,8 @@
     "@pleaseEnterUsername": {},
     "usernameAlreadyExists": "This username already exist. Please choose another one.",
     "@usernameAlreadyExists": {},
+    "usernameSpaceNotAllowed": "Username can't contain space.",
+    "@usernameSpaceNotAllowed": {},
     "next": "Next",
     "@next": {},
     "login": "I have an account",
