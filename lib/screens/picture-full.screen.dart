@@ -24,10 +24,13 @@ class PictureFullScreen extends StatefulWidget {
 
 class _PictureFullScreenState extends State<PictureFullScreen> {
   bool _visible = true;
+  PageController _pageController;
 
   @override
   void initState() {
     super.initState();
+    this._pageController =
+        PageController(initialPage: this.widget.index, keepPage: true);
   }
 
   @override
@@ -48,6 +51,7 @@ class _PictureFullScreenState extends State<PictureFullScreen> {
               String token = snapshot.data;
 
               return PageView.builder(
+                controller: this._pageController,
                 itemBuilder: (BuildContext context, int index) {
                   return this._body(
                     this.widget.pictures[index],
