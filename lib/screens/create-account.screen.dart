@@ -28,8 +28,13 @@ class _CreateAccountState extends State<CreateAccountScreen> {
     MediaQueryData mediaQueryData = MediaQuery.of(context);
     return Scaffold(
       body: Stack(
+        fit: StackFit.expand,
         children: [
-          this._viewPager(),
+          Container(
+            child: Image(
+                image: AssetImage('assets/onboarding/onboarding-1.jpg'),
+                fit: BoxFit.cover),
+          ),
           Container(
             margin: EdgeInsets.only(top: 40.0),
             alignment: Alignment.topCenter,
@@ -40,19 +45,6 @@ class _CreateAccountState extends State<CreateAccountScreen> {
           Positioned.fill(child: this._form(context)),
         ],
       ),
-    );
-  }
-
-  Widget _viewPager() {
-    return PageView(
-      controller: this.controller,
-      children: [
-        Container(
-          child: Image(
-              image: AssetImage('assets/onboarding/onboarding-1.jpg'),
-              fit: BoxFit.cover),
-        ),
-      ],
     );
   }
 
