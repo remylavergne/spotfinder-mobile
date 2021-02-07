@@ -84,8 +84,10 @@ class _PicturesDisplayScreenState extends State<PicturesDisplayScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) =>
-                  PictureFullScreen(picture: pictures[index]),
+              builder: (BuildContext context) => PictureFullScreen(
+                pictures: pictures,
+                index: index,
+              ),
             ),
           );
         },

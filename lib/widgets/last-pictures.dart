@@ -144,14 +144,16 @@ class _LastPicturesState extends State<LastPictures> {
     this._canDisplayAll = true;
 
     List<Widget> picturesWidgets = [];
-    pictures.forEach((Picture picture) {
+    pictures.asMap().forEach((int index, Picture picture) {
       Widget w = GestureDetector(
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) =>
-                  PictureFullScreen(picture: picture),
+              builder: (BuildContext context) => PictureFullScreen(
+                pictures: pictures,
+                index: index,
+              ),
             ),
           );
         },
