@@ -28,10 +28,14 @@ class UploadDialog {
             mainAxisSize: MainAxisSize.min,
             children: [
               CircularProgressIndicator(),
-              SizedBox(
-                height: 16.0,
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  this._alertDialogContent,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(),
+                ),
               ),
-              Center(child: Text(this._alertDialogContent)),
             ],
           ),
         );
