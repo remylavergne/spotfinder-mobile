@@ -22,6 +22,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "accountCreatedTitle" : MessageLookupByLibrary.simpleMessage("Account successfully created!"),
+    "accountCreationInProgress" : MessageLookupByLibrary.simpleMessage("Account creation in progress..."),
     "add" : MessageLookupByLibrary.simpleMessage("Add"),
     "addAction" : MessageLookupByLibrary.simpleMessage("+ Add"),
     "addPhoto" : MessageLookupByLibrary.simpleMessage("Add a photo"),

@@ -85,6 +85,16 @@ class S {
     );
   }
 
+  /// `Account creation in progress...`
+  String get accountCreationInProgress {
+    return Intl.message(
+      'Account creation in progress...',
+      name: 'accountCreationInProgress',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Next`
   String get next {
     return Intl.message(

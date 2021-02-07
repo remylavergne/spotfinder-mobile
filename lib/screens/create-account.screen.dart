@@ -46,7 +46,12 @@ class _CreateAccountState extends State<CreateAccountScreen> {
                 size: mediaQueryData.size.width * 0.25),
           ),
           Positioned.fill(child: this._form(context)),
-          Visibility(visible: this._displayLoader, child: FullscreenLoader()),
+          Visibility(
+            visible: this._displayLoader,
+            child: FullscreenLoader(
+              message: S.of(context).accountCreationInProgress,
+            ),
+          ),
         ],
       ),
     );

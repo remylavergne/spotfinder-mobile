@@ -13,6 +13,8 @@
     "@usernameAlreadyExists": {},
     "usernameSpaceNotAllowed": "Username can't contain space.",
     "@usernameSpaceNotAllowed": {},
+    "accountCreationInProgress": "Account creation in progress...",
+    "@accountCreationInProgress": {},
     "next": "Next",
     "@next": {},
     "login": "I have an account",
