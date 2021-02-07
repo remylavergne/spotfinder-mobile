@@ -180,7 +180,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       context,
       MaterialPageRoute(
         builder: (BuildContext context) => PictureFullScreen(
-          picture: Picture.fromUser(user),
+          pictures: [Picture.fromUser(user)],
+          index: 0,
         ),
       ),
     );
