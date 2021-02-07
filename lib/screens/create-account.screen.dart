@@ -18,14 +18,15 @@ class CreateAccountScreen extends StatefulWidget {
 }
 
 class _CreateAccountState extends State<CreateAccountScreen> {
-  final controller = PageController(initialPage: 0);
-  final _formKey = GlobalKey<FormState>();
-  Throttling createSpotThrottling = Throttling(Duration(seconds: 5));
-  bool creationError = false;
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController _usernameController = TextEditingController();
+  Throttling _createSpotThrottling = Throttling(Duration(seconds: 5));
+  bool _creationError = false;
 
   @override
   Widget build(BuildContext context) {
     MediaQueryData mediaQueryData = MediaQuery.of(context);
+
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
@@ -49,8 +50,6 @@ class _CreateAccountState extends State<CreateAccountScreen> {
   }
 
   Widget _form(BuildContext context) {
-    final usernameController = TextEditingController();
-
     return Container(
       margin: EdgeInsets.only(
         left: 16.0,
@@ -64,7 +63,7 @@ class _CreateAccountState extends State<CreateAccountScreen> {
             Container(
               margin: EdgeInsets.only(bottom: 16.0),
               child: TextFormField(
-                controller: usernameController,
+                controller: _usernameController,
                 decoration: InputDecoration(
                   hintStyle: TextStyle(
                     color: Color(0xFF989898),
@@ -81,8 +80,8 @@ class _CreateAccountState extends State<CreateAccountScreen> {
                 validator: (value) {
                   if (value.isEmpty) {
                     return S.of(context).pleaseEnterUsername;
-                  } else if (this.creationError) {
-                    this.creationError = false;
+                  } else if (this._creationError) {
+                    this._creationError = false;
                     return S.of(context).usernameAlreadyExists;
                   } else if (value.contains(' ')) {
                     return S.of(context).usernameSpaceNotAllowed;
@@ -103,9 +102,9 @@ class _CreateAccountState extends State<CreateAccountScreen> {
                 height: 56.0,
                 onPressed: () async {
                   if (_formKey.currentState.validate()) {
-                    this.createSpotThrottling.throttle(() => this
+                    this._createSpotThrottling.throttle(() => this
                         ._createAccountProcess(
-                            usernameController.text, context));
+                            _usernameController.text, context));
                   }
                 },
                 child: Text(
@@ -151,7 +150,7 @@ class _CreateAccountState extends State<CreateAccountScreen> {
         ),
       );
     } else {
-      this.creationError = true;
+      this._creationError = true;
       _formKey.currentState.validate();
     }
   }
