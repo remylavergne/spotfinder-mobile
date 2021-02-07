@@ -5,6 +5,7 @@ import 'package:spotfinder/helpers/throttling.dart';
 import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/feed.screen.dart';
 import 'package:spotfinder/widgets/application-title.dart';
+import 'package:spotfinder/widgets/fullscreen-loader.dart';
 
 class RetrieveAccountScreen extends StatefulWidget {
   static String route = '/retrieve-account';
@@ -20,6 +21,7 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
   bool _creationError = false;
   TextEditingController _usernameCtrl = TextEditingController();
   TextEditingController _passwordCtrl = TextEditingController();
+  bool _displayLoader = false;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +43,7 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
                 size: mediaQueryData.size.width * 0.25),
           ),
           Positioned.fill(child: this._form(context)),
+          Visibility(visible: this._displayLoader, child: FullscreenLoader()),
         ],
       ),
     );
@@ -187,5 +190,11 @@ class _RetrieveAccount extends State<RetrieveAccountScreen> {
       this._creationError = true;
       _formKey.currentState.validate();
     }
+  }
+
+  void _loaderState() {
+    setState(() {
+      this._displayLoader = !this._displayLoader;
+    });
   }
 }

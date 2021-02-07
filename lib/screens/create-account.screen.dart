@@ -7,6 +7,7 @@ import 'package:spotfinder/repositories/repository.dart';
 import 'package:spotfinder/screens/display-clear-password.screen.dart';
 import 'package:spotfinder/screens/retrieve-account.screen.dart';
 import 'package:spotfinder/widgets/application-title.dart';
+import 'package:spotfinder/widgets/fullscreen-loader.dart';
 
 class CreateAccountScreen extends StatefulWidget {
   static String route = '/create-account';
@@ -22,6 +23,7 @@ class _CreateAccountState extends State<CreateAccountScreen> {
   TextEditingController _usernameController = TextEditingController();
   Throttling _createSpotThrottling = Throttling(Duration(seconds: 5));
   bool _creationError = false;
+  bool _displayLoader = false;
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +46,7 @@ class _CreateAccountState extends State<CreateAccountScreen> {
                 size: mediaQueryData.size.width * 0.25),
           ),
           Positioned.fill(child: this._form(context)),
+          Visibility(visible: this._displayLoader, child: FullscreenLoader()),
         ],
       ),
     );
@@ -102,6 +105,7 @@ class _CreateAccountState extends State<CreateAccountScreen> {
                 height: 56.0,
                 onPressed: () async {
                   if (_formKey.currentState.validate()) {
+                    this._loaderState();
                     this._createSpotThrottling.throttle(() => this
                         ._createAccountProcess(
                             _usernameController.text, context));
@@ -141,6 +145,7 @@ class _CreateAccountState extends State<CreateAccountScreen> {
 
   void _createAccountProcess(String username, BuildContext context) async {
     LoginInfos infos = await Repository().createAccount(username.trim());
+    this._loaderState();
     if (infos != null) {
       Navigator.push(
         context,
@@ -153,5 +158,11 @@ class _CreateAccountState extends State<CreateAccountScreen> {
       this._creationError = true;
       _formKey.currentState.validate();
     }
+  }
+
+  void _loaderState() {
+    setState(() {
+      this._displayLoader = !this._displayLoader;
+    });
   }
 }
