@@ -56,14 +56,14 @@ class _FullscreenLoaderState extends State<FullscreenLoader> {
               ),
             ),
             // Steps list
-            Visibility(
-              visible:
-                  this.widget.steps != null && this.widget.steps.isNotEmpty,
-              child: ListView(
-                shrinkWrap: true,
-                children: this.widget.steps,
-              ),
-            ),
+            // Visibility(
+            //   visible:
+            //       this.widget.steps != null && this.widget.steps.isNotEmpty,
+            //   child: ListView(
+            //     shrinkWrap: true,
+            //     children: this.widget.steps,
+            //   ),
+            // ),
           ],
         ),
       ),
