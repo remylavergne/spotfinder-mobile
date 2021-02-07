@@ -36,7 +36,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "changeGeneric" : MessageLookupByLibrary.simpleMessage("change"),
     "changePassword" : MessageLookupByLibrary.simpleMessage("Change current password"),
     "changeProfilePicture" : MessageLookupByLibrary.simpleMessage("Change profile picture"),
-    "chooseYourUsername" : MessageLookupByLibrary.simpleMessage("Choisissez un pseudo"),
+    "chooseYourUsername" : MessageLookupByLibrary.simpleMessage("Choose an username"),
     "clearPasswordExplanation" : MessageLookupByLibrary.simpleMessage("Un mot de passe a été généré pour récupérer votre compte. Vous devez l\'avoir si vous voulez vous connecter sur un autre appareil, ou tout simplement récupérer votre compte après une réinstallation."),
     "clickToCopy" : MessageLookupByLibrary.simpleMessage("Click to copy"),
     "closeGeneric" : MessageLookupByLibrary.simpleMessage("close"),
@@ -102,6 +102,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "userSpotsTitle" : MessageLookupByLibrary.simpleMessage("User\'s spots"),
     "usernameAlreadyExists" : MessageLookupByLibrary.simpleMessage("This username already exist. Please choose another one."),
     "usernameHint" : MessageLookupByLibrary.simpleMessage("Username"),
-    "usernameSpaceNotAllowed" : MessageLookupByLibrary.simpleMessage("Username can\'t contain space.")
+    "usernameSpaceNotAllowed" : MessageLookupByLibrary.simpleMessage("Username can\'t contain space."),
+    "yourEmail" : MessageLookupByLibrary.simpleMessage("Your email")
   };
 }

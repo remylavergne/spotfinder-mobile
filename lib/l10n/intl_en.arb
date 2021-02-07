@@ -3,10 +3,10 @@
     "@appTitle": {
       "description": "Application name"
     },
-    "chooseYourUsername": "Choisissez un pseudo",
-    "@chooseYourUsername": {
-      "description": "Hint for account creation"
-    },
+    "chooseYourUsername": "Choose an username",
+    "@chooseYourUsername": {},
+    "yourEmail": "Your email",
+    "@yourEmail": {},
     "pleaseEnterUsername": "Please enter your username",
     "@pleaseEnterUsername": {},
     "usernameAlreadyExists": "This username already exist. Please choose another one.",

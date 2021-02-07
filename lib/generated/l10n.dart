@@ -45,12 +45,22 @@ class S {
     );
   }
 
-  /// `Choisissez un pseudo`
+  /// `Choose an username`
   String get chooseYourUsername {
     return Intl.message(
-      'Choisissez un pseudo',
+      'Choose an username',
       name: 'chooseYourUsername',
-      desc: 'Hint for account creation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your email`
+  String get yourEmail {
+    return Intl.message(
+      'Your email',
+      name: 'yourEmail',
+      desc: '',
       args: [],
     );
   }
