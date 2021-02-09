@@ -34,6 +34,7 @@ class TakePictureScreenState extends State<TakePictureScreen>
   Future<void> _initializeControllerFuture;
   int _cameraSwipes = 0;
   CameraDescription _activeCamera;
+  FlashState _flashState = FlashState(FlashMode.auto);
 
   @override
   void initState() {
@@ -49,10 +50,8 @@ class TakePictureScreenState extends State<TakePictureScreen>
         break;
     }
     this._activeCamera = CameraHelper.instance.getCamera(this._cameraSwipes);
-
     _controller = CameraController(this._activeCamera, ResolutionPreset.high,
         enableAudio: false);
-
     _initializeControllerFuture = _controller.initialize();
   }
 
@@ -73,7 +72,7 @@ class TakePictureScreenState extends State<TakePictureScreen>
 
   @override
   void dispose() {
-    _controller.dispose();
+    this._controller.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -120,6 +119,19 @@ class TakePictureScreenState extends State<TakePictureScreen>
                   },
                   child: this._cameraPreview(),
                 ),
+                GestureDetector(
+                  onTap: () {
+                    this._updateCameraFlashModeState();
+                    this.setFlashMode(this._flashState.mode);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: this._flashState.getIcon(),
+                    ),
+                  ),
+                ),
                 BottomActionButton(
                   parentContext: context,
                   text: S.of(context).takePictureAction,
@@ -148,7 +160,8 @@ class TakePictureScreenState extends State<TakePictureScreen>
         if (snapshot.connectionState == ConnectionState.done) {
           return Container(
             width: double.maxFinite,
-            child: CameraPreview(_controller));
+            child: CameraPreview(_controller),
+          );
         } else {
           return Container(child: Center(child: CircularProgressIndicator()));
         }
@@ -224,5 +237,83 @@ class TakePictureScreenState extends State<TakePictureScreen>
 
   void _showCameraException(CameraException e) {
     debugPrint('Error: ${e.code}\n${e.description}');
+  }
+
+  ///
+  /// Flash Management
+  ///
+  void onSetFlashModeButtonPressed(FlashMode mode) {
+    setFlashMode(mode).then((_) {
+      if (mounted) setState(() {});
+    });
+  }
+
+  Future<void> setFlashMode(FlashMode mode) async {
+    try {
+      await this._controller.setFlashMode(mode);
+    } on CameraException catch (e) {
+      _showCameraException(e);
+      debugPrint(e.description);
+      rethrow;
+    }
+  }
+
+  void _updateCameraFlashModeState() {
+    setState(() {
+      this._flashState = this._flashState.nextState();
+    });
+  }
+}
+
+class FlashState {
+  FlashMode mode = FlashMode.auto;
+
+  FlashState(FlashMode mode) {
+    this.mode = mode;
+  }
+
+  Icon getIcon([FlashMode updateMode]) {
+    Map<FlashMode, Icon> _iconsFlashMode = {
+      FlashMode.auto: Icon(
+        Icons.flash_auto_outlined,
+        color: Colors.grey,
+        size: 32.0,
+      ),
+      FlashMode.always: Icon(
+        Icons.flash_on_outlined,
+        color: Colors.grey,
+        size: 32.0,
+      ),
+      FlashMode.torch: Icon(
+        Icons.lightbulb_outline,
+        color: Colors.grey,
+        size: 32.0,
+      ),
+      FlashMode.off: Icon(
+        Icons.flash_off_outlined,
+        color: Colors.grey,
+        size: 32.0,
+      ),
+    };
+
+    if (updateMode != null) {
+      return _iconsFlashMode[updateMode];
+    } else {
+      return _iconsFlashMode[this.mode];
+    }
+  }
+
+  FlashState nextState() {
+    return FlashState(this._nextMode());
+  }
+
+  /// Loop over FlashMode Enum and return next mode available
+  FlashMode _nextMode() {
+    int index = this.mode.index;
+    if (index < FlashMode.values.length - 1) {
+      return FlashMode.values[index + 1];
+    } else {
+      return FlashMode.off;
+    }
   }
 }
